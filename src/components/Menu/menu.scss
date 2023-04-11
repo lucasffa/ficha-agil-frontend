@@ -1,0 +1,92 @@
+.side-menu {
+  background-color: #FFF;
+  align-items: center;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.side-menu ul {
+  list-style-type: none;
+  padding-top: 40px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 50vh;
+}
+
+.side-menu li {
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 100% ;
+}
+
+.side-menu li:hover {
+  background-color: #a2b63d;
+  color: #FFF;
+}
+.side-menu a:hover {
+  color: #FFF;
+}
+.side-menu li a {
+  color: #29292e;
+  text-decoration: none;
+}
+
+.top-menu {
+  display: flex;
+  background-color: #a2b63d;
+  border-radius: 25px;
+  margin-top: 10px;
+  width: 97%;
+  height: 8vh;
+  h1 {
+    color: #29292e;
+    font-size: 20px;
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+  }
+
+}
+
+.side-menu.closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+	width: 55px;
+	height: 100vh;
+  left: 0;
+  padding-top: 40px;
+  background-color: #FFF;
+}
+
+.icon-close {
+  font-size: 20px;
+  margin-bottom: 5em;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.icon-open {
+  border: none;
+  cursor: pointer;
+  justify-content: center;
+  background: none;
+}
+
+.icon-exit {
+  background: none;
+  text-decoration: none;
+  margin-top: 80vh;
+}
+
+.icon-exit-active {
+  background: none;
+  text-decoration: none;
+  margin-top: 14vh; 
+}

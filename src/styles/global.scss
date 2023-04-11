@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #f8f8f8;
+  color: #29292e;
+}
+
+body,
+input,
+button,
+textarea {
+  font: 400 16px 'Roboto', sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  background-color: #eef1f5;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.areas {
+  width: 97%;
+  height: 97%;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  background-color: #FFF;
+  border-radius: 25px;
+}

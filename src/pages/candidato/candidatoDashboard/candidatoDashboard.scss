@@ -1,0 +1,46 @@
+.listagem-candidatos {
+  font-family: 'Poppins', sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0px 0px 20px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.listagem-candidatos thead { 
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.listagem-candidatos th,
+.listagem-candidatos td {
+  text-align: left;
+  padding: 8px;
+  
+}
+
+.listagem-candidatos th {
+  background-color: #333;
+  color: white;
+}
+
+.listagem-candidatos tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.listagem-candidatos tr:hover {
+  background-color: #ddd;
+}
+
+.listagem-candidatos .listagem-candidatos-nome {
+  width: 40%;
+}
+
+.listagem-candidatos .listagem-candidatos-cpf {
+  width: 30%;
+}
+
+.listagem-candidatos .listagem-candidatos-idade {
+  width: 30%;
+}

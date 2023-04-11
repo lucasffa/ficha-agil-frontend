@@ -1,0 +1,120 @@
+#page-auth {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+
+  main {   
+    flex: 8;
+    padding: 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    align-items: stretch;
+    text-align: center;
+
+    > img {
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 64px 0 24px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+        
+      .container-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 16px;
+        input  {
+          margin-left: 5px;
+          width: 15px;
+          cursor: pointer;
+        }
+        input[type="checkbox"] {
+          accent-color: #a2b63d;     
+        }
+        label {
+          color: #a2b63d;
+        }
+      }
+      
+        
+    .button {
+      margin-top: 16px;
+      width: 49.5vh;
+      align-items: center;
+      margin-left: 0.4rem;
+      text-decoration: none;
+      }
+
+    .lost-password {
+      align-self: start;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #a2b63d;
+    }
+
+      input {
+        height: 50px;
+        border-radius: 8px;
+        padding: 0 16px;
+        background: #fff;
+        border: 1px solid #a8a8b3;
+      }
+
+      input {
+        width: 100%;
+      }
+    }
+
+    p {
+      font-size: 14px;
+      color: #737380;
+      margin-top: 16px;
+
+      a {
+        color: #e559f9;
+      }
+    }
+  }
+
+
+  .separator {
+    font-size: 14px;
+    color: #a8a8b3;
+
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #a8a8b3;
+      margin-right: 16px;
+    }
+
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #a8a8b3;
+      margin-left: 16px;
+    }
+  }
+}
