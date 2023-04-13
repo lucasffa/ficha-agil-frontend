@@ -5,6 +5,7 @@ import { SideMenu, TopMenu } from './components/Menu/Menu';
 import Home from './Home/Home';
 import './styles/global.scss';
 import CandidatoDashboard from './pages/candidato/candidatoDashboard/CandidatoDashboard';
+import uniqid from 'uniqid';
 
 export default function Rotas() {
   const location = useLocation();
@@ -16,10 +17,14 @@ export default function Rotas() {
         {location.pathname === '/login' ? null : <TopMenu />}
         <main className={location.pathname === '/login' ? '' : 'areas'}>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<SignIn />} />
-            <Route path="/dashboard" element={<Home />} />
-            <Route path="/candidato" element={<CandidatoDashboard />} />
+            <Route path="/" element={<Navigate to="/login" />} key={uniqid()} />
+            <Route path="/login" element={<SignIn />} key={uniqid()} />
+            <Route path="/dashboard" element={<Home />} key={uniqid()} />
+            <Route
+              path="/candidato"
+              element={<CandidatoDashboard />}
+              key={uniqid()}
+            />
           </Routes>
         </main>
       </div>

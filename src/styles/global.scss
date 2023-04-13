@@ -5,9 +5,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
-body {
-  background: #f8f8f8;
+html, body {
+  background: red;
   color: #29292e;
+  height: 100%;
+  width: 100%;
 }
 
 body,
@@ -22,6 +24,8 @@ textarea {
   flex-wrap: wrap;
   justify-content: flex-start;
   background-color: #eef1f5;
+  width: 100vw;
+  height: 100vh;
 }
 
 .main-content {
@@ -34,7 +38,7 @@ textarea {
 
 .areas {
   width: 97%;
-  height: 97%;
+  height: 100%;
   margin-top: 10px;
   margin-bottom: 30px;
   background-color: #FFF;

@@ -8,15 +8,14 @@ import closeMenuIcon from '../../assets/images/close.svg';
 import sairIcon from '../../assets/images/exit.svg';
 import { useState } from 'react';
 
+const sections = [
+  { rota: 'dashboard', name: 'Dashboard' },
+  { rota: 'candidato', name: 'Candidato' },
+  { rota: 'usuario', name: 'Usuário' },
+];
+
 export function SideMenu() {
   const [hiddenMenu, setHiddenMenu] = useState(false);
-
-  const sections = [
-    { id: 'dashboard', name: 'Dashboard' },
-    { id: 'candidato', name: 'Candidato' },
-    { id: 'voluntario', name: 'Voluntário' },
-    { id: 'usuario', name: 'Usuário' },
-  ];
 
   return (
     <aside className={hiddenMenu === false ? 'side-menu closed' : 'side-menu'}>
@@ -37,9 +36,11 @@ export function SideMenu() {
         <>
           <nav>
             <ul>
-              {sections.map(section => (
-                <li key={section.id}>
-                  <Link to={section.id}>{section.name}</Link>
+              {sections.map((section, idx) => (
+                <li key={idx}>
+                  <Link to={section.rota} key={idx}>
+                    {section.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -56,18 +57,11 @@ export function SideMenu() {
 export function TopMenu() {
   const location = useLocation();
 
-  const sections = [
-    { id: 'dashboard', name: 'Dashboard', key: 1 },
-    { id: 'candidato', name: 'Candidato', key: 2 },
-    { id: 'voluntario', name: 'Voluntário', key: 3 },
-    { id: 'usuario', name: 'Usuário', key: 4 },
-  ];
-
   return (
     <header className="top-menu">
-      {sections.map(section =>
-        location.pathname.replace('/', '') === section.id ? (
-          <h1 className="top-menu-name" key={section.id}>
+      {sections.map((section, idx) =>
+        location.pathname.replace('/', '') === section.rota ? (
+          <h1 className="top-menu-name" key={idx}>
             {section.name}
           </h1>
         ) : null
