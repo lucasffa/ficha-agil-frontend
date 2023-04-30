@@ -21,7 +21,7 @@ export function Button({ isOutlined = false, ...props }: ButtonProps) {
 
 export function ButtonLink({ name, path, className }: LinkProps) {
   return (
-    <Link className={className} to={path}>
+    <Link className={className} to={path} style={{ textDecoration: 'none' }}>
       {name}
     </Link>
   );

@@ -1,19 +1,16 @@
 .container-dashboard-candidato {
   display: flex;
   flex-direction: column;
-
 .listagem-candidatos {
   font-family: 'Poppins', sans-serif;
   border-collapse: collapse;
-  width: 100%;
-  margin: 10px 0px 0px 20px;
-  max-height: 400px;
+  width: 80%;
+  max-height: 350px;
   overflow: auto;
+  align-items: center;
+  margin: auto auto 90px auto;
 }
 
-.listagem-candidatos {
-  margin-bottom: 90px;
-}
 .listagem-candidatos thead { 
   position: sticky;
   top: 0;
@@ -28,13 +25,14 @@
 }
 
 .listagem-candidatos th {
-  background-color: #333;
-  color: white;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  color: black;
 }
 
-.listagem-candidatos tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+// .listagem-candidatos tr:nth-child(even) {
+//   background-color: #f2f2f2;
+// }
 
 .listagem-candidatos tr:hover {
   background-color: #ddd;
@@ -52,32 +50,45 @@
   width: 30%;
 }
 
+.listagem-candidatos {
+  .listagem-candidatos-editar img {
+    width: 18px;
+    height: 18px;
+  }
+  button {
+    cursor: pointer;
+    align-self: center;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+    background: none;  
+  }
+}
+
+.listagem-candidatos button {
+  background: none;
+  border: none;
+}
+
 .busca-content {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  justify-content: space-between;
+  margin: auto;
+  height: 100px;
   form {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 300px;
-    input {
-      height: 50px;
-      border-radius: 8px;
-      padding: 0 16px;
-      background: #fff;
-      border: 1px solid #a8a8b3;
-    }
-
-    input {
-      width: 100%;
-    }
+    justify-content: center;
+    align-self: center;
+    gap: 2em;
+    margin-right: 20px;
 
     .button {
-      width: 70px;
+      flex: 1;
+      width: 10px;
       height: 40px;
       margin-top: 10px;
-      align-self: flex-end;
     }
   }
 }

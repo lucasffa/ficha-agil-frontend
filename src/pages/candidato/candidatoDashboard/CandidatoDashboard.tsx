@@ -3,6 +3,10 @@ import { Candidatos } from '../../dataFake';
 import './candidatoDashboard.scss';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../../../components/Button/Button';
+import { TextField } from '@mui/material';
+
+import editIcon from '../../../assets/images/edit.svg';
+import trashIcon from '../../../assets/images/trash.svg';
 
 // type CandidatoDashboardProps = {
 //   candidatos: CandidatosProps;
@@ -13,19 +17,22 @@ interface CandidatoFilterProps {
   Cpf: string;
   //Status: string;
 }
+
 export default function CandidatoDashboard() {
   const { control, handleSubmit } = useForm<CandidatoFilterProps>({
     mode: 'onBlur',
     defaultValues: {
-      Nome: '',
       Cpf: '',
     },
   });
+
   return (
     <div className="container-dashboard-candidato">
       <main>
-        <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>Candidatos</h1>
         <div className="busca-content">
+          <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>
+            Candidatos
+          </h1>
           <form
             onSubmit={handleSubmit((data, event) => {
               event?.preventDefault();
@@ -40,28 +47,18 @@ export default function CandidatoDashboard() {
               name="Cpf"
               render={({ field }) => {
                 return (
-                  <input
+                  <TextField
+                    id="outlined-basic"
+                    label="Cpf do candidato"
+                    color="primary"
+                    variant="outlined"
                     type="text"
-                    placeholder="Cpf do Candidato"
                     {...field}
                   />
                 );
               }}
             />
-            <br />
-            <Controller
-              control={control}
-              name="Nome"
-              render={({ field }) => {
-                return (
-                  <input
-                    type="text"
-                    placeholder="Nome do Candidato"
-                    {...field}
-                  />
-                );
-              }}
-            />
+
             <Button className="button">Filtrar</Button>
           </form>
         </div>
@@ -72,18 +69,30 @@ export default function CandidatoDashboard() {
                 <th className="listagem-candidatos-nome">Nome</th>
                 <th className="listagem-candidatos-cpf">CPF</th>
                 <th className="listagem-candidatos-idade">Idade</th>
+                <th className="listagem-candidatos-idade">Editar</th>
+                <th className="listagem-candidatos-excluir">Excluir</th>
               </tr>
             </thead>
             <tbody>
-              {Candidatos.map(candidato => {
+              {Candidatos.map((candidato, index) => {
                 return (
-                  <tr key={candidato.id}>
+                  <tr key={index}>
                     <td className="listagem-candidatos-nome">
                       {candidato.nome}
                     </td>
                     <td className="listagem-candidatos-cpf">{candidato.cpf}</td>
                     <td className="listagem-candidatos-idade">
                       {candidato.idade}
+                    </td>
+                    <td className="listagem-candidatos-editar">
+                      <button>
+                        <img src={editIcon} alt="Editar Candidato" />
+                      </button>
+                    </td>
+                    <td className="listagem-candidatos-excluir">
+                      <button>
+                        <img src={trashIcon} alt="Excluir Candidato" />
+                      </button>
                     </td>
                   </tr>
                 );

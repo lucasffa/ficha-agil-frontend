@@ -2,13 +2,18 @@ import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 import SignIn from './SignIn/SignIn';
 import { SideMenu, TopMenu } from './components/Menu/Menu';
-import Home from './Home/Home';
+import Dashboard from './pages/Home/Dashboard';
 import './styles/global.scss';
 import CandidatoDashboard from './pages/candidato/candidatoDashboard/CandidatoDashboard';
 import uniqid from 'uniqid';
+import Copyright from './Shared/Copyright';
+import { urlBase } from './services/Axios/axios';
+import PrivateRoutes from './components/utils/PrivateRoutes';
+import NotFound from './components/utils/NotFound';
 
 export default function Rotas() {
   const location = useLocation();
+  const validateToken = localStorage.getItem('token') ? true : false;
 
   return (
     <div className={location.pathname === '/login' ? '' : 'app'}>
@@ -18,15 +23,23 @@ export default function Rotas() {
         <main className={location.pathname === '/login' ? '' : 'areas'}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} key={uniqid()} />
-            <Route path="/login" element={<SignIn />} key={uniqid()} />
-            <Route path="/dashboard" element={<Home />} key={uniqid()} />
             <Route
-              path="/candidato"
-              element={<CandidatoDashboard />}
+              path="/login"
+              element={<SignIn urlBase={urlBase} />}
               key={uniqid()}
             />
+            <Route element={PrivateRoutes(validateToken)}>
+              <Route path="/dashboard" element={<Dashboard />} key={uniqid()} />
+              <Route
+                path="/candidato"
+                element={<CandidatoDashboard />}
+                key={uniqid()}
+              />
+            </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        <Copyright />
       </div>
     </div>
   );
