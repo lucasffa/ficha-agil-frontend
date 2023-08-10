@@ -7,11 +7,13 @@ import sairIcon from '../../assets/images/exit.svg';
 import dashboardIcon from '../../assets/images/align-right.svg';
 import userIcon from '../../assets/images/user.svg';
 import { useState } from 'react';
+import uniqid from 'uniqid';
 
 const sections = [
   { rota: 'dashboard', name: 'Dashboard', icon: dashboardIcon },
   { rota: 'candidato', name: 'Candidato', icon: userIcon },
   { rota: 'usuario', name: 'Usuário', icon: userIcon },
+  { subRota: 'usuario/adicionar', name: 'Adicionar Usuário', icon: userIcon },
 ];
 
 export function SideMenu() {
@@ -41,7 +43,10 @@ export function SideMenu() {
         <Link
           to="/login"
           className="icon-exit"
-          onClick={() => localStorage.setItem('token', '')}
+          onClick={() => {
+            localStorage.setItem('token', '');
+            localStorage.setItem('user', '');
+          }}
         >
           <img src={sairIcon} alt="Sair" />
         </Link>
@@ -49,28 +54,33 @@ export function SideMenu() {
         <>
           <nav>
             <ul>
-              {sections.map((section, idx) => (
-                <li key={idx}>
-                  <img src={section.icon} alt="" />
-                  <Link to={section.rota} key={idx}>
-                    {section.name}
-                  </Link>
-                  <span
-                    key={idx}
-                    className={
-                      location.pathname.replace('/', '') === section.rota
-                        ? 'active-section'
-                        : ''
-                    }
-                  />
-                </li>
-              ))}
+              {sections.map(section =>
+                section.rota ? (
+                  <li key={uniqid()}>
+                    <img src={section.icon} alt="" />
+                    <Link to={section.rota} key={uniqid()}>
+                      {section.name}
+                    </Link>
+                    <span
+                      key={uniqid()}
+                      className={
+                        location.pathname.replace('/', '') === section.rota
+                          ? 'active-section'
+                          : ''
+                      }
+                    />
+                  </li>
+                ) : null
+              )}
             </ul>
           </nav>
           <Link
             to="/login"
             className="icon-exit-active"
-            onClick={() => localStorage.setItem('token', '')}
+            onClick={() => {
+              localStorage.setItem('token', '');
+              localStorage.setItem('user', '');
+            }}
           >
             <img src={sairIcon} alt="Sair" />
           </Link>
@@ -85,14 +95,14 @@ export function TopMenu() {
 
   return (
     <header className="top-menu">
-      {sections.map((section, idx) =>
+      {sections.map(section =>
         location.pathname.replace('/', '') === section.rota ? (
-          <h1 className="top-menu-name" key={idx}>
+          <h1 className="top-menu-name" key={uniqid()}>
             {section.name}
           </h1>
         ) : null
       )}
-      <h1 className="user">Usuario: Guilherme Coelho Vieira</h1>
+      <h1 className="user">Usuario: {localStorage.getItem('user')}</h1>
     </header>
   );
 }

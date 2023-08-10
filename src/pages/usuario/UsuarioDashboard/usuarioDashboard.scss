@@ -1,0 +1,115 @@
+
+.container-dashboard-usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+main {
+  height: 100%;
+  width: 100%;
+
+    .busca-content {
+      display: flex;
+      justify-content: space-between;
+      margin: auto;
+      height: 100px;
+      form {
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        gap: 2em;
+        margin-right: 20px;
+    
+        .button {
+          flex: 1;
+          width: 10px;
+          height: 40px;
+          margin-top: 10px;
+        }
+      }
+    }
+    
+    .listagem-usuario {
+      font-family: 'Poppins', sans-serif;
+      border-collapse: collapse;
+      width: 95%;
+      align-items: center;
+      margin: auto auto auto auto;
+    }
+
+    .listagem-usuario thead { 
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    
+    .listagem-usuario th,
+    .listagem-usuario td {
+      text-align: left;
+      padding: 8px;
+      
+    }
+    
+    .listagem-usuario th {
+      background-color: white;
+      border-bottom: 1px solid #ddd;
+      color: black;
+    }
+    
+    .listagem-usuario tr:hover {
+      background-color: #ddd;
+    }
+    
+    .listagem-usuario .listagem-usuario-nome {
+      width: 40%;
+    }
+    
+    .listagem-usuario .listagem-usuario-cpf {
+      width: 15%;
+    }
+    
+    .listagem-usuario .listagem-usuario-email {
+      width: 25%;
+    }
+    
+    .listagem-usuario .listagem-usuario-date {
+      width: 20%;
+    }
+    
+    .listagem-usuario {
+      .listagem-usuario-editar img {
+        width: 18px;
+        height: 18px;
+      }
+      button {
+        cursor: pointer;
+        align-self: center;
+      }
+    
+      img {
+        width: 20px;
+        height: 20px;
+        background: none;  
+      }
+    }
+    
+    .listagem-usuario button {
+      background: none;
+      border: none;
+    }
+    
+    .bottom {
+      display: flex;
+      justify-self: flex-end;
+      align-self: center; 
+      margin-top: 30px;
+    }
+
+    .bottom .button {
+      justify-content: flex-end;
+      margin: 0 0 0 auto;
+      margin-right: 20px;
+    }
+  }
+}

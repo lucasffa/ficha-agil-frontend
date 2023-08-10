@@ -10,7 +10,6 @@ export default function Copyright() {
     >
       {'Copyright © '}
       Itaka {new Date().getFullYear()}
-      {'.'}
     </Typography>
   );
 }

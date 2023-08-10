@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -19,6 +20,7 @@ import { toast } from 'react-toastify';
 type SignInProps = {
   urlBase: string;
 };
+
 type SignInForm = {
   Email: string;
   Senha: string;
@@ -33,7 +35,6 @@ export default function SignIn({ urlBase }: SignInProps) {
   });
 
   const navigate = useNavigate();
-  console.log(urlBase);
   function handleClickShowPassword() {
     setShowPassword(!showPassword);
   }
@@ -43,20 +44,15 @@ export default function SignIn({ urlBase }: SignInProps) {
   async function postSignIn(email: string, password: string) {
     try {
       await axios
-        .post(
-          'http://localhost:8000/login',
-          JSON.stringify({ email, password }),
-          {
-            headers: { 'Content-Type': 'application/json' },
-          }
-        )
+        .post(`${urlBase}/login`, JSON.stringify({ email, password }), {
+          headers: { 'Content-Type': 'application/json' },
+        })
         .then(res => {
           toast.success('Login feito com sucesso!');
-          localStorage.setItem('token', res.data);
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', res.data.user.name);
           PrivateRoutes(res.data.length > 1 ? true : false);
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 1000);
+          navigate('/dashboard');
         });
     } catch (err: any) {
       const error = err.response?.data;

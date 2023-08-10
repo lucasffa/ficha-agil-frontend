@@ -10,6 +10,8 @@ import Copyright from './Shared/Copyright';
 import { urlBase } from './services/Axios/axios';
 import PrivateRoutes from './components/utils/PrivateRoutes';
 import NotFound from './components/utils/NotFound';
+import UsuarioDashboard from './pages/usuario/UsuarioDashboard/UsuarioDashboard';
+import AdicionarUsuario from './pages/usuario/AdicionarUsuario/AdicionarUsuario';
 
 export default function Rotas() {
   const location = useLocation();
@@ -35,7 +37,18 @@ export default function Rotas() {
                 element={<CandidatoDashboard />}
                 key={uniqid()}
               />
+              <Route
+                path="/usuario"
+                element={<UsuarioDashboard urlBase={urlBase} />}
+                key={uniqid()}
+              />
             </Route>
+
+            <Route
+              path="/usuario/adicionar"
+              element={<AdicionarUsuario urlBase={urlBase} />}
+              key={uniqid()}
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
