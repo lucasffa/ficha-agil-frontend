@@ -12,6 +12,7 @@ import PrivateRoutes from './components/utils/PrivateRoutes';
 import NotFound from './components/utils/NotFound';
 import UsuarioDashboard from './pages/usuario/UsuarioDashboard/UsuarioDashboard';
 import AdicionarUsuario from './pages/usuario/AdicionarUsuario/AdicionarUsuario';
+import EditarUsuario from './pages/usuario/EditarUsuario/EditarUsuario';
 
 export default function Rotas() {
   const location = useLocation();
@@ -47,6 +48,11 @@ export default function Rotas() {
             <Route
               path="/usuario/adicionar"
               element={<AdicionarUsuario urlBase={urlBase} />}
+              key={uniqid()}
+            />
+            <Route
+              path="/usuario/editar"
+              element={<EditarUsuario urlBase={urlBase} />}
               key={uniqid()}
             />
             <Route path="*" element={<NotFound />} />

@@ -14,6 +14,7 @@ const sections = [
   { rota: 'candidato', name: 'Candidato', icon: userIcon },
   { rota: 'usuario', name: 'Usuário', icon: userIcon },
   { subRota: 'usuario/adicionar', name: 'Adicionar Usuário', icon: userIcon },
+  { subRota: 'usuario/editar', name: 'Edição de Usuário', icon: userIcon },
 ];
 
 export function SideMenu() {

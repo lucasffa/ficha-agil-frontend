@@ -50,7 +50,7 @@ export default function SignIn({ urlBase }: SignInProps) {
         .then(res => {
           toast.success('Login feito com sucesso!');
           localStorage.setItem('token', res.data.token);
-          localStorage.setItem('user', res.data.user.name);
+          localStorage.setItem('user', res.data.user.USUARIO);
           PrivateRoutes(res.data.length > 1 ? true : false);
           navigate('/dashboard');
         });
@@ -152,7 +152,7 @@ export default function SignIn({ urlBase }: SignInProps) {
             <ButtonLink
               className="lost-password"
               name="Esqueceu sua senha?"
-              path="#"
+              pathname="#"
             />
           </form>
         </div>

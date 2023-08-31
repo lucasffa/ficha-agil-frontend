@@ -1,6 +1,6 @@
 export function parseDate(data: string) {
   const regex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/;
-  return data.replace(regex, '$3/$2/$1');
+  return data?.replace(regex, '$3/$2/$1');
 }
 
 export function cpfMask(cpf: string) {

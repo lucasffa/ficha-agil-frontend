@@ -1,45 +1,74 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
 import trashIcon from '../../../assets/images/trash.svg';
-import { cpfMask, parseDate } from '../../../Shared/Mascaras';
+import { cpfMask } from '../../../Shared/Mascaras';
 import './usuarioDashboard.scss';
 import { Pagination } from '@mui/material';
 import { ButtonLink } from '../../../components/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 type UsuarioDashboardProps = {
   urlBase: string;
 };
 
 export interface UsuarioProps {
-  name: string;
-  email: string;
-  cpf_user: string;
-  created_at: string;
+  IDUSUARIO: number;
+  USUARIO: string;
+  EMAIL: string;
+  CPF: string;
+  ATIVO: string;
+  TELEFONE?: string;
+  //created_at: string;
 }
 
 export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
   const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [dadosUsuarioEditar, setDadosUsuarioEditar] = useState<UsuarioProps>();
+  const navigate = useNavigate();
+
+  const getUsuarios = useCallback(
+    async (page: number, take: number, status: string) => {
+      try {
+        await axios
+          .get(`${urlBase}/users`, {
+            params: {
+              page: page,
+              take: take,
+              ativo: status,
+            },
+          })
+          .then(res => {
+            setUsuarios(res.data.users);
+            setTotalPages(res.data.totalDeUsuarios);
+          });
+      } catch (err: any) {
+        const error = err.response?.data;
+        Object.keys(error).map(key => {
+          return toast.error(error[key]);
+        });
+      }
+    },
+    [urlBase]
+  );
 
   useEffect(() => {
-    getUsuarios(currentPage, 5);
-  }, [currentPage]);
+    getUsuarios(currentPage, 5, 'S');
+  }, [getUsuarios, currentPage]);
 
-  async function getUsuarios(page: number, take: number) {
+  async function getDadosUsuarioEditar(idUsuario: number) {
     try {
       await axios
-        .get(`${urlBase}/users`, {
+        .get(`${urlBase}/user`, {
           params: {
-            page: page,
-            take: take,
+            IDUSUARIO: idUsuario,
           },
         })
         .then(res => {
-          setUsuarios(res.data.users);
-          setTotalPages(res.data.totalDeUsuarios);
+          setDadosUsuarioEditar(res.data);
         });
     } catch (err: any) {
       const error = err.response?.data;
@@ -49,12 +78,39 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
     }
   }
 
+  useEffect(() => {
+    if (dadosUsuarioEditar !== undefined) {
+      navigate('/usuario/editar', {
+        state: {
+          ValuesRefDadosUsuario: dadosUsuarioEditar,
+        },
+      });
+    }
+  }, [dadosUsuarioEditar, navigate]);
+
+  function handleUsuariosInativos(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      getUsuarios(1, 5, 'N');
+    } else {
+      getUsuarios(1, 5, 'S');
+    }
+  }
+
   const numeroDePaginas = Math.ceil(totalPages / 5);
+
   return (
     <div className="container-dashboard-usuario">
       <main>
         <div className="busca-content">
           <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>Usuários</h1>
+          <div className="busca-inativos-content">
+            <input
+              type="checkbox"
+              id="busca-inativos"
+              onChange={e => handleUsuariosInativos(e)}
+            />
+            <label htmlFor="busca-inativos">Mostrar usuários inativos</label>
+          </div>
         </div>
         <div className="listagem-usuario">
           <table>
@@ -63,7 +119,6 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
                 <th className="listagem-usuario-nome">Nome</th>
                 <th className="listagem-usuario-cpf">CPF</th>
                 <th className="listagem-usuario-email">Email</th>
-                <th className="listagem-usuario-date">Data de Criação</th>
                 <th className="listagem-usuario-editar">Editar</th>
                 <th className="listagem-usuario-excluir">Excluir</th>
               </tr>
@@ -74,24 +129,26 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
                     return (
                       <tr key={index}>
                         <td className="listagem-usuario-nome">
-                          {usuario?.name}
+                          {usuario?.USUARIO}
                         </td>
                         <td
                           className="listagem-usuario-cpf"
                           style={{
-                            color: usuario?.cpf_user ? undefined : 'red',
+                            color: usuario?.CPF ? undefined : 'red',
                           }}
                         >
-                          {cpfMask(usuario?.cpf_user) ?? 'Não cadastrado'}
+                          {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
                         </td>
                         <td className="listagem-usuario-email">
-                          {usuario?.email ?? 'Não cadastrado'}
-                        </td>
-                        <td className="listagem-usuario-date">
-                          {parseDate(usuario?.created_at)}
+                          {usuario?.EMAIL ?? 'Não cadastrado'}
                         </td>
                         <td className="listagem-usuario-editar">
-                          <button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              getDadosUsuarioEditar(usuario.IDUSUARIO);
+                            }}
+                          >
                             <img src={editIcon} alt="Editar Candidato" />
                           </button>
                         </td>
@@ -116,7 +173,7 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
           />
           <ButtonLink
             className="button"
-            path="/usuario/adicionar"
+            pathname="/usuario/adicionar"
             name="Adicionar usuário"
           ></ButtonLink>
         </div>

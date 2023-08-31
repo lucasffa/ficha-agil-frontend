@@ -8,9 +8,11 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 type LinkProps = {
-  path: string;
-  name: string;
-  className: string;
+  pathname: string;
+  name?: string;
+  className?: string;
+  img?: any;
+  onClickFunction?: () => void;
 };
 
 export function Button({ isOutlined = false, ...props }: ButtonProps) {
@@ -19,10 +21,27 @@ export function Button({ isOutlined = false, ...props }: ButtonProps) {
   );
 }
 
-export function ButtonLink({ name, path, className }: LinkProps) {
+export function ButtonLink({
+  name,
+  pathname,
+  className,
+  img,
+  onClickFunction,
+}: LinkProps) {
+  const handleClick = () => {
+    if (onClickFunction) {
+      onClickFunction();
+    }
+  };
+
   return (
-    <Link className={className} to={path} style={{ textDecoration: 'none' }}>
-      {name}
+    <Link
+      className={className}
+      to={pathname}
+      style={{ textDecoration: 'none' }}
+      onClick={() => handleClick()}
+    >
+      {name || img}
     </Link>
   );
 }

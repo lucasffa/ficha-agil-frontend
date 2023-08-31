@@ -14,6 +14,14 @@ main {
       justify-content: space-between;
       margin: auto;
       height: 100px;
+      .busca-inativos-content{
+        align-self: center ;
+        padding-right: 30px;
+        input[type="checkbox"] {
+          margin: 5px;
+          accent-color: #a2b63d;     
+        }
+      }
       form {
         display: flex;
         justify-content: center;
@@ -71,10 +79,6 @@ main {
     
     .listagem-usuario .listagem-usuario-email {
       width: 25%;
-    }
-    
-    .listagem-usuario .listagem-usuario-date {
-      width: 20%;
     }
     
     .listagem-usuario {
