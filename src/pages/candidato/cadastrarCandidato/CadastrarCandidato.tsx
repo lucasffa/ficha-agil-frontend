@@ -275,7 +275,12 @@ export function CadastrarCandidato() {
       setValue={setValue}
       watch={watch}
     />,
-    <OutrasFichasGrupoFamiliar />,
+     <OutrasFichasGrupoFamiliar
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
     <DadosEducacionaisCandidato />,
     <BeneficiosPleiteados />,
     <CondicoesSaudeCandidato />,
