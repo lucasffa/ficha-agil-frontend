@@ -53,7 +53,11 @@ export interface Ficha {
     IdEstadoCivilPai: number;
     IdEstadoCivilMae: number;
   };
-  OutrasFichasGrupoFamiliar: {};
+    OutrasFichasGrupoFamiliar: {
+    IdFicha: number;
+    NomeCompleto: string;
+    IdParentesco: number;
+  };
   DadosEducacionaisCandidato: {
     Estuda: string;
     InstituicaoEnsino: string;
@@ -154,7 +158,11 @@ export function CadastrarCandidato() {
         IdEstadoCivilPai: undefined,
         IdEstadoCivilMae: undefined,
       },
-      OutrasFichasGrupoFamiliar: {},
+      OutrasFichasGrupoFamiliar: {
+        IdFicha: undefined,
+        NomeCompleto: '',
+        IdParentesco: undefined,
+      },
       DadosEducacionaisCandidato: {
         Estuda: '',
         InstituicaoEnsino: '',
