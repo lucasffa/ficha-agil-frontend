@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
@@ -8,10 +7,7 @@ import './usuarioDashboard.scss';
 import { Pagination } from '@mui/material';
 import { ButtonLink } from '../../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
-
-type UsuarioDashboardProps = {
-  urlBase: string;
-};
+import axiosInstance from '../../../components/utils/axios';
 
 export interface UsuarioProps {
   IDUSUARIO: number;
@@ -23,7 +19,7 @@ export interface UsuarioProps {
   //created_at: string;
 }
 
-export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
+export default function UsuarioDashboard() {
   const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -33,8 +29,8 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
   const getUsuarios = useCallback(
     async (page: number, take: number, status: string) => {
       try {
-        await axios
-          .get(`${urlBase}/users`, {
+        await axiosInstance
+          .get('/users', {
             params: {
               page: page,
               take: take,
@@ -52,7 +48,7 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
         });
       }
     },
-    [urlBase]
+    []
   );
 
   useEffect(() => {
@@ -61,8 +57,8 @@ export default function UsuarioDashboard({ urlBase }: UsuarioDashboardProps) {
 
   async function getDadosUsuarioEditar(idUsuario: number) {
     try {
-      await axios
-        .get(`${urlBase}/user`, {
+      await axiosInstance
+        .get(`/user`, {
           params: {
             IDUSUARIO: idUsuario,
           },

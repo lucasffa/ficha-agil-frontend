@@ -1,30 +1,78 @@
-import React from 'react';
-import { Candidatos } from '../../dataFake';
-import './candidatoDashboard.scss';
-import { Controller, useForm } from 'react-hook-form';
-import { Button } from '../../../components/Button/Button';
-import { TextField } from '@mui/material';
-
+//import axios from 'axios';
+import { useCallback, useEffect, useState } from 'react';
+//import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
 import trashIcon from '../../../assets/images/trash.svg';
+import { cpfMask } from '../../../Shared/Mascaras';
+import './candidatoDashboard.scss';
+import { Pagination } from '@mui/material';
+import { ButtonLink } from '../../../components/Button/Button';
+//import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../components/utils/axios';
+import { toast } from 'react-toastify';
 
-// type CandidatoDashboardProps = {
-//   candidatos: CandidatosProps;
-// }
+type UsuarioDashboardProps = {
+  urlBase?: string;
+};
 
-interface CandidatoFilterProps {
-  Nome: string;
-  Cpf: string;
-  //Status: string;
+export interface UsuarioProps {
+  IDUSUARIO: number;
+  USUARIO: string;
+  EMAIL: string;
+  CPF: string;
+  ATIVO: string;
+  TELEFONE?: string;
+  //created_at: string;
 }
+type DashboardCandidatoProps = {
+  NOMECOMPLETO: string;
+  CPF: string;
+  EMAIL: string;
+};
 
-export default function CandidatoDashboard() {
-  const { control, handleSubmit } = useForm<CandidatoFilterProps>({
-    mode: 'onBlur',
-    defaultValues: {
-      Cpf: '',
+export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [candidato, setCandidato] = useState<DashboardCandidatoProps[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const getFichas = useCallback(
+    async (page: number, take: number, status: string) => {
+      try {
+        await axiosInstance
+          .get('/fichas', {
+            params: {
+              page: page,
+              take: take,
+              ativo: status,
+            },
+          })
+          .then(res => {
+            setCandidato(res.data.fichasCandidatos);
+            setTotalPages(res.data.totalDefichasCandidatos);
+          });
+      } catch (err: any) {
+        const error = err.response?.data;
+        Object.keys(error).map(key => {
+          return toast.error(error[key]);
+        });
+      }
     },
-  });
+    []
+  );
+
+  useEffect(() => {
+    getFichas(currentPage, 5, 'S');
+  }, [getFichas, currentPage]);
+
+  function handleUsuariosInativos(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      //getFichas(1, 5, 'N');
+    } else {
+      //getFichas(1, 5, 'S');
+    }
+  }
+
+  const numeroDePaginas = Math.ceil(totalPages / 5);
 
   return (
     <div className="container-dashboard-candidato">
@@ -33,72 +81,79 @@ export default function CandidatoDashboard() {
           <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>
             Candidatos
           </h1>
-          <form
-            onSubmit={handleSubmit((data, event) => {
-              event?.preventDefault();
-
-              if (data) {
-                console.log(data);
-              }
-            })}
-          >
-            <Controller
-              control={control}
-              name="Cpf"
-              render={({ field }) => {
-                return (
-                  <TextField
-                    id="outlined-basic"
-                    label="Cpf do candidato"
-                    color="primary"
-                    variant="outlined"
-                    type="text"
-                    {...field}
-                  />
-                );
-              }}
+          <div className="busca-inativos-content">
+            <input
+              type="checkbox"
+              id="busca-inativos"
+              onChange={e => handleUsuariosInativos(e)}
             />
-
-            <Button className="button">Filtrar</Button>
-          </form>
+            <label htmlFor="busca-inativos">Mostrar candidatos inativos</label>
+          </div>
         </div>
-        <div className="listagem-candidatos">
+        <div className="listagem-candidato">
           <table>
             <thead>
               <tr>
-                <th className="listagem-candidatos-nome">Nome</th>
-                <th className="listagem-candidatos-cpf">CPF</th>
-                <th className="listagem-candidatos-idade">Idade</th>
-                <th className="listagem-candidatos-idade">Editar</th>
-                <th className="listagem-candidatos-excluir">Excluir</th>
+                <th className="listagem-candidato-nome">Nome</th>
+                <th className="listagem-candidato-cpf">CPF</th>
+                <th className="listagem-candidato-email">Email</th>
+                <th className="listagem-candidato-editar">Editar</th>
+                <th className="listagem-candidato-excluir">Excluir</th>
               </tr>
             </thead>
             <tbody>
-              {Candidatos.map((candidato, index) => {
-                return (
-                  <tr key={index}>
-                    <td className="listagem-candidatos-nome">
-                      {candidato.nome}
-                    </td>
-                    <td className="listagem-candidatos-cpf">{candidato.cpf}</td>
-                    <td className="listagem-candidatos-idade">
-                      {candidato.idade}
-                    </td>
-                    <td className="listagem-candidatos-editar">
-                      <button>
-                        <img src={editIcon} alt="Editar Candidato" />
-                      </button>
-                    </td>
-                    <td className="listagem-candidatos-excluir">
-                      <button>
-                        <img src={trashIcon} alt="Excluir Candidato" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {candidato?.length > 0
+                ? candidato?.map((usuario, index) => {
+                    return (
+                      <tr key={index}>
+                        <td className="listagem-candidato-nome">
+                          {usuario?.NOMECOMPLETO}
+                        </td>
+                        <td
+                          className="listagem-candidato-cpf"
+                          style={{
+                            color: usuario?.CPF ? undefined : 'red',
+                          }}
+                        >
+                          {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
+                        </td>
+                        <td className="listagem-candidato-email">
+                          {usuario?.EMAIL ?? 'Não cadastrado'}
+                        </td>
+                        <td className="listagem-candidato-editar">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              //getDadosUsuarioEditar(usuario.IDUSUARIO);
+                            }}
+                          >
+                            <img src={editIcon} alt="Editar Candidato" />
+                          </button>
+                        </td>
+                        <td className="listagem-candidato-excluir">
+                          <button>
+                            <img src={trashIcon} alt="Excluir Candidato" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                : null}
             </tbody>
           </table>
+        </div>
+        <div className="bottom">
+          <Pagination
+            count={numeroDePaginas}
+            color="primary"
+            page={currentPage}
+            onChange={(event, value) => setCurrentPage(value)}
+          />
+          <ButtonLink
+            className="button"
+            pathname="/candidato/adicionar"
+            name="Cadastrar nova ficha"
+          ></ButtonLink>
         </div>
       </main>
     </div>

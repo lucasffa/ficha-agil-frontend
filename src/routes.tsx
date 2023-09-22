@@ -7,12 +7,12 @@ import './styles/global.scss';
 import CandidatoDashboard from './pages/candidato/candidatoDashboard/CandidatoDashboard';
 import uniqid from 'uniqid';
 import Copyright from './Shared/Copyright';
-import { urlBase } from './services/Axios/axios';
 import PrivateRoutes from './components/utils/PrivateRoutes';
 import NotFound from './components/utils/NotFound';
 import UsuarioDashboard from './pages/usuario/UsuarioDashboard/UsuarioDashboard';
 import AdicionarUsuario from './pages/usuario/AdicionarUsuario/AdicionarUsuario';
 import EditarUsuario from './pages/usuario/EditarUsuario/EditarUsuario';
+import { CadastrarCandidato } from './pages/candidato/cadastrarCandidato/CadastrarCandidato';
 
 export default function Rotas() {
   const location = useLocation();
@@ -26,36 +26,40 @@ export default function Rotas() {
         <main className={location.pathname === '/login' ? '' : 'areas'}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} key={uniqid()} />
-            <Route
-              path="/login"
-              element={<SignIn urlBase={urlBase} />}
-              key={uniqid()}
-            />
+            <Route path="/login" element={<SignIn />} key={uniqid()} />
             <Route element={PrivateRoutes(validateToken)}>
+              {/* NotFound rota */}
+              <Route path="*" element={<NotFound />} />
+              {/* Dashboard rota */}
               <Route path="/dashboard" element={<Dashboard />} key={uniqid()} />
+              {/* Candidato/ficha rotas */}
               <Route
                 path="/candidato"
                 element={<CandidatoDashboard />}
                 key={uniqid()}
               />
               <Route
+                path="/candidato/adicionar"
+                element={<CadastrarCandidato />}
+                key={uniqid()}
+              />
+              {/* Usuário rotas */}
+              <Route
                 path="/usuario"
-                element={<UsuarioDashboard urlBase={urlBase} />}
+                element={<UsuarioDashboard />}
+                key={uniqid()}
+              />
+              <Route
+                path="/usuario/adicionar"
+                element={<AdicionarUsuario />}
+                key={uniqid()}
+              />
+              <Route
+                path="/usuario/editar"
+                element={<EditarUsuario />}
                 key={uniqid()}
               />
             </Route>
-
-            <Route
-              path="/usuario/adicionar"
-              element={<AdicionarUsuario urlBase={urlBase} />}
-              key={uniqid()}
-            />
-            <Route
-              path="/usuario/editar"
-              element={<EditarUsuario urlBase={urlBase} />}
-              key={uniqid()}
-            />
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Copyright />

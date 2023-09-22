@@ -10,11 +10,26 @@ import { useState } from 'react';
 import uniqid from 'uniqid';
 
 const sections = [
-  { rota: 'dashboard', name: 'Dashboard', icon: dashboardIcon },
-  { rota: 'candidato', name: 'Candidato', icon: userIcon },
-  { rota: 'usuario', name: 'Usuário', icon: userIcon },
-  { subRota: 'usuario/adicionar', name: 'Adicionar Usuário', icon: userIcon },
-  { subRota: 'usuario/editar', name: 'Edição de Usuário', icon: userIcon },
+  {
+    rota: 'dashboard',
+    name: 'Dashboard',
+    icon: dashboardIcon,
+    isSubRota: false,
+  },
+  { rota: 'candidato', name: 'Candidato', icon: userIcon, isSubRota: false },
+  { rota: 'usuario', name: 'Usuário', icon: userIcon, isSubRota: false },
+  {
+    rota: 'usuario/adicionar',
+    name: 'Adicionar Usuário',
+    icon: userIcon,
+    isSubRota: true,
+  },
+  {
+    rota: 'usuario/editar',
+    name: 'Edição de Usuário',
+    icon: userIcon,
+    isSubRota: true,
+  },
 ];
 
 export function SideMenu() {
@@ -56,7 +71,7 @@ export function SideMenu() {
           <nav>
             <ul>
               {sections.map(section =>
-                section.rota ? (
+                section.rota && !section.isSubRota ? (
                   <li key={uniqid()}>
                     <img src={section.icon} alt="" />
                     <Link to={section.rota} key={uniqid()}>

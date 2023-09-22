@@ -8,7 +8,6 @@ import {
   TextField,
 } from '@mui/material';
 import { Button } from '../../../components/Button/Button';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 import './editarUsuario.scss';
@@ -18,22 +17,15 @@ import {
 } from '../../../Shared/InputPadraoForm';
 import { useState } from 'react';
 import { UsuarioProps } from '../UsuarioDashboard/UsuarioDashboard';
+import axiosInstance from '../../../components/utils/axios';
 
-type EditarUsuarioProps = {
-  urlBase: string;
-};
-
-export default function EditarUsuario({ urlBase }: EditarUsuarioProps) {
+export default function EditarUsuario() {
   const location = useLocation();
   const ValuesRefDadosUsuario: UsuarioProps =
     location.state?.ValuesRefDadosUsuario;
 
   const [cpf, setCpf] = useState(ValuesRefDadosUsuario?.CPF);
   const [telefone, setTelefone] = useState('');
-
-  // function removeMask(value: string) {
-  //   return value?.replace(/[.-\s]/g, '');
-  // }
 
   const {
     control,
@@ -60,9 +52,9 @@ export default function EditarUsuario({ urlBase }: EditarUsuarioProps) {
     TELEFONE?: string
   ) {
     try {
-      await axios
+      await axiosInstance
         .put(
-          `${urlBase}/updateUser`,
+          `/updateUser`,
           JSON.stringify({
             USUARIO,
             CPF,

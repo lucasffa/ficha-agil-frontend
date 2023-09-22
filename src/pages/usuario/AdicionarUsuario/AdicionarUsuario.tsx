@@ -1,7 +1,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { Grid, IconButton, InputAdornment, TextField } from '@mui/material';
 import { Button } from '../../../components/Button/Button';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './adicionarUsuario.scss';
@@ -12,10 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputErrors from '../../../components/Errors/Errors';
-
-type AdicionarUsuarioProps = {
-  urlBase: string;
-};
+import axiosInstance from '../../../components/utils/axios';
 
 export interface UsuarioProps {
   name: string;
@@ -29,7 +25,7 @@ export interface UsuarioProps {
   status?: string;
 }
 
-export default function AdicionarUsuario({ urlBase }: AdicionarUsuarioProps) {
+export default function AdicionarUsuario() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -95,9 +91,9 @@ export default function AdicionarUsuario({ urlBase }: AdicionarUsuarioProps) {
     password: string
   ) {
     try {
-      await axios
+      await axiosInstance
         .post(
-          `${urlBase}/createUser`,
+          `/createUser`,
           JSON.stringify({
             name,
             cpf,

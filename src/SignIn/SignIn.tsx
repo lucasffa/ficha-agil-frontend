@@ -7,7 +7,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import * as Yup from 'yup';
-import axios from 'axios';
 
 import itakaLogo from '../assets/images/logo-itaka.png';
 import InputErrors from '../components/Errors/Errors';
@@ -16,17 +15,14 @@ import PrivateRoutes from '../components/utils/PrivateRoutes';
 
 import './signIn.scss';
 import { toast } from 'react-toastify';
-
-type SignInProps = {
-  urlBase: string;
-};
+import axiosInstance from '../components/utils/axios';
 
 type SignInForm = {
   Email: string;
   Senha: string;
 };
 
-export default function SignIn({ urlBase }: SignInProps) {
+export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = Yup.object().shape({
@@ -43,8 +39,8 @@ export default function SignIn({ urlBase }: SignInProps) {
 
   async function postSignIn(email: string, password: string) {
     try {
-      await axios
-        .post(`${urlBase}/login`, JSON.stringify({ email, password }), {
+      await axiosInstance
+        .post(`/login`, JSON.stringify({ email, password }), {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(res => {
