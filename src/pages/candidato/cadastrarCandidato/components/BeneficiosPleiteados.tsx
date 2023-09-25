@@ -31,7 +31,7 @@ interface BeneficiosPleiteadosProps {
 //4. BENEFÍCIOS PLEITEADOS
 export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
   const { control } = props;
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'BeneficiosPleiteados',
   });
@@ -47,6 +47,7 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
           getValues={props.getValues}
           setValue={props.setValue}
           watch={props.watch}
+          remove={remove}
         />
       ))}
       <Grid container spacing={1}>
@@ -72,19 +73,10 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
 }
 
 function BeneficiosPleiteadosComponent(
-  props: BeneficiosPleiteadosProps & { index: number; field: any }
+  props: BeneficiosPleiteadosProps & { index: number; field: any; remove: any }
 ) {
-  const { index, control } = props;
-
-  const { remove } = useFieldArray({
-    control,
-    name: `BeneficiosPleiteados`,
-  });
-
-  const handleRemoveClick = () => {
-    remove(index);
-  };
-
+  const { index, control, remove } = props;
+  
   return (
     <React.Fragment>
       <Grid container spacing={1}>
@@ -150,7 +142,7 @@ function BeneficiosPleiteadosComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() => handleRemoveClick}
+            onClick={() =>  remove(index)}
           >
             <DeleteIcon color="inherit" />
           </IconButton>
