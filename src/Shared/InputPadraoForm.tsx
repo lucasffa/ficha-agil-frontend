@@ -85,7 +85,7 @@ export function InputMaskCpf(props: PropsInput) {
     <TextField
       {...props}
       id="outlined-basic 4"
-      label="Cpf"
+      label={props.name ?? 'Cpf'}
       color="primary"
       variant="outlined"
       type="text"

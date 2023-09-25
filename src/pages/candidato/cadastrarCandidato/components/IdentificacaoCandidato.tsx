@@ -615,13 +615,15 @@ export function IdentificacaoCandidatoPaiMae(
             name="IdentificacaoCandidato.CpfPai"
             render={({ field }) => {
               return (
-                <TextField
-                  fullWidth
-                  id="outlined-basic 10"
-                  label="Cpf Pai"
-                  color="primary"
-                  variant="outlined"
-                  {...field}
+                <InputMaskCpf
+                  name="Cpf Pai"
+                  value={props.getValues('IdentificacaoCandidato.CpfPai')}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    props.setValue(
+                      'IdentificacaoCandidato.CpfPai',
+                      event.target.value
+                    );
+                  }}
                 />
               );
             }}
@@ -651,13 +653,15 @@ export function IdentificacaoCandidatoPaiMae(
             name="IdentificacaoCandidato.CpfMae"
             render={({ field }) => {
               return (
-                <TextField
-                  fullWidth
-                  id="outlined-basic 12"
-                  label="Cpf Mãe"
-                  color="primary"
-                  variant="outlined"
-                  {...field}
+                <InputMaskCpf
+                  name="Cpf Mãe"
+                  value={props.getValues('IdentificacaoCandidato.CpfMae')}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    props.setValue(
+                      'IdentificacaoCandidato.CpfMae',
+                      event.target.value
+                    );
+                  }}
                 />
               );
             }}
