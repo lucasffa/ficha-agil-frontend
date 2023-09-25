@@ -38,7 +38,7 @@ export default function OutrasFichasGrupoFamiliar(
   props: OutrasFichasGrupoFamiliarProps
 ) {
   const { control } = props;
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'OutrasFichasGrupoFamiliar',
   });
@@ -55,6 +55,7 @@ export default function OutrasFichasGrupoFamiliar(
           getValues={props.getValues}
           setValue={props.setValue}
           watch={props.watch}
+          remove={remove}
         />
       ))}
       <Grid container spacing={1}>
@@ -80,19 +81,10 @@ export default function OutrasFichasGrupoFamiliar(
 }
 
 function OutrasFichasGrupoFamiliarComponent(
-  props: OutrasFichasGrupoFamiliarProps & { index: number; field: any }
+  props: OutrasFichasGrupoFamiliarProps & { index: number; field: any; remove: any; }
 ) {
   const [parentesco, setParentesco] = useState<Parentesco[]>();
   const { index, control } = props;
-
-  const { remove } = useFieldArray({
-    control,
-    name: `OutrasFichasGrupoFamiliar`,
-  });
-
-  const handleRemoveClick = () => {
-    remove(index);
-  };
 
   const getParentesco = useCallback(async () => {
     try {
@@ -185,7 +177,7 @@ function OutrasFichasGrupoFamiliarComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() => handleRemoveClick}
+            onClick={() => remove(index)}
           >
             <DeleteIcon color="inherit" />
           </IconButton>
