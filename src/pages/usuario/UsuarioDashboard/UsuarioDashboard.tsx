@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
-import trashIcon from '../../../assets/images/trash.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './usuarioDashboard.scss';
 import { Pagination } from '@mui/material';
@@ -116,7 +115,6 @@ export default function UsuarioDashboard() {
                 <th className="listagem-usuario-cpf">CPF</th>
                 <th className="listagem-usuario-email">Email</th>
                 <th className="listagem-usuario-editar">Editar</th>
-                <th className="listagem-usuario-excluir">Excluir</th>
               </tr>
             </thead>
             <tbody>
@@ -146,11 +144,6 @@ export default function UsuarioDashboard() {
                             }}
                           >
                             <img src={editIcon} alt="Editar Candidato" />
-                          </button>
-                        </td>
-                        <td className="listagem-usuario-excluir">
-                          <button>
-                            <img src={trashIcon} alt="Excluir Candidato" />
                           </button>
                         </td>
                       </tr>
