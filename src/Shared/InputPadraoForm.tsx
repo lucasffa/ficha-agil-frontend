@@ -29,7 +29,7 @@ export function InputPadraoForm({
   );
 }
 
-type CpfProps = {
+type PropsInput = {
   value: string;
   name?: string;
   onChange: Function;
@@ -37,7 +37,7 @@ type CpfProps = {
   error?: {};
 };
 
-export function InputMaskCpf(props: CpfProps) {
+export function InputMaskCpf(props: PropsInput) {
   const CPF_MASK = '999.999.999-99';
   const MAX_LENGTH = 11;
 
@@ -98,7 +98,7 @@ export function InputMaskCpf(props: CpfProps) {
   );
 }
 
-export function InputMaskTelefone(props: CpfProps) {
+export function InputMaskTelefone(props: PropsInput) {
   const TELEFONE_MASK = '(99)99999-9999';
   const MAX_LENGTH = 11;
 
@@ -146,7 +146,7 @@ export function InputMaskTelefone(props: CpfProps) {
     <TextField
       {...props}
       id="outlined-basic 5"
-      label="Telefone"
+      label={props.name ?? 'Telefone'}
       color="primary"
       variant="outlined"
       type="text"
@@ -158,7 +158,7 @@ export function InputMaskTelefone(props: CpfProps) {
     />
   );
 }
-export function InputMaskTelefoneResidencial(props: CpfProps) {
+export function InputMaskTelefoneResidencial(props: PropsInput) {
   const TELEFONE_MASK = '(99)9999-9999';
   const MAX_LENGTH = 10;
 
@@ -218,7 +218,7 @@ export function InputMaskTelefoneResidencial(props: CpfProps) {
     />
   );
 }
-export function InputMaskTelefoneRecado(props: CpfProps) {
+export function InputMaskTelefoneRecado(props: PropsInput) {
   const TELEFONE_MASK = '(99)9999-9999';
   const MAX_LENGTH = 10;
 
@@ -279,7 +279,7 @@ export function InputMaskTelefoneRecado(props: CpfProps) {
   );
 }
 
-export function InputMaskCep(props: CpfProps) {
+export function InputMaskCep(props: PropsInput) {
   const CEP_MASK = '99999-999';
   const MAX_LENGTH = 8;
 

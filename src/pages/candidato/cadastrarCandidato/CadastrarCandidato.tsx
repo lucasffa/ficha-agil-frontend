@@ -53,11 +53,11 @@ export interface Ficha {
     IdEstadoCivilPai: number;
     IdEstadoCivilMae: number;
   };
-    OutrasFichasGrupoFamiliar: {
-    IdFicha: number;
+  OutrasFichasGrupoFamiliar: {
+    IdFicha: number | undefined;
     NomeCompleto: string;
-    IdParentesco: number;
-  };
+    IdParentesco: number | undefined;
+  }[];
   DadosEducacionaisCandidato: {
     Estuda: string;
     InstituicaoEnsino: string;
@@ -70,7 +70,11 @@ export interface Ficha {
     IdEscolaridade: number;
     OutrosCursosRealizados: string;
   };
-  BeneficiosPleiteados: {};
+  BeneficiosPleiteados: {
+    NomeCursoPretendido: string;
+    Turno: string;
+    Horario: string;
+  }[];
   CondicoesSaudeCandidato: {
     NomeContatoEmergencia: string;
     TelefoneEmergencia1: string;
@@ -158,11 +162,13 @@ export function CadastrarCandidato() {
         IdEstadoCivilPai: undefined,
         IdEstadoCivilMae: undefined,
       },
-      OutrasFichasGrupoFamiliar: {
-        IdFicha: undefined,
-        NomeCompleto: '',
-        IdParentesco: undefined,
-      },
+      OutrasFichasGrupoFamiliar: [
+        {
+          IdFicha: undefined,
+          NomeCompleto: '',
+          IdParentesco: undefined,
+        },
+      ],
       DadosEducacionaisCandidato: {
         Estuda: '',
         InstituicaoEnsino: '',
@@ -175,7 +181,13 @@ export function CadastrarCandidato() {
         IdEscolaridade: undefined,
         OutrosCursosRealizados: '',
       },
-      BeneficiosPleiteados: {},
+      BeneficiosPleiteados: [
+        {
+          NomeCursoPretendido: '',
+          Turno: '',
+          Horario: '',
+        },
+      ],
       CondicoesSaudeCandidato: {
         NomeContatoEmergencia: '',
         TelefoneEmergencia1: '',
@@ -240,15 +252,15 @@ export function CadastrarCandidato() {
       'DOCIDENTIDADE',
       ficha.IdentificacaoCandidato.DocIdentidade
     );
-    dataForm.append(
-      'DATANASCIMENTO',
-      ficha.IdentificacaoCandidato.DataNascimento?.toJSON()
-    );
-    dataForm.append('NATURALIDADE', ficha.IdentificacaoCandidato.Naturalidade);
-    dataForm.append(
-      'IDRACAETNIA',
-      ficha.IdentificacaoCandidato.IdRacaEtnia.toString
-    );
+    // dataForm.append(
+    //   'DATANASCIMENTO',
+    //   ficha.IdentificacaoCandidato.DataNascimento?.toJSON()
+    // );
+    // dataForm.append('NATURALIDADE', ficha.IdentificacaoCandidato.Naturalidade);
+    // dataForm.append(
+    //   'IDRACAETNIA',
+    //   ficha.IdentificacaoCandidato.IdRacaEtnia.toString
+    // );
     dataForm.append(
       'IDSITTRABALHISTA',
       ficha.IdentificacaoCandidato.IdSitTrabalhista.toString()
@@ -275,17 +287,42 @@ export function CadastrarCandidato() {
       setValue={setValue}
       watch={watch}
     />,
-     <OutrasFichasGrupoFamiliar
+    <OutrasFichasGrupoFamiliar
       control={control}
       getValues={getValues}
       setValue={setValue}
       watch={watch}
     />,
-    <DadosEducacionaisCandidato />,
-    <BeneficiosPleiteados />,
-    <CondicoesSaudeCandidato />,
-    <CondicoesSociaisESaudeFamilia />,
-    <CondicoesMoradia />,
+    <DadosEducacionaisCandidato
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
+    <BeneficiosPleiteados
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
+    <CondicoesSaudeCandidato
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
+    <CondicoesSociaisESaudeFamilia
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
+    <CondicoesMoradia
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+    />,
     <ComposicaoFamiliar />,
     <Despesas />,
     <OutrosGastos />,

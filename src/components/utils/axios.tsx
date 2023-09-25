@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000',
@@ -8,16 +9,56 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+//Interceptor que verificar o erro, se for erro do token vencido, ele redireciona para a tela de login com aviso.
+
 axiosInstance.interceptors.response.use(
-  response => response, // Não faça nada se a resposta for bem-sucedida
+  response => {
+    return response;
+  },
   error => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response.data.message === 'Failed to authenticate token' &&
+      error.response.status === 401
+    ) {
+      const countdown = 5;
+
       localStorage.removeItem('token');
-      // Se a resposta for status 401, limpe o token do localStorage
-      // Você pode redirecionar o usuário para a página de login aqui, se desejar
+      localStorage.removeItem('user');
+
+      const toastId = toast.info(
+        `Sua sessão expirou. Redirecionando para o login em ${countdown} segundos...`,
+        {
+          autoClose: false,
+        }
+      );
+
+      const updateCountdown = (count: number) => {
+        if (count === 0) {
+          toast.dismiss(toastId);
+          window.location.href = '/login';
+          return;
+        }
+
+        toast.update(toastId, {
+          render: `Sua sessão expirou. Redirecionando para o login em ${count} segundos...`,
+        });
+
+        setTimeout(() => {
+          updateCountdown(count - 1);
+        }, 1000);
+      };
+
+      updateCountdown(countdown);
     }
     return Promise.reject(error);
   }
 );
-
 export default axiosInstance;

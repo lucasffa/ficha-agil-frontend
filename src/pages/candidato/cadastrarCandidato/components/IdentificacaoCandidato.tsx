@@ -128,7 +128,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
   return (
     <React.Fragment>
       <div className="cabecalho-form">1. IDENTIFICAÇÃO DO CANDIDATO</div>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           <Controller
             control={props.control}
@@ -435,6 +435,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   label="Número"
                   color="primary"
                   variant="outlined"
+                  type="number"
                   {...field}
                 />
               );
@@ -589,7 +590,7 @@ export function IdentificacaoCandidatoPaiMae(
       <div className="cabecalho-form">
         1. IDENTIFICAÇÃO DO CANDIDATO (CONTINUAÇÃO)
       </div>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item xs={9}>
           <Controller
             control={props.control}

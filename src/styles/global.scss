@@ -16,7 +16,7 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: 100vw;
+  //width: 100vw;
   height: 100vh;
 }
 
@@ -27,6 +27,7 @@ textarea {
   justify-content: flex-start;
   align-items: center;
   background-color: #eef1f5;
+  overflow-y: hidden;
 }
 
 .areas {
@@ -36,5 +37,6 @@ textarea {
   margin-bottom: 30px;
   background-color: #FFF;
   border-radius: 25px;
+  overflow-y: auto; 
 }
 

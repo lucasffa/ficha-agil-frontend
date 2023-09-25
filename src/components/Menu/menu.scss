@@ -1,12 +1,15 @@
 .side-menu {
+  top: 0;
+  left: 0;
   background-color: #FFF;
   align-items: center;
   padding-top: 40px;
   display: flex;
   flex-direction: column;
-	height: auto;
   width: 200px;
+  height: 100vh; /* Altura fixa em relação à altura da janela do navegador */
 }
+
 
 .side-menu ul {
   list-style-type: none;
