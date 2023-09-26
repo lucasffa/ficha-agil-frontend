@@ -6,7 +6,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import {
   Controller,
   Control,
@@ -14,41 +14,19 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { Ficha } from '../CadastrarCandidato';
-import { toast } from 'react-toastify';
-import axiosInstance from '../../../../components/utils/axios';
+import { CoberturaMoradia, Ficha, Parentesco } from '../CadastrarCandidato';
 
 interface CondicoesMoradiaProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
+  coberturaMoradia: CoberturaMoradia[] | undefined;
+  parentesco: Parentesco[] | undefined;
 }
-type CoberturaMoradia = {
-  DESCRICAO: string;
-  IDCOBERTURAMORADIA: number;
-};
+
 //7. CONDIÇÕES DE MORADIA
 export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
-  const [coberturaMoradia, setCoberturaMoradia] =
-    useState<CoberturaMoradia[]>();
-  const getCoberturaMoradia = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/coberturamoradia`).then(res => {
-        setCoberturaMoradia(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getCoberturaMoradia();
-  }, [getCoberturaMoradia]);
-
   return (
     <React.Fragment>
       <div className="cabecalho-form">7. CONDIÇÕES DE MORADIA</div>
@@ -118,13 +96,8 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Tipo da cobertura da moradia"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'CondicoesMoradia.IdCoberturaMoradia'
-                      ]
-                    }
                   >
-                    {coberturaMoradia?.map((item, index) => {
+                    {props?.coberturaMoradia?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDCOBERTURAMORADIA}>
                           {item.DESCRICAO}
@@ -205,6 +178,116 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
             )}
           />
         </Grid>
+        <Grid
+          item
+          xs={
+            props.watch('CondicoesMoradia.TipoImovelResidencia') !== '' &&
+            props.watch('CondicoesMoradia.TipoImovelResidencia') !== 'P'
+              ? 6
+              : 12
+          }
+        >
+          <Controller
+            control={props.control}
+            name="CondicoesMoradia.TipoImovelResidencia"
+            render={({ field }) => {
+              return (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    O imóvel em que o candidato reside é
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Situação Trabalhista"
+                    {...field}
+                  >
+                    return (<MenuItem value="P">Próprio</MenuItem>
+                    <MenuItem value="A">Alugado</MenuItem>
+                    <MenuItem value="C">Cedido</MenuItem>
+                    <MenuItem value="F">Financiado</MenuItem>
+                    );
+                  </Select>
+                </FormControl>
+              );
+            }}
+          />
+        </Grid>
+        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'A' ? (
+          <Grid item xs={6}>
+            <Controller
+              control={props.control}
+              name="CondicoesMoradia.ValorAluguel"
+              render={({ field }) => {
+                return (
+                  <FormControl fullWidth>
+                    <TextField
+                      fullWidth
+                      id="outlined-basic 3"
+                      label="Valor do Aluguel"
+                      color="primary"
+                      variant="outlined"
+                      {...field}
+                    />
+                  </FormControl>
+                );
+              }}
+            />
+          </Grid>
+        ) : null}
+        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'C' ? (
+          <Grid item xs={6}>
+            <Controller
+              control={props.control}
+              name="CondicoesMoradia.IdParentescoProprietario"
+              render={({ field }) => {
+                return (
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Parentesco com o proprietário
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Parentesco com o proprietário"
+                      {...field}
+                    >
+                      {props?.parentesco?.map((item, index) => {
+                        return (
+                          <MenuItem key={index} value={item.IDPARENTESCO}>
+                            {item.DESCRICAO}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                );
+              }}
+            />
+          </Grid>
+        ) : null}
+        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'F' ? (
+          <Grid item xs={6}>
+            <Controller
+              control={props.control}
+              name="CondicoesMoradia.PrestacaoFinanciamento"
+              render={({ field }) => {
+                return (
+                  <FormControl fullWidth>
+                    <TextField
+                      fullWidth
+                      id="outlined-basic 3"
+                      label="Valor da prestação"
+                      color="primary"
+                      variant="outlined"
+                      {...field}
+                    />
+                  </FormControl>
+                );
+              }}
+            />
+          </Grid>
+        ) : null}
       </Grid>
     </React.Fragment>
   );

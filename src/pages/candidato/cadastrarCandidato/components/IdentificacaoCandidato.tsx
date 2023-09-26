@@ -13,7 +13,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import {
   InputMaskCep,
   InputMaskCpf,
@@ -21,90 +21,30 @@ import {
   InputMaskTelefoneRecado,
   InputMaskTelefoneResidencial,
 } from '../../../../Shared/InputPadraoForm';
-import { Ficha } from '../CadastrarCandidato';
-import { toast } from 'react-toastify';
+import {
+  EstadoCivil,
+  Ficha,
+  Parentesco,
+  RacaEtnia,
+  SituacaoTrabalhista,
+} from '../CadastrarCandidato';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import axiosInstance from '../../../../components/utils/axios';
 
 interface IdentificacaoCandidatoProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
+  situacaoTrabalhista: SituacaoTrabalhista[] | undefined;
+  racaEtnia: RacaEtnia[] | undefined;
+  estadoCivil: EstadoCivil[] | undefined;
+  parentesco: Parentesco[] | undefined;
 }
-
-type SituacaoTrabalhista = {
-  IDSITTRABALHISTA: number;
-  DESCRICAO: string;
-  ATIVO: string;
-};
-
-type RacaEtnia = {
-  IDRACAETNIA: number;
-  DESCRICAO: string;
-  ATIVO: string;
-};
-
-type EstadoCivil = {
-  IDESTADOCIVIL: number;
-  DESCRICAO: string;
-  ATIVO: string;
-};
 
 //1. IDENTIFICAÇÃO DO CANDIDATO
 export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
-  const [situacaoTrabalhista, setSituacaoTrabalhista] =
-    useState<SituacaoTrabalhista[]>();
-  const [racaEtnia, setRacaEtnia] = useState<RacaEtnia[]>();
-  const [estadoCivil, setEstadoCivil] = useState<EstadoCivil[]>();
-
-  const getRacaEtnia = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/racaEtnia`).then(res => {
-        setRacaEtnia(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  const getSituacaoTrabalhista = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/situacaoTrabalhista`).then(res => {
-        setSituacaoTrabalhista(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  const getEstadoCivil = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/estadocivil`).then(res => {
-        setEstadoCivil(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getRacaEtnia();
-    getSituacaoTrabalhista();
-    getEstadoCivil();
-  }, [getRacaEtnia, getSituacaoTrabalhista, getEstadoCivil]);
-
   function calcularIdade(dataNascimento: Date | null) {
     if (dataNascimento === null) {
       return '';
@@ -255,13 +195,8 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Raça/Etnia"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'IdentificacaoCandidato.IdRacaEtnia'
-                      ]
-                    }
                   >
-                    {racaEtnia?.map((item, index) => {
+                    {props?.racaEtnia?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDRACAETNIA}>
                           {item.DESCRICAO}
@@ -294,13 +229,8 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Situação Trabalhista"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'IdentificacaoCandidato.IdSitTrabalhista'
-                      ]
-                    }
                   >
-                    {situacaoTrabalhista?.map((item, index) => {
+                    {props?.situacaoTrabalhista?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDSITTRABALHISTA}>
                           {item.DESCRICAO}
@@ -350,13 +280,8 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Estado Civil"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'IdentificacaoCandidato.IdEstadoCivil'
-                      ]
-                    }
                   >
-                    {estadoCivil?.map((item, index) => {
+                    {props?.estadoCivil?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDESTADOCIVIL}>
                           {item.DESCRICAO}
@@ -568,23 +493,6 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
 export function IdentificacaoCandidatoPaiMae(
   props: IdentificacaoCandidatoProps
 ) {
-  const [estadoCivil, setEstadoCivil] = useState<EstadoCivil[]>();
-  const getEstadoCivil = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/estadocivil`).then(res => {
-        setEstadoCivil(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getEstadoCivil();
-  }, [getEstadoCivil]);
   return (
     <React.Fragment>
       <div className="cabecalho-form">
@@ -667,7 +575,7 @@ export function IdentificacaoCandidatoPaiMae(
             }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Controller
             control={props.control}
             name="IdentificacaoCandidato.NomeResponsavel"
@@ -676,11 +584,40 @@ export function IdentificacaoCandidatoPaiMae(
                 <TextField
                   fullWidth
                   id="outlined-basic 13"
-                  label="Responsável pelo candidato (nome e parentesco)"
+                  label="Responsável pelo candidato"
                   color="primary"
                   variant="outlined"
                   {...field}
                 />
+              );
+            }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Controller
+            control={props.control}
+            name="IdentificacaoCandidato.IdParentescoResponsavel"
+            render={({ field }) => {
+              return (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Parentesco
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Parentesco"
+                    {...field}
+                  >
+                    {props?.parentesco?.map((item, index) => {
+                      return (
+                        <MenuItem key={index} value={item.IDPARENTESCO}>
+                          {item.DESCRICAO}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               );
             }}
           />
@@ -700,13 +637,8 @@ export function IdentificacaoCandidatoPaiMae(
                     id="demo-simple-select"
                     label="Estado Civil"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'IdentificacaoCandidato.IdEstadoCivilPai'
-                      ]
-                    }
                   >
-                    {estadoCivil?.map((item, index) => {
+                    {props?.estadoCivil?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDESTADOCIVIL}>
                           {item.DESCRICAO}
@@ -734,13 +666,8 @@ export function IdentificacaoCandidatoPaiMae(
                     id="demo-simple-select"
                     label="Estado Civil"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'IdentificacaoCandidato.IdEstadoCivilMae'
-                      ]
-                    }
                   >
-                    {estadoCivil?.map((item, index) => {
+                    {props?.estadoCivil?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDESTADOCIVIL}>
                           {item.DESCRICAO}

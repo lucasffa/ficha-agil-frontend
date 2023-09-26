@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import {
   FormControl,
   Grid,
@@ -14,42 +14,20 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { Ficha } from '../CadastrarCandidato';
-import axiosInstance from '../../../../components/utils/axios';
-import { toast } from 'react-toastify';
+import { Escolaridade, Ficha } from '../CadastrarCandidato';
 
 interface DadosEducacionaisCandidatoProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
+  escolaridade: Escolaridade[] | undefined;
 }
-type Escolaridade = {
-  IDESCOLARIDADE: number;
-  DESCRICAO: string;
-};
+
 //3. DADOS EDUCACIONAIS DO CANDIDATO
 export default function DadosEducacionaisCandidato(
   props: DadosEducacionaisCandidatoProps
 ) {
-  const [escolaridade, setEscolaridade] = useState<Escolaridade[]>();
-
-  const getEscolaridade = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/escolaridade`).then(res => {
-        setEscolaridade(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getEscolaridade();
-  }, [getEscolaridade]);
   return (
     <React.Fragment>
       <div className="cabecalho-form">3. DADOS EDUCACIONAIS DO CANDIDATO</div>
@@ -159,7 +137,7 @@ export default function DadosEducacionaisCandidato(
         <Grid item xs={2}>
           <Controller
             control={props.control}
-            name="DadosEducacionaisCandidato.BairroInstituicao"
+            name="DadosEducacionaisCandidato.SerieAtual"
             render={({ field }) => {
               return (
                 <TextField
@@ -232,13 +210,8 @@ export default function DadosEducacionaisCandidato(
                     id="demo-simple-select"
                     label="Escolaridade"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'DadosEducacionaisCandidato.IdEscolaridade'
-                      ]
-                    }
                   >
-                    {escolaridade?.map((item, index) => {
+                    {props?.escolaridade?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDESCOLARIDADE}>
                           {item.DESCRICAO}

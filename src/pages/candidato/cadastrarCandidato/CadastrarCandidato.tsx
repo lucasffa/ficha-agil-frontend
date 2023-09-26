@@ -22,7 +22,41 @@ import ParecerAssistSocial from './components/ParecerAssistSocial';
 import DeclaracaoResponsabilidadeInfoDoc from './components/DeclaracaoResponsabilidadeInfoDoc';
 import TermoAutorizacaoUsoDeImagemEVoz from './components/TermoAutorizacaoUsoDeImagemEVoz';
 import axiosInstance from '../../../components/utils/axios';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
+export type SituacaoTrabalhista = {
+  IDSITTRABALHISTA: number;
+  DESCRICAO: string;
+  ATIVO: string;
+};
+
+export type RacaEtnia = {
+  IDRACAETNIA: number;
+  DESCRICAO: string;
+  ATIVO: string;
+};
+
+export type EstadoCivil = {
+  IDESTADOCIVIL: number;
+  DESCRICAO: string;
+  ATIVO: string;
+};
+
+export type Parentesco = {
+  IDPARENTESCO: number;
+  DESCRICAO: string;
+};
+
+export type Escolaridade = {
+  IDESCOLARIDADE: number;
+  DESCRICAO: string;
+};
+
+export type CoberturaMoradia = {
+  DESCRICAO: string;
+  IDCOBERTURAMORADIA: number;
+};
 export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
@@ -105,7 +139,18 @@ export interface Ficha {
     IdParentescoProprietario: number;
     PrestacaoFinanciamento: number;
   };
-  ComposicaoFamiliar: {};
+  ComposicaoFamiliar: {
+    IdCompFamiliar: number | undefined;
+    IdFicha: number | undefined;
+    Nome: string;
+    IdParentesco: number | undefined;
+    Idade: number | undefined;
+    IdEstadoCivil: number | undefined;
+    Profissao: string;
+    IdSitTrabalhista: number | undefined;
+    IdEscolaridade: number | undefined;
+    Renda: number | undefined;
+  }[];
   Despesas: {
     DespesasDescontos: number;
     DespesasRendaBruta: number;
@@ -130,95 +175,211 @@ export interface Ficha {
 }
 
 export function CadastrarCandidato() {
+  const [situacaoTrabalhista, setSituacaoTrabalhista] =
+    useState<SituacaoTrabalhista[]>();
+  const [racaEtnia, setRacaEtnia] = useState<RacaEtnia[]>();
+  const [estadoCivil, setEstadoCivil] = useState<EstadoCivil[]>();
+  const [parentesco, setParentesco] = useState<Parentesco[]>();
+  const [escolaridade, setEscolaridade] = useState<Escolaridade[]>();
+  const [coberturaMoradia, setCoberturaMoradia] =
+    useState<CoberturaMoradia[]>();
+
+  const getRacaEtnia = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/racaEtnia`).then(res => {
+        setRacaEtnia(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  const getSituacaoTrabalhista = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/situacaoTrabalhista`).then(res => {
+        setSituacaoTrabalhista(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  const getEstadoCivil = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/estadocivil`).then(res => {
+        setEstadoCivil(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  const getParentesco = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/parentesco`).then(res => {
+        setParentesco(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  const getEscolaridade = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/escolaridade`).then(res => {
+        setEscolaridade(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  const getCoberturaMoradia = useCallback(async () => {
+    try {
+      await axiosInstance.get(`/coberturamoradia`).then(res => {
+        setCoberturaMoradia(res.data);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    getRacaEtnia();
+    getSituacaoTrabalhista();
+    getEstadoCivil();
+    getParentesco();
+    getEscolaridade();
+    getCoberturaMoradia();
+  }, [
+    getRacaEtnia,
+    getSituacaoTrabalhista,
+    getEstadoCivil,
+    getParentesco,
+    getEscolaridade,
+    getCoberturaMoradia,
+  ]);
+
   const { control, handleSubmit, getValues, setValue, watch } = useForm<Ficha>({
     mode: 'onBlur',
     defaultValues: {
       IdentificacaoCandidato: {
-        NomeCompleto: '',
-        Cpf: '',
-        DocIdentidade: '',
+        NomeCompleto: 'Guilherme Coelho Vieira',
+        Cpf: '1234567890',
+        DocIdentidade: 'mg12345678',
         DataNascimento: null,
-        Naturalidade: '',
-        IdRacaEtnia: undefined,
-        IdSitTrabalhista: undefined,
+        Naturalidade: 'Governador Valadares',
+        IdRacaEtnia: 2,
+        IdSitTrabalhista: 4,
         OutraSitTrabalhista: '',
-        IdEstadoCivil: undefined,
-        Email: '',
+        IdEstadoCivil: 1,
+        Email: 'guilherme.coelho@univale.br',
         NecessidadeEspecial: undefined,
-        EnderecoResidencial: '',
-        Numero: '',
+        EnderecoResidencial: 'Rua 0',
+        Numero: '000',
         Complemento: '',
-        Bairro: '',
-        Cep: '',
-        TelefoneResidencial: '',
-        TelefoneRecado: '',
-        TelefoneCelular: '',
-        NomePai: '',
-        CpfPai: '',
-        NomeMae: '',
-        CpfMae: '',
-        NomeResponsavel: '',
-        IdParentescoResponsavel: undefined,
-        IdEstadoCivilPai: undefined,
-        IdEstadoCivilMae: undefined,
+        Bairro: 'Centro',
+        Cep: '00000000',
+        TelefoneResidencial: '3300000000',
+        TelefoneRecado: '3300000000',
+        TelefoneCelular: '33000000000',
+        NomePai: 'Lúcio A Vieira',
+        CpfPai: '1234567890',
+        NomeMae: 'Silvia Coelho',
+        CpfMae: '1234567890',
+        NomeResponsavel: 'Silvia Coelho',
+        IdParentescoResponsavel: 2,
+        IdEstadoCivilPai: 3,
+        IdEstadoCivilMae: 3,
       },
       OutrasFichasGrupoFamiliar: [
         {
-          IdFicha: undefined,
-          NomeCompleto: '',
-          IdParentesco: undefined,
+          IdFicha: 18,
+          NomeCompleto: 'Pamela Morgan Halpert',
+          IdParentesco: 1,
         },
       ],
       DadosEducacionaisCandidato: {
-        Estuda: '',
-        InstituicaoEnsino: '',
-        NomeInstituicaoEnsino: '',
-        EnderecoInstituicao: '',
-        BairroInstituicao: '',
-        SerieAtual: undefined,
-        Turma: '',
-        Turno: '',
-        IdEscolaridade: undefined,
+        Estuda: 'S',
+        InstituicaoEnsino: 'I',
+        NomeInstituicaoEnsino: 'Univale',
+        EnderecoInstituicao: 'R. Israel Pinheiro, 2000',
+        BairroInstituicao: 'Universitário',
+        SerieAtual: 6,
+        Turma: 'Sistema de Informação',
+        Turno: 'N',
+        IdEscolaridade: 4,
         OutrosCursosRealizados: '',
       },
       BeneficiosPleiteados: [
         {
-          NomeCursoPretendido: '',
-          Turno: '',
-          Horario: '',
+          NomeCursoPretendido: 'Programação 1',
+          Turno: 'N',
+          Horario: '18:00',
         },
       ],
       CondicoesSaudeCandidato: {
-        NomeContatoEmergencia: '',
-        TelefoneEmergencia1: '',
-        TelefoneEmergencia2: '',
-        Alergia: '',
-        SitMedicaEspecial: '',
-        FraturasCirurgicas: '',
-        MedicacaoControlada: '',
-        ProvidenciaRecomendada: '',
+        NomeContatoEmergencia: 'Deus',
+        TelefoneEmergencia1: '33000000000',
+        TelefoneEmergencia2: '33000000000',
+        Alergia: 'Amoxicilina',
+        SitMedicaEspecial: 'Não',
+        FraturasCirurgicas: 'Não',
+        MedicacaoControlada: 'Não',
+        ProvidenciaRecomendada: 'Não',
       },
       CondicoesSociaisESaudeFamilia: {
-        FamiliarTratamentoMedico: '',
-        FamiliarUsoMedico: '',
-        FamiliarDeficiencia: '',
-        FamiliarDependenciaQuimica: '',
-        AcompanhamentoTerapeutico: '',
-        ProgramaSocial: '',
+        FamiliarTratamentoMedico: 'Não',
+        FamiliarUsoMedico: 'Não',
+        FamiliarDeficiencia: 'Não',
+        FamiliarDependenciaQuimica: 'Não',
+        AcompanhamentoTerapeutico: 'Não',
+        ProgramaSocial: 'Não',
       },
       CondicoesMoradia: {
-        AguaPotavel: '',
-        RedeEsgoto: '',
-        IdCoberturaMoradia: undefined,
-        RuaPavimentada: '',
-        PossuiEletricidade: '',
-        ComodosMoradia: undefined,
-        TipoImovelResidencia: '',
-        ValorAluguel: undefined,
+        AguaPotavel: 'S',
+        RedeEsgoto: 'S',
+        IdCoberturaMoradia: 1,
+        RuaPavimentada: 'S',
+        PossuiEletricidade: 'S',
+        ComodosMoradia: 6,
+        TipoImovelResidencia: 'A',
+        ValorAluguel: 600,
         IdParentescoProprietario: undefined,
         PrestacaoFinanciamento: undefined,
       },
-      ComposicaoFamiliar: {},
+      ComposicaoFamiliar: [
+        {
+          IdCompFamiliar: 1,
+          IdFicha: 18,
+          Nome: 'Pamela Morgan Halpert',
+          IdParentesco: 1,
+          Idade: 30,
+          IdEstadoCivil: 2,
+          Profissao: 'Administradora de escritório',
+          IdSitTrabalhista: 3,
+          IdEscolaridade: 5,
+          Renda: 3500,
+        },
+      ],
       Despesas: {
         DespesasDescontos: undefined,
         DespesasRendaBruta: undefined,
@@ -243,6 +404,7 @@ export function CadastrarCandidato() {
     },
     criteriaMode: 'all',
   });
+
   async function postFicha(ficha: Ficha) {
     const dataForm = new FormData();
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
@@ -274,30 +436,41 @@ export function CadastrarCandidato() {
       console.log(err);
     }
   }
+
   const formComponents = [
     <IdentificacaoCandidato
       control={control}
       getValues={getValues}
       setValue={setValue}
       watch={watch}
+      estadoCivil={estadoCivil}
+      racaEtnia={racaEtnia}
+      situacaoTrabalhista={situacaoTrabalhista}
+      parentesco={parentesco}
     />,
     <IdentificacaoCandidatoPaiMae
       control={control}
       getValues={getValues}
       setValue={setValue}
       watch={watch}
+      estadoCivil={estadoCivil}
+      racaEtnia={racaEtnia}
+      situacaoTrabalhista={situacaoTrabalhista}
+      parentesco={parentesco}
     />,
     <OutrasFichasGrupoFamiliar
       control={control}
       getValues={getValues}
       setValue={setValue}
       watch={watch}
+      parentesco={parentesco}
     />,
     <DadosEducacionaisCandidato
       control={control}
       getValues={getValues}
       setValue={setValue}
       watch={watch}
+      escolaridade={escolaridade}
     />,
     <BeneficiosPleiteados
       control={control}
@@ -322,8 +495,19 @@ export function CadastrarCandidato() {
       getValues={getValues}
       setValue={setValue}
       watch={watch}
+      coberturaMoradia={coberturaMoradia}
+      parentesco={parentesco}
     />,
-    <ComposicaoFamiliar />,
+    <ComposicaoFamiliar
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      watch={watch}
+      parentesco={parentesco}
+      estadoCivil={estadoCivil}
+      situacaoTrabalhista={situacaoTrabalhista}
+      escolaridade={escolaridade}
+    />,
     <Despesas />,
     <OutrosGastos />,
     <SituacaoSocioEconomicaFamiliar />,

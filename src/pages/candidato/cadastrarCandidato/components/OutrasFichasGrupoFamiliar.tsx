@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import {
   Controller,
   Control,
@@ -18,21 +18,16 @@ import {
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Ficha } from '../CadastrarCandidato';
+import { Ficha, Parentesco } from '../CadastrarCandidato';
 import { useFieldArray } from 'react-hook-form';
-import axiosInstance from '../../../../components/utils/axios';
-import { toast } from 'react-toastify';
 
 interface OutrasFichasGrupoFamiliarProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
+  parentesco: Parentesco[] | undefined;
 }
-type Parentesco = {
-  IDPARENTESCO: number;
-  DESCRICAO: string;
-};
 
 export default function OutrasFichasGrupoFamiliar(
   props: OutrasFichasGrupoFamiliarProps
@@ -56,6 +51,7 @@ export default function OutrasFichasGrupoFamiliar(
           setValue={props.setValue}
           watch={props.watch}
           remove={remove}
+          parentesco={props.parentesco}
         />
       ))}
       <Grid container spacing={1}>
@@ -81,27 +77,13 @@ export default function OutrasFichasGrupoFamiliar(
 }
 
 function OutrasFichasGrupoFamiliarComponent(
-  props: OutrasFichasGrupoFamiliarProps & { index: number; field: any; remove: any; }
+  props: OutrasFichasGrupoFamiliarProps & {
+    index: number;
+    field: any;
+    remove: any;
+  }
 ) {
-  const [parentesco, setParentesco] = useState<Parentesco[]>();
   const { index, control, remove } = props;
-
-  const getParentesco = useCallback(async () => {
-    try {
-      await axiosInstance.get(`/parentesco`).then(res => {
-        setParentesco(res.data);
-      });
-    } catch (err: any) {
-      const error = err.response?.data;
-      Object.keys(error).map(key => {
-        return toast.error(error[key]);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getParentesco();
-  }, [getParentesco]);
 
   return (
     <React.Fragment>
@@ -154,13 +136,8 @@ function OutrasFichasGrupoFamiliarComponent(
                     id="demo-simple-select"
                     label="Parentesco"
                     {...field}
-                    value={
-                      props.control._fields[
-                        'DadosEducacionaisCandidato.IdEscolaridade'
-                      ]
-                    }
                   >
-                    {parentesco?.map((item, index) => {
+                    {props?.parentesco?.map((item, index) => {
                       return (
                         <MenuItem key={index} value={item.IDPARENTESCO}>
                           {item.DESCRICAO}
