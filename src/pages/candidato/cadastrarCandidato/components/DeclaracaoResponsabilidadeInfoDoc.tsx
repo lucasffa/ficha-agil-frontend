@@ -60,13 +60,15 @@ export default function DeclaracaoResponsabilidadeInfoDoc(
         </span>
         <span>Governador Valadares, {formatarData(new Date())}.</span>
       </div>
-      <button
-        type="button"
-        className="btn-autorizar"
-        onClick={() => props.setAceitarTermos(!props.aceitarTermos)}
-      >
-        Aceitar
-      </button>
+      <div className="container-btn-autorizar">
+        <button
+          type="button"
+          className="btn-autorizar"
+          onClick={() => props.setAceitarTermos(!props.aceitarTermos)}
+        >
+          Aceitar
+        </button>
+      </div>
     </React.Fragment>
   );
 }

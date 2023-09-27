@@ -66,7 +66,7 @@ export interface Ficha {
     Naturalidade: string;
     IdRacaEtnia: number;
     IdSitTrabalhista: number;
-    OutraSitTrabalhista?: string;
+    OutraSitTrabalhista: string;
     IdEstadoCivil: number;
     Email: string;
     NecessidadeEspecial: string;
@@ -182,13 +182,13 @@ const fakeData: Ficha = {
     Naturalidade: 'Governador Valadares',
     IdRacaEtnia: 2,
     IdSitTrabalhista: 4,
-    OutraSitTrabalhista: '',
+    OutraSitTrabalhista: 'a',
     IdEstadoCivil: 1,
     Email: 'guilherme.coelho@univale.br',
     NecessidadeEspecial: 'Nenhuma',
     EnderecoResidencial: 'Rua 0',
     Numero: '000',
-    Complemento: '',
+    Complemento: 'kk',
     Bairro: 'Centro',
     Cep: '00000000',
     TelefoneResidencial: '3300000000',
@@ -220,7 +220,7 @@ const fakeData: Ficha = {
     Turma: 'Sistema de Informação',
     Turno: 'N',
     IdEscolaridade: 4,
-    OutrosCursosRealizados: '',
+    OutrosCursosRealizados: 'Não',
   },
   BeneficiosPleiteados: [
     {
@@ -295,7 +295,7 @@ const fakeData: Ficha = {
   ParecerAssistSocial: {
     ParecerAssistSocial:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    StatusProcesso: '',
+    StatusProcesso: 'D',
   },
   DataCad: new Date(),
   IdUsuario: 1,
@@ -405,6 +405,12 @@ export function CadastrarCandidato() {
     getEscolaridade,
     getCoberturaMoradia,
   ]);
+
+  function removeMask(value: any) {
+    return value === undefined || value === null
+      ? 0
+      : value?.replace(/[-.\s]/g, '');
+  }
 
   const { control, handleSubmit, getValues, setValue, watch } = useForm<Ficha>({
     mode: 'onBlur',
@@ -582,23 +588,242 @@ export function CadastrarCandidato() {
   async function postFicha(ficha: Ficha) {
     const dataForm = new FormData();
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
-    dataForm.append('CPF', ficha.IdentificacaoCandidato.Cpf);
-
+    dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
     dataForm.append(
       'DOCIDENTIDADE',
       ficha.IdentificacaoCandidato.DocIdentidade
+    );
+    dataForm.append('DATANASCIMENTO', new Date().toJSON());
+    dataForm.append('NATURALIDADE', ficha.IdentificacaoCandidato.Naturalidade);
+    dataForm.append(
+      'IDRACAETNIA',
+      ficha.IdentificacaoCandidato.IdRacaEtnia.toString()
     );
     dataForm.append(
       'IDSITTRABALHISTA',
       ficha.IdentificacaoCandidato.IdSitTrabalhista.toString()
     );
-
+    dataForm.append(
+      'OUTRASITTRABALHISTA',
+      ficha.IdentificacaoCandidato.OutraSitTrabalhista
+    );
+    dataForm.append(
+      'IDESTADOCIVIL',
+      ficha.IdentificacaoCandidato.IdEstadoCivil.toString()
+    );
+    dataForm.append('EMAIL', ficha.IdentificacaoCandidato.Email);
+    dataForm.append(
+      'NECESSIDADEESPECIAL',
+      ficha.IdentificacaoCandidato.NecessidadeEspecial
+    );
+    dataForm.append(
+      'ENDERECORESIDENCIAL',
+      ficha.IdentificacaoCandidato.EnderecoResidencial
+    );
+    dataForm.append('NUMERO', ficha.IdentificacaoCandidato.Numero);
+    dataForm.append('COMPLEMENTO', ficha.IdentificacaoCandidato.Complemento);
+    dataForm.append('BAIRRO', ficha.IdentificacaoCandidato.Bairro);
+    dataForm.append('CEP', ficha.IdentificacaoCandidato.Cep);
+    dataForm.append(
+      'TELEFONERESIDENCIAL',
+      ficha.IdentificacaoCandidato.TelefoneResidencial
+    );
+    dataForm.append(
+      'TELEFONERECADO',
+      ficha.IdentificacaoCandidato.TelefoneRecado
+    );
+    dataForm.append(
+      'TELEFONECELULAR',
+      ficha.IdentificacaoCandidato.TelefoneCelular
+    );
+    dataForm.append('NOMEPAI', ficha.IdentificacaoCandidato.NomePai);
+    dataForm.append('CPFPAI', removeMask(ficha.IdentificacaoCandidato.CpfPai));
+    dataForm.append('NOMEMAE', ficha.IdentificacaoCandidato.NomeMae);
+    dataForm.append('CPFMAE', removeMask(ficha.IdentificacaoCandidato.CpfMae));
+    dataForm.append(
+      'NOMERESPONSAVEL',
+      ficha.IdentificacaoCandidato.NomeResponsavel
+    );
+    dataForm.append(
+      'IDPARENTESCORESPONSAVEL',
+      ficha.IdentificacaoCandidato.IdParentescoResponsavel.toString()
+    );
+    dataForm.append(
+      'IDESTADOCIVILPAI',
+      ficha.IdentificacaoCandidato.IdEstadoCivilPai.toString()
+    );
+    dataForm.append(
+      'IDESTADOCIVILMAE',
+      ficha.IdentificacaoCandidato.IdEstadoCivilMae.toString()
+    );
+    dataForm.append('ESTUDA', ficha.DadosEducacionaisCandidato.Estuda);
+    dataForm.append(
+      'INSTITUICAOENSINO',
+      ficha.DadosEducacionaisCandidato.InstituicaoEnsino
+    );
+    dataForm.append(
+      'NOMEINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.NomeInstituicaoEnsino
+    );
+    dataForm.append(
+      'ENDERECOINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.EnderecoInstituicao
+    );
+    dataForm.append(
+      'BAIRROINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.BairroInstituicao
+    );
+    dataForm.append(
+      'SERIEATUAL',
+      ficha.DadosEducacionaisCandidato.SerieAtual.toString()
+    );
+    dataForm.append('TURMA', ficha.DadosEducacionaisCandidato.Turma);
+    dataForm.append('TURNO', ficha.DadosEducacionaisCandidato.Turno);
+    dataForm.append(
+      'IDESCOLARIDADE',
+      ficha.DadosEducacionaisCandidato.IdEscolaridade.toString()
+    );
+    dataForm.append(
+      'OUTROSCURSOSREALIZADOS',
+      ficha.DadosEducacionaisCandidato.OutrosCursosRealizados
+    );
+    dataForm.append(
+      'NOMECONTATOEMERGENCIA',
+      ficha.CondicoesSaudeCandidato.NomeContatoEmergencia
+    );
+    dataForm.append(
+      'TELEFONEEMERGENCIA1',
+      ficha.CondicoesSaudeCandidato.TelefoneEmergencia1
+    );
+    dataForm.append(
+      'TELEFONEEMERGENCIA2',
+      ficha.CondicoesSaudeCandidato.TelefoneEmergencia2
+    );
+    dataForm.append('ALERGIA', ficha.CondicoesSaudeCandidato.Alergia);
+    dataForm.append(
+      'SITMEDICAESPECIAL',
+      ficha.CondicoesSaudeCandidato.SitMedicaEspecial
+    );
+    dataForm.append(
+      'FRATURASCIRURGIAS',
+      ficha.CondicoesSaudeCandidato.FraturasCirurgicas
+    );
+    dataForm.append(
+      'MEDICACAOCONTROLADA',
+      ficha.CondicoesSaudeCandidato.MedicacaoControlada
+    );
+    dataForm.append(
+      'PROVIDENCIARECOMENDADA',
+      ficha.CondicoesSaudeCandidato.ProvidenciaRecomendada
+    );
+    dataForm.append(
+      'FAMILIARTRATAMENTOMEDICO',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarTratamentoMedico
+    );
+    dataForm.append(
+      'FAMILIARUSOMEDICAMENTO',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedico
+    );
+    dataForm.append(
+      'FAMILIARDEFICIENCIA',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarDeficiencia
+    );
+    dataForm.append(
+      'FAMILIARDEPENDENCIAQUIMICA',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarDependenciaQuimica
+    );
+    dataForm.append(
+      'ACOMPTERAPEUTICO',
+      ficha.CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico
+    );
+    dataForm.append(
+      'PROGRAMASOCIAL',
+      ficha.CondicoesSociaisESaudeFamilia.ProgramaSocial
+    );
+    dataForm.append('AGUAPOTAVEL', ficha.CondicoesMoradia.AguaPotavel);
+    dataForm.append('REDEESGOTO', ficha.CondicoesMoradia.RedeEsgoto);
+    dataForm.append(
+      'IDCOBERTURAMORADIA',
+      ficha.CondicoesMoradia.IdCoberturaMoradia.toString()
+    );
+    dataForm.append('RUAPAVIMENTADA', ficha.CondicoesMoradia.RuaPavimentada);
+    dataForm.append(
+      'POSSUIELETRICIDADE',
+      ficha.CondicoesMoradia.PossuiEletricidade
+    );
+    dataForm.append(
+      'COMODOSMORADIA',
+      ficha.CondicoesMoradia.ComodosMoradia.toString()
+    );
+    dataForm.append(
+      'TIPOIMOVELRESIDENCIA',
+      ficha.CondicoesMoradia.TipoImovelResidencia
+    );
+    dataForm.append(
+      'VALORALUGUEL',
+      ficha.CondicoesMoradia.ValorAluguel.toString()
+    );
+    dataForm.append(
+      'IDPARENTESCOPROPRIETARIO',
+      ficha.CondicoesMoradia.IdParentescoProprietario.toString()
+    );
+    dataForm.append(
+      'PRESTACAOFINANCIAMENTO',
+      ficha.CondicoesMoradia.PrestacaoFinanciamento.toString()
+    );
+    dataForm.append(
+      'DESPESASDESCONTOS',
+      ficha.Despesas.DespesasDescontos.toString()
+    );
+    dataForm.append(
+      'DESPESASRENDABRUTA',
+      ficha.Despesas.DespesasRendaBruta.toString()
+    );
+    dataForm.append(
+      'DESPESASMORADIA',
+      ficha.Despesas.DespesasMoradia.toString()
+    );
+    dataForm.append(
+      'DESPESASRENDALIQUIDA',
+      ficha.Despesas.DespesasRendaLiquida.toString()
+    );
+    dataForm.append(
+      'DESPESASEDUCACAO',
+      ficha.Despesas.DespesasEducacao.toString()
+    );
+    dataForm.append(
+      'DESPESASPESSOASRESIDENCIA',
+      ficha.Despesas.DespesasPessoasResidencia.toString()
+    );
+    dataForm.append('DESPESASSAUDE', ficha.Despesas.DespesasSaude.toString());
+    dataForm.append('DESPESASRPC', ficha.Despesas.DespesasRpc.toString());
+    dataForm.append('DESPESASTOTAL', ficha.Despesas.DespesasTotal.toString());
+    dataForm.append('DESPESASOBS', ficha.Despesas.DespesasObs);
+    dataForm.append('OUTROSGASTOS', ficha.OutrosGastos.toString());
+    dataForm.append(
+      'SITSOCIOECONOMICOFAMILIAR',
+      ficha.SituacaoSocioEconomicaFamiliar.toString()
+    );
+    dataForm.append(
+      'OBSERVACOESNECESSARIAS',
+      ficha.ObservacoesNecessarias.toString()
+    );
+    dataForm.append(
+      'PARECERASSISTSOCIAL',
+      ficha.ParecerAssistSocial.ParecerAssistSocial.toString()
+    );
+    dataForm.append('STATUSPROCESSO', ficha.ParecerAssistSocial.StatusProcesso);
+    dataForm.append('DATACAD', ficha.DataCad.toString());
+    dataForm.append('IDUSUARIO', ficha.IdUsuario.toString());
     try {
       await axiosInstance
-        .post(`/createFichaCandidato`, ficha)
-        .then(res => console.log(res.data));
-    } catch (err) {
-      console.log(err);
+        .post(`/createFichaCandidato`, dataForm)
+        .then(res => toast.success(res.data.message));
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
     }
   }
 
@@ -718,7 +943,6 @@ export function CadastrarCandidato() {
       onSubmit={handleSubmit((data, event) => {
         event?.preventDefault();
         if (data) {
-          console.log(data);
           postFicha(data);
         }
       })}
