@@ -17,6 +17,12 @@ const sections = [
     isSubRota: false,
   },
   { rota: 'candidato', name: 'Candidato', icon: userIcon, isSubRota: false },
+  {
+    rota: 'candidato/adicionar',
+    name: 'Adicionar Candidato',
+    icon: userIcon,
+    isSubRota: true,
+  },
   { rota: 'usuario', name: 'Usuário', icon: userIcon, isSubRota: false },
   {
     rota: 'usuario/adicionar',

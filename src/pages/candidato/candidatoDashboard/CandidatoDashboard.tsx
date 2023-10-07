@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 //import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
-import trashIcon from '../../../assets/images/trash.svg';
+//import trashIcon from '../../../assets/images/trash.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
 import { Pagination } from '@mui/material';
@@ -98,7 +98,7 @@ export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
                 <th className="listagem-candidato-cpf">CPF</th>
                 <th className="listagem-candidato-email">Email</th>
                 <th className="listagem-candidato-editar">Editar</th>
-                <th className="listagem-candidato-excluir">Excluir</th>
+                {/* <th className="listagem-candidato-excluir">Excluir</th> */}
               </tr>
             </thead>
             <tbody>
@@ -121,20 +121,15 @@ export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
                           {usuario?.EMAIL ?? 'Não cadastrado'}
                         </td>
                         <td className="listagem-candidato-editar">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              //getDadosUsuarioEditar(usuario.IDUSUARIO);
-                            }}
-                          >
+                          <button type="button" onClick={() => {}}>
                             <img src={editIcon} alt="Editar Candidato" />
                           </button>
                         </td>
-                        <td className="listagem-candidato-excluir">
+                        {/* <td className="listagem-candidato-excluir">
                           <button>
                             <img src={trashIcon} alt="Excluir Candidato" />
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })

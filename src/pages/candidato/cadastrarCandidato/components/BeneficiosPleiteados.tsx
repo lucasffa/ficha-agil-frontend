@@ -20,6 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Ficha } from '../CadastrarCandidato';
 import { useFieldArray } from 'react-hook-form';
+import { InputMaskHorario } from '../../../../Shared/InputPadraoForm';
 
 interface BeneficiosPleiteadosProps {
   control: Control<Ficha>;
@@ -76,7 +77,7 @@ function BeneficiosPleiteadosComponent(
   props: BeneficiosPleiteadosProps & { index: number; field: any; remove: any }
 ) {
   const { index, control, remove } = props;
-  
+
   return (
     <React.Fragment>
       <Grid container spacing={1}>
@@ -126,14 +127,14 @@ function BeneficiosPleiteadosComponent(
             control={control}
             name={`BeneficiosPleiteados.${index}.Horario`}
             render={({ field }) => (
-              <TextField
-                fullWidth
-                id={`outlined-basic-${index}-3`}
-                label="Horário"
-                color="primary"
-                variant="outlined"
-                type="text"
-                {...field}
+              <InputMaskHorario
+                value={props.getValues(`BeneficiosPleiteados.${index}.Horario`)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  props.setValue(
+                    `BeneficiosPleiteados.${index}.Horario`,
+                    event.target.value
+                  );
+                }}
               />
             )}
           />
@@ -142,7 +143,7 @@ function BeneficiosPleiteadosComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() =>  remove(index)}
+            onClick={() => remove(index)}
           >
             <DeleteIcon color="inherit" />
           </IconButton>

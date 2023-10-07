@@ -339,3 +339,64 @@ export function InputMaskCep(props: PropsInput) {
     />
   );
 }
+
+export function InputMaskHorario(props: PropsInput) {
+  const HORA_MASK = '99:99';
+  const MAX_LENGTH = 4;
+
+  const { onChange } = props;
+
+  let value = clear(props.value);
+
+  if (value) {
+    value = applyMask(value, HORA_MASK);
+  }
+
+  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
+    let value = clear(ev.target.value);
+
+    let nextLength = value.length;
+
+    if (nextLength > MAX_LENGTH) return;
+
+    value = applyMask(value, HORA_MASK);
+
+    ev.target.value = value;
+
+    onChange(ev);
+  }
+
+  function applyMask(value: string, mask: string) {
+    let result = '';
+
+    let inc = 0;
+    Array.from(value).forEach((letter, index) => {
+      if (!mask[index + inc]?.match(/[0-9]/)) {
+        result += mask[index + inc];
+        inc++;
+      }
+      result += letter;
+    });
+    return result;
+  }
+
+  function clear(value: string) {
+    return value && value.replace(/[^0-9]/g, '');
+  }
+
+  return (
+    <TextField
+      {...props}
+      id="outlined-basic 4"
+      label={props.name ?? 'Horário'}
+      color="primary"
+      variant="outlined"
+      type="text"
+      name={''}
+      onChange={onLocalChange}
+      value={value}
+      error={!!props.error}
+      fullWidth
+    />
+  );
+}

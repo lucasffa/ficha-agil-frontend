@@ -24,6 +24,7 @@ import DeclaracaoResponsabilidadeInfoDoc from './components/DeclaracaoResponsabi
 import axiosInstance from '../../../components/utils/axios';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
 
 export type SituacaoTrabalhista = {
   IDSITTRABALHISTA: number;
@@ -176,7 +177,7 @@ export interface Ficha {
 const fakeData: Ficha = {
   IdentificacaoCandidato: {
     NomeCompleto: 'Guilherme Coelho Vieira',
-    Cpf: '1234567890',
+    Cpf: '77186478115',
     DocIdentidade: 'mg12345678',
     DataNascimento: null,
     Naturalidade: 'Governador Valadares',
@@ -593,7 +594,14 @@ export function CadastrarCandidato() {
       'DOCIDENTIDADE',
       ficha.IdentificacaoCandidato.DocIdentidade
     );
-    dataForm.append('DATANASCIMENTO', new Date().toJSON());
+    dataForm.append(
+      'DATANASCIMENTO',
+      ficha.IdentificacaoCandidato.DataNascimento !== null
+        ? DateFormToSend(
+            ficha.IdentificacaoCandidato.DataNascimento?.toString()
+          )
+        : ''
+    );
     dataForm.append('NATURALIDADE', ficha.IdentificacaoCandidato.Naturalidade);
     dataForm.append(
       'IDRACAETNIA',
