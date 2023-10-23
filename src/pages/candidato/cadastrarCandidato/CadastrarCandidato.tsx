@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import useFormSteps from '../../../hooks/useFormSteps';
 import './cadastrarCandidato.scss';
+import Tabs from '../../../Shared/Tabs/Tabs';
 
 //Import dos componentes/etapas do formulário
 import {
@@ -22,7 +23,7 @@ import ParecerAssistSocial from './components/ParecerAssistSocial';
 import DeclaracaoResponsabilidadeInfoDoc from './components/DeclaracaoResponsabilidadeInfoDoc';
 //import TermoAutorizacaoUsoDeImagemEVoz from './components/TermoAutorizacaoUsoDeImagemEVoz';
 import axiosInstance from '../../../components/utils/axios';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
 
@@ -947,47 +948,55 @@ export function CadastrarCandidato() {
     useFormSteps(formComponents);
 
   return (
-    <form
-      onSubmit={handleSubmit((data, event) => {
-        event?.preventDefault();
-        if (data) {
-          postFicha(data);
-        }
-      })}
-      className="form-cadastrar-ficha"
-    >
-      <div className="container-ficha">{currentComponent}</div>
-      <div className="container-btn">
-        {!isFirstStep ? (
-          <span></span>
-        ) : (
-          <button
-            type="button"
-            className="btn-voltar"
-            onClick={event => changeStep(currentStep - 1, event)}
-          >
-            Voltar
-          </button>
-        )}
+    <React.Fragment>
+      <Tabs
+        tabQuantidade={formComponents.length}
+        tabContent={formComponents}
+        currentTab={currentStep}
+        onTabChange={changeStep}
+      />
+      <form
+        onSubmit={handleSubmit((data, event) => {
+          event?.preventDefault();
+          if (data) {
+            postFicha(data);
+          }
+        })}
+        className="form-cadastrar-ficha"
+      >
+        <div className="container-ficha">{currentComponent}</div>
+        <div className="container-btn">
+          {!isFirstStep ? (
+            <span></span>
+          ) : (
+            <button
+              type="button"
+              className="btn-voltar"
+              onClick={event => changeStep(currentStep - 1, event)}
+            >
+              Voltar
+            </button>
+          )}
 
-        {!isLastStep ? (
-          <button
-            type="button"
-            className="btn-avancar"
-            onClick={event => changeStep(currentStep + 1, event)}
-          >
-            Próximo
-          </button>
-        ) : (
-          <button
-            type="submit"
-            className="btn-avancar"
-            disabled={aceitarTermos === false}
-          >
-            Adicionar
-          </button>
-        )}
-      </div>
-    </form>
+          {!isLastStep ? (
+            <button
+              type="button"
+              className="btn-avancar"
+              onClick={event => changeStep(currentStep + 1, event)}
+            >
+              Próximo
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="btn-avancar"
+              disabled={aceitarTermos === false}
+            >
+              Adicionar
+            </button>
+          )}
+        </div>
+      </form>
+    </React.Fragment>
   );
 }

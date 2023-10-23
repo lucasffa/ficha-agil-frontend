@@ -1,0 +1,26 @@
+.tabs {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  
+  .tab {
+    background-color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 0;
+  }
+
+  .tab-active {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 25px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #a2b63d;
+  }
+
+}

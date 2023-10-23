@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type ChangeStepFunction = (
+export type ChangeStepFunction = (
   index: number,
   event: React.MouseEvent<HTMLButtonElement>
 ) => void;

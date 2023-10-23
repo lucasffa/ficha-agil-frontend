@@ -86,7 +86,7 @@ export function SideMenu() {
                     <span
                       key={uniqid()}
                       className={
-                        location.pathname.replace('/', '') === section.rota
+                        location.pathname.includes(section.rota)
                           ? 'active-section'
                           : ''
                       }
