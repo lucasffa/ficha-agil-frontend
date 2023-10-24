@@ -25,6 +25,7 @@ import {
 } from '../CadastrarCandidato';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 
 interface ComposicaoFamiliarProps {
   control: Control<Ficha>;
@@ -327,15 +328,7 @@ function ComposicaoFamiliarComponent(
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Renda"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Renda" {...field} />
                 </FormControl>
               );
             }}

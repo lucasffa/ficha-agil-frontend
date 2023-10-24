@@ -8,6 +8,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form';
 import { Ficha } from '../CadastrarCandidato';
+import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 
 interface DespesasProps {
   control: Control<Ficha>;
@@ -29,13 +30,8 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
+                  <CurrencyFieldInput
                     label="Descontos obrigatórios"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
                     {...field}
                   />
                 </FormControl>
@@ -50,15 +46,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Renda bruta"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Renda bruta" {...field} />
                 </FormControl>
               );
             }}
@@ -71,15 +59,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Moradia"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Moradia" {...field} />
                 </FormControl>
               );
             }}
@@ -92,15 +72,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Renda líquida"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Renda líquida" {...field} />
                 </FormControl>
               );
             }}
@@ -113,15 +85,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Educação"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Educação" {...field} />
                 </FormControl>
               );
             }}
@@ -155,15 +119,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Saúde"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Saúde" {...field} />
                 </FormControl>
               );
             }}
@@ -176,15 +132,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="RPC"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="RPC" {...field} />
                 </FormControl>
               );
             }}
@@ -197,15 +145,7 @@ export default function Despesas(props: DespesasProps) {
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic 3"
-                    label="Total"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                  />
+                  <CurrencyFieldInput label="Total" {...field} />
                 </FormControl>
               );
             }}

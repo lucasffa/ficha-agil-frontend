@@ -15,7 +15,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form';
 import { CoberturaMoradia, Ficha, Parentesco } from '../CadastrarCandidato';
-
+import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 interface CondicoesMoradiaProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
@@ -221,14 +221,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic 3"
-                      label="Valor do Aluguel"
-                      color="primary"
-                      variant="outlined"
-                      {...field}
-                    />
+                    <CurrencyFieldInput label="Valor do Aluguel" {...field} />
                   </FormControl>
                 );
               }}
