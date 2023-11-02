@@ -14,7 +14,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { CoberturaMoradia, Ficha, Parentesco } from '../CadastrarCandidato';
+import { CoberturaMoradia, Ficha, Parentesco } from '../CandidatoFicha';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 interface CondicoesMoradiaProps {
   control: Control<Ficha>;

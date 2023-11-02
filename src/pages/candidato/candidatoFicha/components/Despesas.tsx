@@ -7,7 +7,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { Ficha } from '../CadastrarCandidato';
+import { Ficha } from '../CandidatoFicha';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 
 interface DespesasProps {

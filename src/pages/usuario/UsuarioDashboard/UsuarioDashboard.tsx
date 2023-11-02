@@ -1,3 +1,4 @@
+import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
@@ -7,22 +8,24 @@ import { Pagination } from '@mui/material';
 import { ButtonLink } from '../../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../components/utils/axios';
+import ativoIcon from '../../../assets/images/ativo-icon.svg';
+import inativoIcon from '../../../assets/images/inativo-icon.svg';
 
-export interface UsuarioProps {
+export type UsuarioProps = {
   IDUSUARIO: number;
   USUARIO: string;
   EMAIL: string;
   CPF: string;
   ATIVO: string;
   TELEFONE?: string;
-  //created_at: string;
-}
+};
 
 export default function UsuarioDashboard() {
   const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [dadosUsuarioEditar, setDadosUsuarioEditar] = useState<UsuarioProps>();
+  const [isFilterInativos, setIsFilterInativos] = useState<string>('S');
   const navigate = useNavigate();
 
   const getUsuarios = useCallback(
@@ -51,8 +54,8 @@ export default function UsuarioDashboard() {
   );
 
   useEffect(() => {
-    getUsuarios(currentPage, 5, 'S');
-  }, [getUsuarios, currentPage]);
+    getUsuarios(currentPage, 5, isFilterInativos);
+  }, [getUsuarios, currentPage, isFilterInativos]);
 
   async function getDadosUsuarioEditar(idUsuario: number) {
     try {
@@ -86,8 +89,10 @@ export default function UsuarioDashboard() {
   function handleUsuariosInativos(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
       getUsuarios(1, 5, 'N');
+      setIsFilterInativos('N');
     } else {
       getUsuarios(1, 5, 'S');
+      setIsFilterInativos('S');
     }
   }
 
@@ -115,6 +120,7 @@ export default function UsuarioDashboard() {
                 <th className="listagem-usuario-cpf">CPF</th>
                 <th className="listagem-usuario-email">Email</th>
                 <th className="listagem-usuario-editar">Editar</th>
+                <th className="listagem-usuario-status">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -143,8 +149,27 @@ export default function UsuarioDashboard() {
                               getDadosUsuarioEditar(usuario.IDUSUARIO);
                             }}
                           >
-                            <img src={editIcon} alt="Editar Candidato" />
+                            <img src={editIcon} alt="Editar Usuário" />
                           </button>
+                        </td>
+                        <td className="listagem-usuario-status">
+                          {usuario.ATIVO === 'S' ? (
+                            <span>
+                              <img
+                                src={ativoIcon}
+                                alt="Usuario Ativo"
+                                title="Usuario Ativo"
+                              />
+                            </span>
+                          ) : (
+                            <span>
+                              <img
+                                src={inativoIcon}
+                                alt="Usuario Inativo"
+                                title="Usuario Inativo"
+                              />
+                            </span>
+                          )}
                         </td>
                       </tr>
                     );

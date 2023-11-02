@@ -14,7 +14,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { Escolaridade, Ficha } from '../CadastrarCandidato';
+import { Escolaridade, Ficha } from '../CandidatoFicha';
 
 interface DadosEducacionaisCandidatoProps {
   control: Control<Ficha>;
@@ -213,8 +213,8 @@ export default function DadosEducacionaisCandidato(
                   >
                     {props?.escolaridade?.map((item, index) => {
                       return (
-                        <MenuItem key={index} value={item.IDESCOLARIDADE}>
-                          {item.DESCRICAO}
+                        <MenuItem key={index} value={item?.IDESCOLARIDADE}>
+                          {item?.DESCRICAO}
                         </MenuItem>
                       );
                     })}

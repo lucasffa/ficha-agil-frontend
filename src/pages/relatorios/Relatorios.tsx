@@ -1,5 +1,5 @@
 import React from 'react';
-export default function Dashboard() {
+export default function Relatorios() {
   function saudacao() {
     const horaAtual = new Date().getHours();
 
@@ -16,7 +16,7 @@ export default function Dashboard() {
 
   return (
     <React.Fragment>
-      <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>Dashboard</h1>
+      <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>Relatórios</h1>
       <h4 style={{ paddingLeft: '20px' }}>
         {saudacao()}, {usuario}, bem-vindo!
       </h4>

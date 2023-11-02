@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import useFormSteps from '../../../hooks/useFormSteps';
-import './cadastrarCandidato.scss';
+import './candidatoFicha.scss';
 import Tabs from '../../../Shared/Tabs/Tabs';
 
 //Import dos componentes/etapas do formulário
@@ -26,6 +26,7 @@ import axiosInstance from '../../../components/utils/axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
+import { useLocation } from 'react-router-dom';
 
 export type SituacaoTrabalhista = {
   IDSITTRABALHISTA: number;
@@ -59,6 +60,7 @@ export type CoberturaMoradia = {
   DESCRICAO: string;
   IDCOBERTURAMORADIA: number;
 };
+
 export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
@@ -175,135 +177,98 @@ export interface Ficha {
   DataCad: Date;
   IdUsuario: number;
 }
-const fakeData: Ficha = {
-  IdentificacaoCandidato: {
-    NomeCompleto: 'Guilherme Coelho Vieira',
-    Cpf: '77186478115',
-    DocIdentidade: 'mg12345678',
-    DataNascimento: null,
-    Naturalidade: 'Governador Valadares',
-    IdRacaEtnia: 2,
-    IdSitTrabalhista: 4,
-    OutraSitTrabalhista: 'a',
-    IdEstadoCivil: 1,
-    Email: 'guilherme.coelho@univale.br',
-    NecessidadeEspecial: 'Nenhuma',
-    EnderecoResidencial: 'Rua 0',
-    Numero: '000',
-    Complemento: 'kk',
-    Bairro: 'Centro',
-    Cep: '00000000',
-    TelefoneResidencial: '3300000000',
-    TelefoneRecado: '3300000000',
-    TelefoneCelular: '33000000000',
-    NomePai: 'Lúcio A Vieira',
-    CpfPai: '1234567890',
-    NomeMae: 'Silvia Coelho',
-    CpfMae: '1234567890',
-    NomeResponsavel: 'Silvia Coelho',
-    IdParentescoResponsavel: 2,
-    IdEstadoCivilPai: 3,
-    IdEstadoCivilMae: 3,
-  },
-  OutrasFichasGrupoFamiliar: [
-    {
-      IdFicha: 18,
-      NomeCompleto: 'Pamela Morgan Halpert',
-      IdParentesco: 1,
-    },
-  ],
-  DadosEducacionaisCandidato: {
-    Estuda: 'S',
-    InstituicaoEnsino: 'I',
-    NomeInstituicaoEnsino: 'Univale',
-    EnderecoInstituicao: 'R. Israel Pinheiro, 2000',
-    BairroInstituicao: 'Universitário',
-    SerieAtual: 6,
-    Turma: 'Sistema de Informação',
-    Turno: 'N',
-    IdEscolaridade: 4,
-    OutrosCursosRealizados: 'Não',
-  },
-  BeneficiosPleiteados: [
-    {
-      NomeCursoPretendido: 'Programação 1',
-      Turno: 'N',
-      Horario: '18:00',
-    },
-  ],
-  CondicoesSaudeCandidato: {
-    NomeContatoEmergencia: 'Deus',
-    TelefoneEmergencia1: '33000000000',
-    TelefoneEmergencia2: '33000000000',
-    Alergia: 'Amoxicilina',
-    SitMedicaEspecial: 'Não',
-    FraturasCirurgicas: 'Não',
-    MedicacaoControlada: 'Não',
-    ProvidenciaRecomendada: 'Não',
-  },
-  CondicoesSociaisESaudeFamilia: {
-    FamiliarTratamentoMedico: 'Não',
-    FamiliarUsoMedico: 'Não',
-    FamiliarDeficiencia: 'Não',
-    FamiliarDependenciaQuimica: 'Não',
-    AcompanhamentoTerapeutico: 'Não',
-    ProgramaSocial: 'Não',
-  },
-  CondicoesMoradia: {
-    AguaPotavel: 'S',
-    RedeEsgoto: 'S',
-    IdCoberturaMoradia: 1,
-    RuaPavimentada: 'S',
-    PossuiEletricidade: 'S',
-    ComodosMoradia: 6,
-    TipoImovelResidencia: 'A',
-    ValorAluguel: 600,
-    IdParentescoProprietario: 0,
-    PrestacaoFinanciamento: 0,
-  },
-  ComposicaoFamiliar: [
-    {
-      IdCompFamiliar: 1,
-      IdFicha: 18,
-      Nome: 'Pamela Morgan Halpert',
-      IdParentesco: 1,
-      Idade: 30,
-      IdEstadoCivil: 2,
-      Profissao: 'Administradora de escritório',
-      IdSitTrabalhista: 3,
-      IdEscolaridade: 5,
-      Renda: 3500,
-    },
-  ],
-  Despesas: {
-    DespesasDescontos: 500,
-    DespesasRendaBruta: 500,
-    DespesasMoradia: 500,
-    DespesasRendaLiquida: 500,
-    DespesasEducacao: 500,
-    DespesasPessoasResidencia: 500,
-    DespesasSaude: 500,
-    DespesasRpc: 500,
-    DespesasTotal: 500,
-    DespesasObs:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
-  OutrosGastos:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc risus leo, bibendum eget ligula a, laoreet mollis mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut felis in nibh sollicitudin volutpat. Proin pellentesque sed libero ac finibus. Sed quis pretium elit, a placerat dolor. In euismod turpis lobortis, sodales mi vel, ultrices enim. Nullam commodo nibh non lacinia tempor. Vestibulum lacus tortor, consequat id massa eu, laoreet aliquet nunc. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque lectus mi, semper quis nibh sed, pharetra elementum urna. Sed et lectus tincidunt, placerat ipsum nec, tincidunt tortor. Fusce in metus vulputate, dignissim nunc eu, rutrum massa. In eget luctus orci. Nam eget nisl sed velit pretium maximus vel vitae diam. Mauris placerat erat in dui bibendum pellentesque. In rhoncus eros eget ipsum fermentum, sit amet semper nulla convallis. Nam elit dolor, hendrerit vel imperdiet a, tempor ornare turpis. Curabitur posuere tempor dolor vel finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus lobortis malesuada orci. Cras dignissim, orci vitae egestas tempus, sapien ipsum consectetur diam, quis molestie est sem in mauris. Integer accumsan sem vitae sollicitudin volutpat. Praesent laoreet sem quis mauris sodales varius. Donec vestibulum, erat sed pellentesque rutrum, nulla nisi imperdiet nibh, ac aliquet nibh urna quis magna. Aliquam quis interdum nisi. Cras bibendum fringilla turpis, a semper nunc fringilla et. Vestibulum lobortis consequat sapien a rutrum. Mauris tincidunt rutrum dui vitae tempor. Aliquam iaculis, ante quis dignissim congue, metus mauris pellentesque elit, porta molestie tortor tellus vel purus. Nulla vitae dignissim elit.',
-  SituacaoSocioEconomicaFamiliar:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  ObservacoesNecessarias:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  ParecerAssistSocial: {
-    ParecerAssistSocial:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    StatusProcesso: 'D',
-  },
-  DataCad: new Date(),
-  IdUsuario: 1,
-};
 
-export function CadastrarCandidato() {
+export interface FichaEdit {
+  NOMECOMPLETO: string;
+  CPF: string;
+  DOCIDENTIDADE: string;
+  DATANASCIMENTO: Date | null;
+  NATURALIDADE: string;
+  IDRACAETNIA: number;
+  IDSITTRABALHISTA: number;
+  OUTRASITTRABALHISTA: string;
+  IDESTADOCIVIL: number;
+  EMAIL: string;
+  NECESSIDADEESPECIAL: string;
+  ENDERECORESIDENCIAL: string;
+  NUMERO: string;
+  COMPLEMENTO: string;
+  BAIRRO: string;
+  CEP: string;
+  TELEFONERESIDENCIAL: string;
+  TELEFONERECADO: string;
+  TELEFONECELULAR: string;
+  NOMEPAI: string;
+  CPFPAI: string;
+  NOMEMAE: string;
+  CPFMAE: string;
+  NOMERESPONSAVEL: string;
+  IDPARENTESCORESPONSAVEL: number;
+  IDESTADOCIVILPAI: number;
+  IDESTADOCIVILMAE: number;
+  IDFICHA: number | undefined;
+  IDPARENTESCO: number | undefined;
+  ESTUDA: string;
+  INSTITUICAOENSINO: string;
+  NOMEINSTITUICAOENSINO: string;
+  ENDERECOINSTITUICAO: string;
+  BAIRROINSTITUICAO: string;
+  SERIEATUAL: number;
+  TURMA: string;
+  IDESCOLARIDADE: number;
+  OUTROSCURSOSREALIZADOS: string;
+  NOMECURSOPRETENDIDO: string;
+  HORARIO: string;
+  NOMECONTATOEMERGENCIA: string;
+  TELEFONEEMERGENCIA1: string;
+  TELEFONEEMERGENCIA2: string;
+  ALERGIA: string;
+  SITMEDICAESPECIAL: string;
+  FRATURASCIRURGICAS: string;
+  MEDICACAOCONTROLADA: string;
+  PROVIDENCIARECOMENDADA: string;
+  FAMILIARTRATAMENTOMEDICO: string;
+  FAMILIARUSOMEDICO: string;
+  FAMILIARDEFICIENCIA: string;
+  FAMILARDEPENDENCIAQUIMICA: string;
+  ACOMPANHAMENTOTERAPEUTICO: string;
+  PROGRAMASOCIAL: string;
+  AGUAPOTAVEL: string;
+  REDEESGOTO: string;
+  IDCOBERTURAMORADIA: number;
+  RUAPAVIMENTADA: string;
+  POSSUIELETRICIDADE: string;
+  COMODOSMORADIA: number;
+  TIPOIMOVELRESIDENCIA: string;
+  VALORALUGUEL: number;
+  IDPARENTESCOPROPRIETARIO: number;
+  PRESTACAOFINANCIAMENTO: number;
+  IDCOMPFAMILIAR: number | undefined;
+  NOME: string;
+  IDADE: number | undefined;
+  PROFISSAO: string;
+  RENDA: number | undefined;
+  DESPESASDESCONTOS: number;
+  DESPESASRENDABRUTA: number;
+  DESPESASMORADIA: number;
+  DESPESASRENDALIQUIDA: number;
+  DESPESASEDUCACAO: number;
+  DESPESASPESSOASRESIDENCIA: number;
+  DESPESASSAUDE: number;
+  DESPESASRPC: number;
+  DESPESASTOTAL: number;
+  DESPESASOBS: string;
+  OUTROSGASTOS: string;
+  SITUACAOSOCIOECONOMICAFAMILIAR: string;
+  OBSERVACOESNECESSARIAS: string;
+  PARECERASSISTSOCIAL: string;
+  STATUSPROCESSO: string;
+  DATACAD: Date;
+  IDUSUARIO: number;
+}
+
+export function CandidatoFicha() {
+  const location = useLocation();
   const [situacaoTrabalhista, setSituacaoTrabalhista] =
     useState<SituacaoTrabalhista[]>();
   const [racaEtnia, setRacaEtnia] = useState<RacaEtnia[]>();
@@ -313,6 +278,10 @@ export function CadastrarCandidato() {
   const [coberturaMoradia, setCoberturaMoradia] =
     useState<CoberturaMoradia[]>();
   const [aceitarTermos, setAceitarTermos] = useState(false);
+
+  const valuesEditFicha = location.state?.valuesEditFicha;
+  const fichaCandidato = location.state?.valuesEditFicha.ficha;
+  console.log(valuesEditFicha);
 
   const getRacaEtnia = useCallback(async () => {
     try {
@@ -418,171 +387,131 @@ export function CadastrarCandidato() {
     mode: 'onBlur',
     defaultValues: {
       IdentificacaoCandidato: {
-        NomeCompleto: fakeData.IdentificacaoCandidato.NomeCompleto ?? '',
-        Cpf: fakeData.IdentificacaoCandidato.Cpf ?? '',
-        DocIdentidade: fakeData.IdentificacaoCandidato.DocIdentidade ?? '',
+        NomeCompleto: fichaCandidato?.NOMECOMPLETO,
+        Cpf: fichaCandidato?.CPF ?? '',
+        DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',
         DataNascimento: null,
-        Naturalidade: fakeData.IdentificacaoCandidato.Naturalidade ?? '',
-        IdRacaEtnia: fakeData.IdentificacaoCandidato.IdRacaEtnia ?? undefined,
-        IdSitTrabalhista:
-          fakeData.IdentificacaoCandidato.IdSitTrabalhista ?? undefined,
-        OutraSitTrabalhista:
-          fakeData.IdentificacaoCandidato.OutraSitTrabalhista ?? '',
-        IdEstadoCivil:
-          fakeData.IdentificacaoCandidato.IdEstadoCivil ?? undefined,
-        Email: fakeData.IdentificacaoCandidato.Email ?? '',
-        NecessidadeEspecial:
-          fakeData.IdentificacaoCandidato.NecessidadeEspecial ?? 0,
-        EnderecoResidencial:
-          fakeData.IdentificacaoCandidato.EnderecoResidencial ?? '',
-        Numero: fakeData.IdentificacaoCandidato.Numero ?? '',
-        Complemento: fakeData.IdentificacaoCandidato.Complemento ?? '',
-        Bairro: fakeData.IdentificacaoCandidato.Bairro ?? '',
-        Cep: fakeData.IdentificacaoCandidato.Cep ?? '',
-        TelefoneResidencial:
-          fakeData.IdentificacaoCandidato.TelefoneResidencial ?? '',
-        TelefoneRecado: fakeData.IdentificacaoCandidato.TelefoneRecado ?? '',
-        TelefoneCelular: fakeData.IdentificacaoCandidato.TelefoneCelular ?? '',
-        NomePai: fakeData.IdentificacaoCandidato.NomePai ?? '',
-        CpfPai: fakeData.IdentificacaoCandidato.CpfPai ?? '',
-        NomeMae: fakeData.IdentificacaoCandidato.NomeMae ?? '',
-        CpfMae: fakeData.IdentificacaoCandidato.CpfMae ?? '',
-        NomeResponsavel: fakeData.IdentificacaoCandidato.NomeResponsavel ?? '',
-        IdParentescoResponsavel:
-          fakeData.IdentificacaoCandidato.IdParentescoResponsavel ?? undefined,
-        IdEstadoCivilPai:
-          fakeData.IdentificacaoCandidato.IdEstadoCivilPai ?? undefined,
-        IdEstadoCivilMae:
-          fakeData.IdentificacaoCandidato.IdEstadoCivilMae ?? undefined,
+        Naturalidade: fichaCandidato?.NATURALIDADE ?? '',
+        IdRacaEtnia: fichaCandidato?.IDRACAETNIA ?? '',
+        IdSitTrabalhista: fichaCandidato?.IDSITTRABALHISTA ?? '',
+        OutraSitTrabalhista: fichaCandidato?.OUTRASITTRABALHISTA ?? '',
+        IdEstadoCivil: fichaCandidato?.IDESTADOCIVIL ?? '',
+        Email: fichaCandidato?.EMAIL ?? '',
+        NecessidadeEspecial: fichaCandidato?.NECESSIDADEESPECIAL ?? '',
+        EnderecoResidencial: fichaCandidato?.ENDERECORESIDENCIAL ?? '',
+        Numero: fichaCandidato?.NUMERO ?? '',
+        Complemento: fichaCandidato?.COMPLEMENTO ?? '',
+        Bairro: fichaCandidato?.BAIRRO ?? '',
+        Cep: fichaCandidato?.CEP ?? '',
+        TelefoneResidencial: fichaCandidato?.TELEFONERESIDENCIAL ?? '',
+        TelefoneRecado: fichaCandidato?.TELEFONERECADO ?? '',
+        TelefoneCelular: fichaCandidato?.TELEFONECELULAR ?? '',
+        NomePai: fichaCandidato?.NOMEPAI ?? '',
+        CpfPai: fichaCandidato?.CPFPAI ?? '',
+        NomeMae: fichaCandidato?.NOMEMAE ?? '',
+        CpfMae: fichaCandidato?.CPFMAE ?? '',
+        NomeResponsavel: fichaCandidato?.NOMERESPONSAVEL ?? '',
+        IdParentescoResponsavel: fichaCandidato?.IDPARENTESCORESPONSAVEL ?? '',
+        IdEstadoCivilPai: fichaCandidato?.IDESTADOCIVILPAI ?? '',
+        IdEstadoCivilMae: fichaCandidato?.IDESTADOCIVILMAE ?? '',
       },
       OutrasFichasGrupoFamiliar: [
         {
-          IdFicha: fakeData.OutrasFichasGrupoFamiliar[0].IdFicha ?? undefined,
-          NomeCompleto:
-            fakeData.OutrasFichasGrupoFamiliar[0].NomeCompleto ?? '',
-          IdParentesco:
-            fakeData.OutrasFichasGrupoFamiliar[0].IdParentesco ?? undefined,
+          IdFicha: fichaCandidato?.IDFICHA ?? '',
+          NomeCompleto: fichaCandidato?.NOMECOMPLETO ?? '',
+          IdParentesco: fichaCandidato?.IDPARENTESCO ?? '',
         },
       ],
       DadosEducacionaisCandidato: {
-        Estuda: fakeData.DadosEducacionaisCandidato.Estuda ?? '',
-        InstituicaoEnsino:
-          fakeData.DadosEducacionaisCandidato.InstituicaoEnsino ?? '',
-        NomeInstituicaoEnsino:
-          fakeData.DadosEducacionaisCandidato.NomeInstituicaoEnsino ?? '',
-        EnderecoInstituicao:
-          fakeData.DadosEducacionaisCandidato.EnderecoInstituicao ?? '',
-        BairroInstituicao:
-          fakeData.DadosEducacionaisCandidato.BairroInstituicao ?? '',
-        SerieAtual: fakeData.DadosEducacionaisCandidato.SerieAtual ?? undefined,
-        Turma: fakeData.DadosEducacionaisCandidato.Turma ?? '',
-        Turno: fakeData.DadosEducacionaisCandidato.Turno ?? '',
-        IdEscolaridade:
-          fakeData.DadosEducacionaisCandidato.IdEscolaridade ?? undefined,
-        OutrosCursosRealizados:
-          fakeData.DadosEducacionaisCandidato.OutrosCursosRealizados ?? '',
+        Estuda: fichaCandidato?.ESTUDA ?? '',
+        InstituicaoEnsino: fichaCandidato?.INSTITUICAOENSINO ?? '',
+        NomeInstituicaoEnsino: fichaCandidato?.NOMEINSTITUICAOENSINO ?? '',
+        EnderecoInstituicao: fichaCandidato?.ENDERECOINSTITUICAO ?? '',
+        BairroInstituicao: fichaCandidato?.BAIRROINSTITUICAO ?? '',
+        SerieAtual: fichaCandidato?.SERIEATUAL ?? '',
+        Turma: fichaCandidato?.TURMA ?? '',
+        Turno: '',
+        IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
+        OutrosCursosRealizados: fichaCandidato?.OUTROSCURSOSREALIZADOS ?? '',
       },
       BeneficiosPleiteados: [
         {
-          NomeCursoPretendido:
-            fakeData.BeneficiosPleiteados[0].NomeCursoPretendido ?? '',
-          Turno: fakeData.BeneficiosPleiteados[0].Turno ?? '',
-          Horario: fakeData.BeneficiosPleiteados[0].Horario ?? '',
+          NomeCursoPretendido: fichaCandidato?.NOMECURSOPRETENDIDO ?? '',
+          Turno: '',
+          Horario: fichaCandidato?.HORARIO ?? '',
         },
       ],
       CondicoesSaudeCandidato: {
-        NomeContatoEmergencia:
-          fakeData.CondicoesSaudeCandidato.NomeContatoEmergencia ?? '',
-        TelefoneEmergencia1:
-          fakeData.CondicoesSaudeCandidato.TelefoneEmergencia1 ?? '',
-        TelefoneEmergencia2:
-          fakeData.CondicoesSaudeCandidato.TelefoneEmergencia2 ?? '',
-        Alergia: fakeData.CondicoesSaudeCandidato.Alergia ?? '',
-        SitMedicaEspecial:
-          fakeData.CondicoesSaudeCandidato.SitMedicaEspecial ?? '',
-        FraturasCirurgicas:
-          fakeData.CondicoesSaudeCandidato.FraturasCirurgicas ?? '',
-        MedicacaoControlada:
-          fakeData.CondicoesSaudeCandidato.MedicacaoControlada ?? '',
-        ProvidenciaRecomendada:
-          fakeData.CondicoesSaudeCandidato.ProvidenciaRecomendada ?? '',
+        NomeContatoEmergencia: fichaCandidato?.NOMECONTATOEMERGENCIA ?? '',
+        TelefoneEmergencia1: fichaCandidato?.TELEFONEEMERGENCIA1 ?? '',
+        TelefoneEmergencia2: fichaCandidato?.TELEFONEEMERGENCIA2 ?? '',
+        Alergia: fichaCandidato?.ALERGIA ?? '',
+        SitMedicaEspecial: fichaCandidato?.SITMEDICAESPECIAL ?? '',
+        FraturasCirurgicas: fichaCandidato?.FRATURASCIRURGICAS ?? '',
+        MedicacaoControlada: fichaCandidato?.MEDICACAOCONTROLADA ?? '',
+        ProvidenciaRecomendada: fichaCandidato?.PROVIDENCIARECOMENDADA ?? '',
       },
       CondicoesSociaisESaudeFamilia: {
         FamiliarTratamentoMedico:
-          fakeData.CondicoesSociaisESaudeFamilia.FamiliarTratamentoMedico ?? '',
-        FamiliarUsoMedico:
-          fakeData.CondicoesSociaisESaudeFamilia.FamiliarUsoMedico ?? '',
-        FamiliarDeficiencia:
-          fakeData.CondicoesSociaisESaudeFamilia.FamiliarDeficiencia ?? '',
+          fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
+        FamiliarUsoMedico: fichaCandidato?.FAMILIARUSOMEDICO ?? '',
+        FamiliarDeficiencia: fichaCandidato?.FAMILIARDEFICIENCIA ?? '',
         FamiliarDependenciaQuimica:
-          fakeData.CondicoesSociaisESaudeFamilia.FamiliarDependenciaQuimica ??
-          '',
+          fichaCandidato?.FAMILARDEPENDENCIAQUIMICA ?? '',
         AcompanhamentoTerapeutico:
-          fakeData.CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico ??
-          '',
-        ProgramaSocial:
-          fakeData.CondicoesSociaisESaudeFamilia.ProgramaSocial ?? '',
+          fichaCandidato?.ACOMPANHAMENTOTERAPEUTICO ?? '',
+        ProgramaSocial: fichaCandidato?.PROGRAMASOCIAL ?? '',
       },
       CondicoesMoradia: {
-        AguaPotavel: fakeData.CondicoesMoradia.AguaPotavel ?? '',
-        RedeEsgoto: fakeData.CondicoesMoradia.RedeEsgoto ?? '',
-        IdCoberturaMoradia:
-          fakeData.CondicoesMoradia.IdCoberturaMoradia ?? undefined,
-        RuaPavimentada: fakeData.CondicoesMoradia.RuaPavimentada ?? '',
-        PossuiEletricidade: fakeData.CondicoesMoradia.PossuiEletricidade ?? '',
-        ComodosMoradia: fakeData.CondicoesMoradia.ComodosMoradia ?? undefined,
-        TipoImovelResidencia:
-          fakeData.CondicoesMoradia.TipoImovelResidencia ?? '',
-        ValorAluguel: fakeData.CondicoesMoradia.ValorAluguel ?? undefined,
+        AguaPotavel: fichaCandidato?.AGUAPOTAVEL ?? '',
+        RedeEsgoto: fichaCandidato?.REDEESGOTO ?? '',
+        IdCoberturaMoradia: fichaCandidato?.IDCOBERTURAMORADIA ?? '',
+        RuaPavimentada: fichaCandidato?.RUAPAVIMENTADA ?? '',
+        PossuiEletricidade: fichaCandidato?.POSSUIELETRICIDADE ?? '',
+        ComodosMoradia: fichaCandidato?.COMODOSMORADIA ?? '',
+        TipoImovelResidencia: fichaCandidato?.TIPOIMOVELRESIDENCIA ?? '',
+        ValorAluguel: fichaCandidato?.VALORALUGUEL ?? '',
         IdParentescoProprietario:
-          fakeData.CondicoesMoradia.IdParentescoProprietario ?? undefined,
-        PrestacaoFinanciamento:
-          fakeData.CondicoesMoradia.PrestacaoFinanciamento ?? undefined,
+          fichaCandidato?.IDPARENTESCOPROPRIETARIO ?? '',
+        PrestacaoFinanciamento: fichaCandidato?.PRESTACAOFINANCIAMENTO ?? '',
       },
       ComposicaoFamiliar: [
         {
-          IdCompFamiliar:
-            fakeData.ComposicaoFamiliar[0].IdCompFamiliar ?? undefined,
-          IdFicha: fakeData.ComposicaoFamiliar[0].IdFicha ?? undefined,
-          Nome: fakeData.ComposicaoFamiliar[0].Nome ?? '',
-          IdParentesco:
-            fakeData.ComposicaoFamiliar[0].IdParentesco ?? undefined,
-          Idade: fakeData.ComposicaoFamiliar[0].Idade ?? undefined,
-          IdEstadoCivil:
-            fakeData.ComposicaoFamiliar[0].IdEstadoCivil ?? undefined,
-          Profissao: fakeData.ComposicaoFamiliar[0].Profissao ?? '',
-          IdSitTrabalhista:
-            fakeData.ComposicaoFamiliar[0].IdSitTrabalhista ?? undefined,
-          IdEscolaridade:
-            fakeData.ComposicaoFamiliar[0].IdEscolaridade ?? undefined,
-          Renda: fakeData.ComposicaoFamiliar[0].Renda ?? undefined,
+          IdCompFamiliar: fichaCandidato?.IDCOMPFAMILIAR ?? '',
+          IdFicha: fichaCandidato?.IDFICHA ?? '',
+          Nome: fichaCandidato?.NOME ?? '',
+          IdParentesco: fichaCandidato?.IDPARENTESCO ?? '',
+          Idade: fichaCandidato?.IDADE ?? '',
+          IdEstadoCivil: fichaCandidato?.IDESTADOCIVIL ?? '',
+          Profissao: fichaCandidato?.PROFISSAO ?? '',
+          IdSitTrabalhista: fichaCandidato?.IDSITTRABALHISTA ?? '',
+          IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
+          Renda: fichaCandidato?.RENDA ?? '',
         },
       ],
       Despesas: {
-        DespesasDescontos: fakeData.Despesas.DespesasDescontos ?? undefined,
-        DespesasRendaBruta: fakeData.Despesas.DespesasRendaBruta ?? undefined,
-        DespesasMoradia: fakeData.Despesas.DespesasMoradia ?? undefined,
-        DespesasRendaLiquida:
-          fakeData.Despesas.DespesasRendaLiquida ?? undefined,
-        DespesasEducacao: fakeData.Despesas.DespesasEducacao ?? undefined,
+        DespesasDescontos: fichaCandidato?.DESPESASDESCONTOS ?? '',
+        DespesasRendaBruta: fichaCandidato?.DESPESASRENDABRUTA ?? '',
+        DespesasMoradia: fichaCandidato?.DESPESASMORADIA ?? '',
+        DespesasRendaLiquida: fichaCandidato?.DESPESASRENDALIQUIDA ?? '',
+        DespesasEducacao: fichaCandidato?.DESPESASEDUCACAO ?? '',
         DespesasPessoasResidencia:
-          fakeData.Despesas.DespesasPessoasResidencia ?? undefined,
-        DespesasSaude: fakeData.Despesas.DespesasSaude ?? undefined,
-        DespesasRpc: fakeData.Despesas.DespesasRpc ?? undefined,
-        DespesasTotal: fakeData.Despesas.DespesasTotal ?? undefined,
-        DespesasObs: fakeData.Despesas.DespesasObs ?? undefined,
+          fichaCandidato?.DESPESASPESSOASRESIDENCIA ?? '',
+        DespesasSaude: fichaCandidato?.DESPESASSAUDE ?? '',
+        DespesasRpc: fichaCandidato?.DESPESASRPC ?? '',
+        DespesasTotal: fichaCandidato?.DESPESASTOTAL ?? '',
+        DespesasObs: fichaCandidato?.DESPESASOBS ?? '',
       },
-      OutrosGastos: fakeData.OutrosGastos ?? undefined,
+      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? '',
       SituacaoSocioEconomicaFamiliar:
-        fakeData.SituacaoSocioEconomicaFamiliar ?? undefined,
-      ObservacoesNecessarias: fakeData.ObservacoesNecessarias ?? undefined,
+        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? '',
+      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? '',
       ParecerAssistSocial: {
-        ParecerAssistSocial:
-          fakeData.ParecerAssistSocial.ParecerAssistSocial ?? undefined,
-        StatusProcesso: fakeData.ParecerAssistSocial.StatusProcesso ?? '',
+        ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIAL ?? '',
+        StatusProcesso: fichaCandidato?.STATUSPROCESSO ?? '',
       },
-      DataCad: fakeData.DataCad ?? new Date(),
-      IdUsuario: fakeData.IdUsuario ?? 1,
+      DataCad: fichaCandidato?.DATACAD ?? new Date(),
+      IdUsuario: fichaCandidato?.IDUSUARIO ?? 0,
     },
     criteriaMode: 'all',
   });
@@ -937,10 +866,12 @@ export function CadastrarCandidato() {
       setValue={setValue}
       watch={watch}
     />,
-    <DeclaracaoResponsabilidadeInfoDoc
-      aceitarTermos={aceitarTermos}
-      setAceitarTermos={setAceitarTermos}
-    />,
+    !valuesEditFicha?.isEdit && (
+      <DeclaracaoResponsabilidadeInfoDoc
+        aceitarTermos={aceitarTermos}
+        setAceitarTermos={setAceitarTermos}
+      />
+    ),
     //<TermoAutorizacaoUsoDeImagemEVoz />,
   ];
 
@@ -950,7 +881,10 @@ export function CadastrarCandidato() {
   return (
     <React.Fragment>
       <Tabs
-        tabQuantidade={formComponents.length}
+        tabQuantidade={
+          //usando o filter para filtrar os componentes que não quero que apareça na tela quando for editar
+          formComponents.filter(componentes => componentes !== false).length
+        }
         tabContent={formComponents}
         currentTab={currentStep}
         onTabChange={changeStep}
@@ -986,13 +920,17 @@ export function CadastrarCandidato() {
             >
               Próximo
             </button>
-          ) : (
+          ) : isLastStep && !valuesEditFicha?.isEdit ? (
             <button
               type="submit"
               className="btn-avancar"
               disabled={aceitarTermos === false}
             >
               Adicionar
+            </button>
+          ) : (
+            <button type="submit" className="btn-avancar">
+              Salvar
             </button>
           )}
         </div>

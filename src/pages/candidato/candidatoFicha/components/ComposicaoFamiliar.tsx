@@ -22,7 +22,7 @@ import {
   Ficha,
   Parentesco,
   SituacaoTrabalhista,
-} from '../CadastrarCandidato';
+} from '../CandidatoFicha';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';

@@ -1,39 +1,40 @@
-//import axios from 'axios';
+import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-//import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
-//import trashIcon from '../../../assets/images/trash.svg';
+import inativoIcon from '../../../assets/images/inativo-icon.svg';
+import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
 import { Pagination } from '@mui/material';
 import { ButtonLink } from '../../../components/Button/Button';
-//import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../components/utils/axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
 
-type UsuarioDashboardProps = {
+type CandidatoDashboardProps = {
   urlBase?: string;
 };
 
-export interface UsuarioProps {
-  IDUSUARIO: number;
-  USUARIO: string;
-  EMAIL: string;
-  CPF: string;
-  ATIVO: string;
-  TELEFONE?: string;
-  //created_at: string;
-}
-type DashboardCandidatoProps = {
+type CandidatoProps = {
   NOMECOMPLETO: string;
   CPF: string;
   EMAIL: string;
-};
+  ATIVO: string;
+  IDFICHA: number;
+}[];
 
-export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
+export default function CandidatoDashboard({
+  urlBase,
+}: CandidatoDashboardProps) {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [candidato, setCandidato] = useState<DashboardCandidatoProps[]>([]);
+  const [candidato, setCandidato] = useState<CandidatoProps>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [isFilterInativos, setIsFilterInativos] = useState<string>('S');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [idFicha, setIdFicha] = useState<number>(0);
+  const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
 
   const getFichas = useCallback(
     async (page: number, take: number, status: string) => {
@@ -60,17 +61,59 @@ export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
     []
   );
 
-  useEffect(() => {
-    getFichas(currentPage, 5, 'S');
-  }, [getFichas, currentPage]);
+  const getFichaCandidato = useCallback(async (IDFICHA: number) => {
+    try {
+      await axiosInstance
+        .get(`/ficha`, {
+          params: {
+            idFicha: IDFICHA,
+          },
+        })
+        .then(res => {
+          setFichaCandidato(res.data);
+        });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }, []);
 
-  function handleUsuariosInativos(e: React.ChangeEvent<HTMLInputElement>) {
+  useEffect(() => {
+    getFichas(currentPage, 5, isFilterInativos);
+  }, [getFichas, currentPage, isFilterInativos]);
+
+  function handleCandidatosInativos(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      //getFichas(1, 5, 'N');
+      getFichas(1, 5, 'N');
+      setIsFilterInativos('N');
     } else {
-      //getFichas(1, 5, 'S');
+      getFichas(1, 5, 'S');
+      setIsFilterInativos('S');
     }
   }
+
+  const handleEdit = useCallback(
+    function () {
+      if (isEdit && fichaCandidato !== undefined) {
+        navigate('/candidato/editar', {
+          state: {
+            valuesEditFicha: {
+              isEdit: isEdit,
+              idFicha: idFicha,
+              ficha: fichaCandidato,
+            },
+          },
+        });
+      }
+    },
+    [isEdit, navigate, idFicha, fichaCandidato]
+  );
+
+  useEffect(() => {
+    handleEdit();
+  }, [isEdit, navigate, handleEdit, idFicha]);
 
   const numeroDePaginas = Math.ceil(totalPages / 5);
 
@@ -85,7 +128,7 @@ export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
             <input
               type="checkbox"
               id="busca-inativos"
-              onChange={e => handleUsuariosInativos(e)}
+              onChange={e => handleCandidatosInativos(e)}
             />
             <label htmlFor="busca-inativos">Mostrar candidatos inativos</label>
           </div>
@@ -98,38 +141,60 @@ export default function CandidatoDashboard({ urlBase }: UsuarioDashboardProps) {
                 <th className="listagem-candidato-cpf">CPF</th>
                 <th className="listagem-candidato-email">Email</th>
                 <th className="listagem-candidato-editar">Editar</th>
-                {/* <th className="listagem-candidato-excluir">Excluir</th> */}
+                <th className="listagem-candidato-status">Status</th>
               </tr>
             </thead>
             <tbody>
               {candidato?.length > 0
-                ? candidato?.map((usuario, index) => {
+                ? candidato?.map((candidato, index) => {
                     return (
                       <tr key={index}>
                         <td className="listagem-candidato-nome">
-                          {usuario?.NOMECOMPLETO}
+                          {candidato?.NOMECOMPLETO}
                         </td>
                         <td
                           className="listagem-candidato-cpf"
                           style={{
-                            color: usuario?.CPF ? undefined : 'red',
+                            color: candidato?.CPF ? undefined : 'red',
                           }}
                         >
-                          {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
+                          {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
                         </td>
                         <td className="listagem-candidato-email">
-                          {usuario?.EMAIL ?? 'Não cadastrado'}
+                          {candidato?.EMAIL ?? 'Não cadastrado'}
                         </td>
                         <td className="listagem-candidato-editar">
-                          <button type="button" onClick={() => {}}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsEdit(true);
+                              setIdFicha(candidato?.IDFICHA);
+                              getFichaCandidato(candidato?.IDFICHA);
+                              handleEdit();
+                            }}
+                          >
                             <img src={editIcon} alt="Editar Candidato" />
                           </button>
                         </td>
-                        {/* <td className="listagem-candidato-excluir">
-                          <button>
-                            <img src={trashIcon} alt="Excluir Candidato" />
-                          </button>
-                        </td> */}
+                        <td className="listagem-candidato-status">
+                          {candidato.ATIVO === 'S' ? (
+                            <span>
+                              <img
+                                src={ativoIcon}
+                                alt="Candidato Ativo"
+                                title="Candidato Ativo"
+                              />
+                            </span>
+                          ) : (
+                            <span>
+                              <img
+                                src={inativoIcon}
+                                alt="Candidato Inativo"
+                                title="Candidato Inativo"
+                              />
+                            </span>
+                          )}
+                        </td>
                       </tr>
                     );
                   })

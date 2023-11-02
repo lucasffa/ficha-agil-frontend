@@ -8,14 +8,14 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import * as Yup from 'yup';
 
-import itakaLogo from '../assets/images/logo-itaka.png';
-import InputErrors from '../components/Errors/Errors';
-import { ButtonLink } from '../components/Button/Button';
-import PrivateRoutes from '../components/utils/PrivateRoutes';
+import itakaLogo from '../../assets/images/logo-itaka.png';
+import InputErrors from '../../components/Errors/Errors';
+import { ButtonLink } from '../../components/Button/Button';
+import PrivateRoutes from '../../components/utils/PrivateRoutes';
 
 import './signIn.scss';
 import { toast } from 'react-toastify';
-import axiosInstance from '../components/utils/axios';
+import axiosInstance from '../../components/utils/axios';
 
 type SignInForm = {
   Email: string;
@@ -49,7 +49,7 @@ export default function SignIn() {
           localStorage.setItem('user', res.data.user.USUARIO);
           localStorage.setItem('isAuthenticated', 'true');
           PrivateRoutes(res.data.length > 1 ? true : false);
-          navigate('/dashboard');
+          navigate('/relatorios');
         });
     } catch (err: any) {
       const error = err.response?.data;

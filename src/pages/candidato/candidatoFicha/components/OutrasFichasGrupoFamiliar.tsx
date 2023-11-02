@@ -10,37 +10,39 @@ import {
   Grid,
   TextField,
   IconButton,
-  FormControl,
   InputLabel,
-  Select,
+  FormControl,
   MenuItem,
+  Select,
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Ficha } from '../CadastrarCandidato';
+import { Ficha, Parentesco } from '../CandidatoFicha';
 import { useFieldArray } from 'react-hook-form';
-import { InputMaskHorario } from '../../../../Shared/InputPadraoForm';
 
-interface BeneficiosPleiteadosProps {
+interface OutrasFichasGrupoFamiliarProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
+  parentesco: Parentesco[] | undefined;
 }
 
-//4. BENEFÍCIOS PLEITEADOS
-export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
+export default function OutrasFichasGrupoFamiliar(
+  props: OutrasFichasGrupoFamiliarProps
+) {
   const { control } = props;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'BeneficiosPleiteados',
+    name: 'OutrasFichasGrupoFamiliar',
   });
+
   return (
     <React.Fragment>
-      <div className="cabecalho-form">4. BENEFÍCIOS PLEITEADOS</div>
+      <div className="cabecalho-form">2. OUTRAS FICHAS DO GRUPO FAMILIAR</div>
       {fields.map((field, index) => (
-        <BeneficiosPleiteadosComponent
+        <OutrasFichasGrupoFamiliarComponent
           key={field.id}
           index={index}
           control={control}
@@ -49,6 +51,7 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
           setValue={props.setValue}
           watch={props.watch}
           remove={remove}
+          parentesco={props.parentesco}
         />
       ))}
       <Grid container spacing={1}>
@@ -58,9 +61,9 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
             type="button"
             onClick={() =>
               append({
-                NomeCursoPretendido: '',
-                Horario: '',
-                Turno: '',
+                IdFicha: undefined,
+                NomeCompleto: '',
+                IdParentesco: undefined,
               })
             }
             style={{ background: 'none' }}
@@ -73,24 +76,44 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
   );
 }
 
-function BeneficiosPleiteadosComponent(
-  props: BeneficiosPleiteadosProps & { index: number; field: any; remove: any }
+function OutrasFichasGrupoFamiliarComponent(
+  props: OutrasFichasGrupoFamiliarProps & {
+    index: number;
+    field: any;
+    remove: any;
+  }
 ) {
   const { index, control, remove } = props;
 
   return (
     <React.Fragment>
       <Grid container spacing={1}>
-        <Grid item xs={7}>
+        <Grid item xs={2}>
           <Controller
             control={control}
-            name={`BeneficiosPleiteados.${index}.NomeCursoPretendido`}
+            name={`OutrasFichasGrupoFamiliar.${index}.IdFicha`}
             render={({ field }) => (
               <TextField
                 fullWidth
                 id={`outlined-basic-${index}-1`}
-                label="Cursos ou Atividades pretendidos (Na ordem de prioridade)
-                "
+                label="Número"
+                color="primary"
+                variant="outlined"
+                type="number"
+                {...field}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={7}>
+          <Controller
+            control={control}
+            name={`OutrasFichasGrupoFamiliar.${index}.NomeCompleto`}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                id={`outlined-basic-${index}-2`}
+                label="Nome Completo"
                 color="primary"
                 variant="outlined"
                 {...field}
@@ -100,43 +123,31 @@ function BeneficiosPleiteadosComponent(
         </Grid>
         <Grid item xs={2}>
           <Controller
-            control={control}
-            name={`BeneficiosPleiteados.${index}.Turno`}
+            control={props.control}
+            name={`OutrasFichasGrupoFamiliar.${index}.IdParentesco`}
             render={({ field }) => {
               return (
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Turno</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    Parentesco
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Turno"
+                    label="Parentesco"
                     {...field}
                   >
-                    return (<MenuItem value="M">Manhã</MenuItem>
-                    <MenuItem value="T">Tarde</MenuItem>{' '}
-                    <MenuItem value="N">Noite</MenuItem>
-                    );
+                    {props?.parentesco?.map((item, index) => {
+                      return (
+                        <MenuItem key={index} value={item.IDPARENTESCO}>
+                          {item.DESCRICAO}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               );
             }}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <Controller
-            control={control}
-            name={`BeneficiosPleiteados.${index}.Horario`}
-            render={({ field }) => (
-              <InputMaskHorario
-                value={props.getValues(`BeneficiosPleiteados.${index}.Horario`)}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  props.setValue(
-                    `BeneficiosPleiteados.${index}.Horario`,
-                    event.target.value
-                  );
-                }}
-              />
-            )}
           />
         </Grid>
         <Grid item xs={1}>

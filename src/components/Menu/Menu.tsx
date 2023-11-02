@@ -4,22 +4,22 @@ import '../../styles/global.scss';
 import menuIcon from '../../assets/images/menu.svg';
 import closeMenuIcon from '../../assets/images/close.svg';
 import sairIcon from '../../assets/images/exit.svg';
-import dashboardIcon from '../../assets/images/align-right.svg';
+import relatoriodIcon from '../../assets/images/align-right.svg';
 import userIcon from '../../assets/images/user.svg';
 import { useState } from 'react';
 import uniqid from 'uniqid';
 
 const sections = [
-  {
-    rota: 'dashboard',
-    name: 'Dashboard',
-    icon: dashboardIcon,
-    isSubRota: false,
-  },
   { rota: 'candidato', name: 'Candidato', icon: userIcon, isSubRota: false },
   {
     rota: 'candidato/adicionar',
     name: 'Adicionar Candidato',
+    icon: userIcon,
+    isSubRota: true,
+  },
+  {
+    rota: 'candidato/editar',
+    name: 'Editar Candidato',
     icon: userIcon,
     isSubRota: true,
   },
@@ -35,6 +35,12 @@ const sections = [
     name: 'Edição de Usuário',
     icon: userIcon,
     isSubRota: true,
+  },
+  {
+    rota: 'relatorios',
+    name: 'Relatórios',
+    icon: relatoriodIcon,
+    isSubRota: false,
   },
 ];
 

@@ -5,7 +5,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { Ficha } from '../CadastrarCandidato';
+import { Ficha } from '../CandidatoFicha';
 import React from 'react';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';

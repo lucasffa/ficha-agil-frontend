@@ -1,3 +1,4 @@
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   FormControl,
@@ -9,7 +10,7 @@ import {
 } from '@mui/material';
 import { Button } from '../../../components/Button/Button';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './editarUsuario.scss';
 import {
   InputMaskCpf,
@@ -20,6 +21,7 @@ import { UsuarioProps } from '../UsuarioDashboard/UsuarioDashboard';
 import axiosInstance from '../../../components/utils/axios';
 
 export default function EditarUsuario() {
+  const navigate = useNavigate();
   const location = useLocation();
   const ValuesRefDadosUsuario: UsuarioProps =
     location.state?.ValuesRefDadosUsuario;
@@ -67,6 +69,7 @@ export default function EditarUsuario() {
         )
         .then(res => {
           toast.success(`Usuário ${res.data} salvo com sucesso!`);
+          navigate('/usuario');
         });
     } catch (err: any) {
       const error = err.response?.data;

@@ -22,7 +22,11 @@ export default function useFormSteps(steps: React.ReactNode[]) {
     currentStep,
     currentComponent: steps[currentStep],
     changeStep: changeStep as ChangeStepFunction,
-    isLastStep: currentStep + 1 === steps.length ? true : false,
+    isLastStep:
+      currentStep + 1 ===
+      steps.filter(componentes => componentes !== false).length
+        ? true
+        : false,
     isFirstStep: currentStep === 0 ? false : true,
   };
 }
