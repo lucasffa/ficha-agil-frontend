@@ -47,6 +47,7 @@ export default function SignIn() {
           toast.success('Login feito com sucesso!');
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('user', res.data.user.USUARIO);
+          localStorage.setItem('idUsuarioLogado', res.data.user.IDUSUARIO);
           localStorage.setItem('isAuthenticated', 'true');
           PrivateRoutes(res.data.length > 1 ? true : false);
           navigate('/relatorios');

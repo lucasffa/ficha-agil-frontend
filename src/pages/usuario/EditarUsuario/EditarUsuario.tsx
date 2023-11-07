@@ -51,6 +51,7 @@ export default function EditarUsuario() {
     CPF: string,
     EMAIL: string,
     ATIVO: string,
+    IDUSUARIOREQ: string,
     TELEFONE?: string
   ) {
     try {
@@ -62,6 +63,7 @@ export default function EditarUsuario() {
             CPF,
             EMAIL,
             ATIVO,
+            IDUSUARIOREQ,
           }),
           {
             headers: { 'Content-Type': 'application/json' },
@@ -87,7 +89,13 @@ export default function EditarUsuario() {
         onSubmit={handleSubmit((data, event) => {
           event?.preventDefault();
           if (data) {
-            salvarUsuario(data.USUARIO, data.CPF, data.EMAIL, data.ATIVO);
+            salvarUsuario(
+              data.USUARIO,
+              data.CPF,
+              data.EMAIL,
+              data.ATIVO,
+              localStorage.getItem('idUsuarioLogado') ?? ''
+            );
           }
         })}
       >

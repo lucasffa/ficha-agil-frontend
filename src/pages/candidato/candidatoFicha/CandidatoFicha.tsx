@@ -378,9 +378,10 @@ export function CandidatoFicha() {
   ]);
 
   function removeMask(value: any) {
-    return value === undefined || value === null
-      ? 0
-      : value?.replace(/[-.\s]/g, '');
+    if (value === undefined || value === null) {
+      return 0;
+    }
+    return value.replace(/[^\w\s]/g, '');
   }
 
   const { control, handleSubmit, getValues, setValue, watch } = useForm<Ficha>({
@@ -470,10 +471,9 @@ export function CandidatoFicha() {
         PossuiEletricidade: fichaCandidato?.POSSUIELETRICIDADE ?? '',
         ComodosMoradia: fichaCandidato?.COMODOSMORADIA ?? '',
         TipoImovelResidencia: fichaCandidato?.TIPOIMOVELRESIDENCIA ?? '',
-        ValorAluguel: fichaCandidato?.VALORALUGUEL ?? '',
-        IdParentescoProprietario:
-          fichaCandidato?.IDPARENTESCOPROPRIETARIO ?? '',
-        PrestacaoFinanciamento: fichaCandidato?.PRESTACAOFINANCIAMENTO ?? '',
+        ValorAluguel: fichaCandidato?.VALORALUGUEL ?? 0,
+        IdParentescoProprietario: fichaCandidato?.IDPARENTESCOPROPRIETARIO ?? 1,
+        PrestacaoFinanciamento: fichaCandidato?.PRESTACAOFINANCIAMENTO ?? 0,
       },
       ComposicaoFamiliar: [
         {
@@ -490,22 +490,22 @@ export function CandidatoFicha() {
         },
       ],
       Despesas: {
-        DespesasDescontos: fichaCandidato?.DESPESASDESCONTOS ?? '',
-        DespesasRendaBruta: fichaCandidato?.DESPESASRENDABRUTA ?? '',
-        DespesasMoradia: fichaCandidato?.DESPESASMORADIA ?? '',
-        DespesasRendaLiquida: fichaCandidato?.DESPESASRENDALIQUIDA ?? '',
-        DespesasEducacao: fichaCandidato?.DESPESASEDUCACAO ?? '',
+        DespesasDescontos: fichaCandidato?.DESPESASDESCONTOS ?? 0,
+        DespesasRendaBruta: fichaCandidato?.DESPESASRENDABRUTA ?? 0,
+        DespesasMoradia: fichaCandidato?.DESPESASMORADIA ?? 0,
+        DespesasRendaLiquida: fichaCandidato?.DESPESASRENDALIQUIDA ?? 0,
+        DespesasEducacao: fichaCandidato?.DESPESASEDUCACAO ?? 0,
         DespesasPessoasResidencia:
-          fichaCandidato?.DESPESASPESSOASRESIDENCIA ?? '',
-        DespesasSaude: fichaCandidato?.DESPESASSAUDE ?? '',
-        DespesasRpc: fichaCandidato?.DESPESASRPC ?? '',
-        DespesasTotal: fichaCandidato?.DESPESASTOTAL ?? '',
-        DespesasObs: fichaCandidato?.DESPESASOBS ?? '',
+          fichaCandidato?.DESPESASPESSOASRESIDENCIA ?? 0,
+        DespesasSaude: fichaCandidato?.DESPESASSAUDE ?? 0,
+        DespesasRpc: fichaCandidato?.DESPESASRPC ?? 0,
+        DespesasTotal: fichaCandidato?.DESPESASTOTAL ?? 0,
+        DespesasObs: fichaCandidato?.DESPESASOBS ?? 0,
       },
-      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? '',
+      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? 0,
       SituacaoSocioEconomicaFamiliar:
-        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? '',
-      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? '',
+        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? 0,
+      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? 0,
       ParecerAssistSocial: {
         ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIAL ?? '',
         StatusProcesso: fichaCandidato?.STATUSPROCESSO ?? '',
@@ -561,18 +561,18 @@ export function CandidatoFicha() {
     dataForm.append('NUMERO', ficha.IdentificacaoCandidato.Numero);
     dataForm.append('COMPLEMENTO', ficha.IdentificacaoCandidato.Complemento);
     dataForm.append('BAIRRO', ficha.IdentificacaoCandidato.Bairro);
-    dataForm.append('CEP', ficha.IdentificacaoCandidato.Cep);
+    dataForm.append('CEP', removeMask(ficha.IdentificacaoCandidato.Cep));
     dataForm.append(
       'TELEFONERESIDENCIAL',
-      ficha.IdentificacaoCandidato.TelefoneResidencial
+      removeMask(ficha.IdentificacaoCandidato.TelefoneResidencial)
     );
     dataForm.append(
       'TELEFONERECADO',
-      ficha.IdentificacaoCandidato.TelefoneRecado
+      removeMask(ficha.IdentificacaoCandidato.TelefoneRecado)
     );
     dataForm.append(
       'TELEFONECELULAR',
-      ficha.IdentificacaoCandidato.TelefoneCelular
+      removeMask(ficha.IdentificacaoCandidato.TelefoneCelular)
     );
     dataForm.append('NOMEPAI', ficha.IdentificacaoCandidato.NomePai);
     dataForm.append('CPFPAI', removeMask(ficha.IdentificacaoCandidato.CpfPai));
@@ -631,11 +631,11 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'TELEFONEEMERGENCIA1',
-      ficha.CondicoesSaudeCandidato.TelefoneEmergencia1
+      removeMask(ficha.CondicoesSaudeCandidato.TelefoneEmergencia1)
     );
     dataForm.append(
       'TELEFONEEMERGENCIA2',
-      ficha.CondicoesSaudeCandidato.TelefoneEmergencia2
+      removeMask(ficha.CondicoesSaudeCandidato.TelefoneEmergencia2)
     );
     dataForm.append('ALERGIA', ficha.CondicoesSaudeCandidato.Alergia);
     dataForm.append(
