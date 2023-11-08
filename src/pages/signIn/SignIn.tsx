@@ -16,6 +16,7 @@ import PrivateRoutes from '../../components/utils/PrivateRoutes';
 import './signIn.scss';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../components/utils/axios';
+import BlockUI from '../../components/utils/BlockUI/BlockUI';
 
 type SignInForm = {
   Email: string;
@@ -24,6 +25,7 @@ type SignInForm = {
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     Email: Yup.string().required('E-mail obrigatório'),
@@ -39,6 +41,7 @@ export default function SignIn() {
 
   async function postSignIn(email: string, password: string) {
     try {
+      setIsLoading(true);
       await axiosInstance
         .post(`/login`, JSON.stringify({ email, password }), {
           headers: { 'Content-Type': 'application/json' },
@@ -57,6 +60,8 @@ export default function SignIn() {
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -76,6 +81,7 @@ export default function SignIn() {
 
   return (
     <div id="page-auth">
+      <BlockUI blocking={isLoading} />
       <main>
         <div className="conteiner">
           <img

@@ -19,6 +19,7 @@ import {
 import { useState } from 'react';
 import { UsuarioProps } from '../UsuarioDashboard/UsuarioDashboard';
 import axiosInstance from '../../../components/utils/axios';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 
 export default function EditarUsuario() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function EditarUsuario() {
 
   const [cpf, setCpf] = useState(ValuesRefDadosUsuario?.CPF);
   const [telefone, setTelefone] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -55,6 +56,7 @@ export default function EditarUsuario() {
     TELEFONE?: string
   ) {
     try {
+      setIsLoading(true);
       await axiosInstance
         .put(
           `/updateUser`,
@@ -78,11 +80,14 @@ export default function EditarUsuario() {
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="container-editar-usuario">
+      <BlockUI blocking={isLoading} />
       <h1>Editar Usuário</h1>
       <form
         id="form-editar-usuario"

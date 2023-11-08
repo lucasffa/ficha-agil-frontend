@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputErrors from '../../../components/Errors/Errors';
 import axiosInstance from '../../../components/utils/axios';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 
 export interface UsuarioProps {
   name: string;
@@ -29,6 +30,7 @@ export default function AdicionarUsuario() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function mascarCelular(celular: any) {
     console.log(celular.value);
@@ -91,6 +93,7 @@ export default function AdicionarUsuario() {
     password: string
   ) {
     try {
+      setIsLoading(true);
       await axiosInstance
         .post(
           `/createUser`,
@@ -113,6 +116,8 @@ export default function AdicionarUsuario() {
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -126,6 +131,7 @@ export default function AdicionarUsuario() {
 
   return (
     <div className="container-adiconar-usuario">
+      <BlockUI blocking={isLoading} />
       <h1>Adicionar Usuário</h1>
       <form
         onSubmit={handleSubmit((data, event) => {

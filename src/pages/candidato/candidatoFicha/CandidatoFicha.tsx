@@ -27,6 +27,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
 import { useLocation } from 'react-router-dom';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 
 export type SituacaoTrabalhista = {
   IDSITTRABALHISTA: number;
@@ -278,6 +279,7 @@ export function CandidatoFicha() {
   const [coberturaMoradia, setCoberturaMoradia] =
     useState<CoberturaMoradia[]>();
   const [aceitarTermos, setAceitarTermos] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const valuesEditFicha = location.state?.valuesEditFicha;
   const fichaCandidato = location.state?.valuesEditFicha.ficha;
@@ -754,6 +756,7 @@ export function CandidatoFicha() {
     dataForm.append('DATACAD', ficha.DataCad.toString());
     dataForm.append('IDUSUARIO', ficha.IdUsuario.toString());
     try {
+      setIsLoading(true);
       await axiosInstance
         .post(`/createFichaCandidato`, dataForm)
         .then(res => toast.success(res.data.message));
@@ -762,6 +765,8 @@ export function CandidatoFicha() {
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -880,6 +885,7 @@ export function CandidatoFicha() {
 
   return (
     <React.Fragment>
+      <BlockUI blocking={isLoading} />
       <Tabs
         tabQuantidade={
           //usando o filter para filtrar os componentes que não quero que apareça na tela quando for editar

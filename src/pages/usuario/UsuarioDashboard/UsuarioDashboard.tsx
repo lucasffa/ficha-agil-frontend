@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../components/utils/axios';
 import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import inativoIcon from '../../../assets/images/inativo-icon.svg';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 
 export type UsuarioProps = {
   IDUSUARIO: number;
@@ -26,11 +27,13 @@ export default function UsuarioDashboard() {
   const [totalPages, setTotalPages] = useState(0);
   const [dadosUsuarioEditar, setDadosUsuarioEditar] = useState<UsuarioProps>();
   const [isFilterInativos, setIsFilterInativos] = useState<string>('S');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const getUsuarios = useCallback(
     async (page: number, take: number, status: string) => {
       try {
+        setIsLoading(true);
         await axiosInstance
           .get('/users', {
             params: {
@@ -48,6 +51,8 @@ export default function UsuarioDashboard() {
         Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
+      } finally {
+        setIsLoading(false);
       }
     },
     []
@@ -59,6 +64,7 @@ export default function UsuarioDashboard() {
 
   async function getDadosUsuarioEditar(idUsuario: number) {
     try {
+      setIsLoading(true);
       await axiosInstance
         .get(`/user`, {
           params: {
@@ -73,6 +79,8 @@ export default function UsuarioDashboard() {
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -100,6 +108,8 @@ export default function UsuarioDashboard() {
 
   return (
     <div className="container-dashboard-usuario">
+      <BlockUI blocking={isLoading} />
+
       <main>
         <div className="busca-content">
           <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>Usuários</h1>
@@ -112,85 +122,89 @@ export default function UsuarioDashboard() {
             <label htmlFor="busca-inativos">Mostrar usuários inativos</label>
           </div>
         </div>
-        <div className="listagem-usuario">
-          <table>
-            <thead>
-              <tr>
-                <th className="listagem-usuario-nome">Nome</th>
-                <th className="listagem-usuario-cpf">CPF</th>
-                <th className="listagem-usuario-email">Email</th>
-                <th className="listagem-usuario-editar">Editar</th>
-                <th className="listagem-usuario-status">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usuarios?.length > 0
-                ? usuarios?.map((usuario, index) => {
-                    return (
-                      <tr key={index}>
-                        <td className="listagem-usuario-nome">
-                          {usuario?.USUARIO}
-                        </td>
-                        <td
-                          className="listagem-usuario-cpf"
-                          style={{
-                            color: usuario?.CPF ? undefined : 'red',
-                          }}
-                        >
-                          {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
-                        </td>
-                        <td className="listagem-usuario-email">
-                          {usuario?.EMAIL ?? 'Não cadastrado'}
-                        </td>
-                        <td className="listagem-usuario-editar">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              getDadosUsuarioEditar(usuario.IDUSUARIO);
-                            }}
-                          >
-                            <img src={editIcon} alt="Editar Usuário" />
-                          </button>
-                        </td>
-                        <td className="listagem-usuario-status">
-                          {usuario.ATIVO === 'S' ? (
-                            <span>
-                              <img
-                                src={ativoIcon}
-                                alt="Usuario Ativo"
-                                title="Usuario Ativo"
-                              />
-                            </span>
-                          ) : (
-                            <span>
-                              <img
-                                src={inativoIcon}
-                                alt="Usuario Inativo"
-                                title="Usuario Inativo"
-                              />
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
-                : null}
-            </tbody>
-          </table>
-        </div>
-        <div className="bottom">
-          <Pagination
-            count={numeroDePaginas}
-            color="primary"
-            page={currentPage}
-            onChange={(event, value) => setCurrentPage(value)}
-          />
-          <ButtonLink
-            className="button"
-            pathname="/usuario/adicionar"
-            name="Adicionar usuário"
-          ></ButtonLink>
-        </div>
+        {!isLoading && (
+          <React.Fragment>
+            <div className="listagem-usuario">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="listagem-usuario-nome">Nome</th>
+                    <th className="listagem-usuario-cpf">CPF</th>
+                    <th className="listagem-usuario-email">Email</th>
+                    <th className="listagem-usuario-editar">Editar</th>
+                    <th className="listagem-usuario-status">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usuarios?.length > 0
+                    ? usuarios?.map((usuario, index) => {
+                        return (
+                          <tr key={index}>
+                            <td className="listagem-usuario-nome">
+                              {usuario?.USUARIO}
+                            </td>
+                            <td
+                              className="listagem-usuario-cpf"
+                              style={{
+                                color: usuario?.CPF ? undefined : 'red',
+                              }}
+                            >
+                              {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
+                            </td>
+                            <td className="listagem-usuario-email">
+                              {usuario?.EMAIL ?? 'Não cadastrado'}
+                            </td>
+                            <td className="listagem-usuario-editar">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  getDadosUsuarioEditar(usuario.IDUSUARIO);
+                                }}
+                              >
+                                <img src={editIcon} alt="Editar Usuário" />
+                              </button>
+                            </td>
+                            <td className="listagem-usuario-status">
+                              {usuario.ATIVO === 'S' ? (
+                                <span>
+                                  <img
+                                    src={ativoIcon}
+                                    alt="Usuario Ativo"
+                                    title="Usuario Ativo"
+                                  />
+                                </span>
+                              ) : (
+                                <span>
+                                  <img
+                                    src={inativoIcon}
+                                    alt="Usuario Inativo"
+                                    title="Usuario Inativo"
+                                  />
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            </div>
+            <div className="bottom">
+              <Pagination
+                count={numeroDePaginas}
+                color="primary"
+                page={currentPage}
+                onChange={(event, value) => setCurrentPage(value)}
+              />
+              <ButtonLink
+                className="button"
+                pathname="/usuario/adicionar"
+                name="Adicionar usuário"
+              ></ButtonLink>
+            </div>
+          </React.Fragment>
+        )}
       </main>
     </div>
   );

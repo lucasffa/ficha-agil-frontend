@@ -11,6 +11,7 @@ import axiosInstance from '../../../components/utils/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -35,10 +36,12 @@ export default function CandidatoDashboard({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [idFicha, setIdFicha] = useState<number>(0);
   const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getFichas = useCallback(
     async (page: number, take: number, status: string) => {
       try {
+        setIsLoading(true);
         await axiosInstance
           .get('/fichas', {
             params: {
@@ -56,6 +59,8 @@ export default function CandidatoDashboard({
         Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
+      } finally {
+        setIsLoading(false);
       }
     },
     []
@@ -63,6 +68,7 @@ export default function CandidatoDashboard({
 
   const getFichaCandidato = useCallback(async (IDFICHA: number) => {
     try {
+      setIsLoading(true);
       await axiosInstance
         .get(`/ficha`, {
           params: {
@@ -77,6 +83,8 @@ export default function CandidatoDashboard({
       Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -119,6 +127,8 @@ export default function CandidatoDashboard({
 
   return (
     <div className="container-dashboard-candidato">
+      <BlockUI blocking={isLoading} />
+
       <main>
         <div className="busca-content">
           <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>
@@ -133,88 +143,93 @@ export default function CandidatoDashboard({
             <label htmlFor="busca-inativos">Mostrar candidatos inativos</label>
           </div>
         </div>
-        <div className="listagem-candidato">
-          <table>
-            <thead>
-              <tr>
-                <th className="listagem-candidato-nome">Nome</th>
-                <th className="listagem-candidato-cpf">CPF</th>
-                <th className="listagem-candidato-email">Email</th>
-                <th className="listagem-candidato-editar">Editar</th>
-                <th className="listagem-candidato-status">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {candidato?.length > 0
-                ? candidato?.map((candidato, index) => {
-                    return (
-                      <tr key={index}>
-                        <td className="listagem-candidato-nome">
-                          {candidato?.NOMECOMPLETO}
-                        </td>
-                        <td
-                          className="listagem-candidato-cpf"
-                          style={{
-                            color: candidato?.CPF ? undefined : 'red',
-                          }}
-                        >
-                          {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
-                        </td>
-                        <td className="listagem-candidato-email">
-                          {candidato?.EMAIL ?? 'Não cadastrado'}
-                        </td>
-                        <td className="listagem-candidato-editar">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setIsEdit(true);
-                              setIdFicha(candidato?.IDFICHA);
-                              getFichaCandidato(candidato?.IDFICHA);
-                              handleEdit();
-                            }}
-                          >
-                            <img src={editIcon} alt="Editar Candidato" />
-                          </button>
-                        </td>
-                        <td className="listagem-candidato-status">
-                          {candidato.ATIVO === 'S' ? (
-                            <span>
-                              <img
-                                src={ativoIcon}
-                                alt="Candidato Ativo"
-                                title="Candidato Ativo"
-                              />
-                            </span>
-                          ) : (
-                            <span>
-                              <img
-                                src={inativoIcon}
-                                alt="Candidato Inativo"
-                                title="Candidato Inativo"
-                              />
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
-                : null}
-            </tbody>
-          </table>
-        </div>
-        <div className="bottom">
-          <Pagination
-            count={numeroDePaginas}
-            color="primary"
-            page={currentPage}
-            onChange={(event, value) => setCurrentPage(value)}
-          />
-          <ButtonLink
-            className="button"
-            pathname="/candidato/adicionar"
-            name="Cadastrar nova ficha"
-          ></ButtonLink>
-        </div>
+
+        {!isLoading && (
+          <React.Fragment>
+            <div className="listagem-candidato">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="listagem-candidato-nome">Nome</th>
+                    <th className="listagem-candidato-cpf">CPF</th>
+                    <th className="listagem-candidato-email">Email</th>
+                    <th className="listagem-candidato-editar">Editar</th>
+                    <th className="listagem-candidato-status">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {candidato?.length > 0
+                    ? candidato?.map((candidato, index) => {
+                        return (
+                          <tr key={index}>
+                            <td className="listagem-candidato-nome">
+                              {candidato?.NOMECOMPLETO}
+                            </td>
+                            <td
+                              className="listagem-candidato-cpf"
+                              style={{
+                                color: candidato?.CPF ? undefined : 'red',
+                              }}
+                            >
+                              {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
+                            </td>
+                            <td className="listagem-candidato-email">
+                              {candidato?.EMAIL ?? 'Não cadastrado'}
+                            </td>
+                            <td className="listagem-candidato-editar">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsEdit(true);
+                                  setIdFicha(candidato?.IDFICHA);
+                                  getFichaCandidato(candidato?.IDFICHA);
+                                  handleEdit();
+                                }}
+                              >
+                                <img src={editIcon} alt="Editar Candidato" />
+                              </button>
+                            </td>
+                            <td className="listagem-candidato-status">
+                              {candidato.ATIVO === 'S' ? (
+                                <span>
+                                  <img
+                                    src={ativoIcon}
+                                    alt="Candidato Ativo"
+                                    title="Candidato Ativo"
+                                  />
+                                </span>
+                              ) : (
+                                <span>
+                                  <img
+                                    src={inativoIcon}
+                                    alt="Candidato Inativo"
+                                    title="Candidato Inativo"
+                                  />
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            </div>
+            <div className="bottom">
+              <Pagination
+                count={numeroDePaginas}
+                color="primary"
+                page={currentPage}
+                onChange={(event, value) => setCurrentPage(value)}
+              />
+              <ButtonLink
+                className="button"
+                pathname="/candidato/adicionar"
+                name="Cadastrar nova ficha"
+              ></ButtonLink>
+            </div>
+          </React.Fragment>
+        )}
       </main>
     </div>
   );
