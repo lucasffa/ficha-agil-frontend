@@ -393,7 +393,7 @@ export function CandidatoFicha() {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
         Cpf: fichaCandidato?.CPF ?? '',
         DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',
-        DataNascimento: null,
+        DataNascimento: fichaCandidato?.DATANASCIMENTO ?? null,
         Naturalidade: fichaCandidato?.NATURALIDADE ?? '',
         IdRacaEtnia: fichaCandidato?.IDRACAETNIA ?? '',
         IdSitTrabalhista: fichaCandidato?.IDSITTRABALHISTA ?? '',

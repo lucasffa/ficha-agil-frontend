@@ -28,6 +28,9 @@ textarea {
   align-items: center;
   background-color: #eef1f5;
   overflow-y: hidden;
+  .datePickerPopper {
+    z-index: 1000;
+  }
 }
 
 .areas {

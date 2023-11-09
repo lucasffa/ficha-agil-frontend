@@ -13,7 +13,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   InputMaskCep,
   InputMaskCpf,
@@ -28,9 +28,9 @@ import {
   RacaEtnia,
   SituacaoTrabalhista,
 } from '../CandidatoFicha';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import ptBR from 'date-fns/locale/pt-BR';
 
 interface IdentificacaoCandidatoProps {
   control: Control<Ficha>;
@@ -45,6 +45,10 @@ interface IdentificacaoCandidatoProps {
 
 //1. IDENTIFICAÇÃO DO CANDIDATO
 export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
+  useEffect(() => {
+    registerLocale('pt-BR', ptBR);
+  }, []);
+
   function calcularIdade(dataNascimento: Date | null) {
     if (dataNascimento === null) {
       return '';
@@ -130,21 +134,31 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
             control={props.control}
             name="IdentificacaoCandidato.DataNascimento"
             render={({ field }) => {
+              const dateValue = field.value ? new Date(field.value) : null;
               return (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    {...field}
-                    label="Data de Nascimento"
-                    onChange={newValue => {
-                      props.setValue(
-                        'IdentificacaoCandidato.DataNascimento',
-                        newValue
-                      );
-                      calcularIdade(newValue);
-                    }}
-                    format="DD/MM/YYYY"
-                  />
-                </LocalizationProvider>
+                <DatePicker
+                  selected={dateValue}
+                  onChange={(date: Date) => {
+                    field.onChange(date);
+                  }}
+                  locale="pt-BR"
+                  dateFormat="P"
+                  popperClassName="datePickerPopper"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      id="outlined-basic 3123"
+                      label="Data de Nascimento"
+                      color="primary"
+                      variant="outlined"
+                      value={
+                        field.value
+                          ? new Date(field.value).toLocaleDateString('pt-BR')
+                          : ''
+                      }
+                    />
+                  }
+                />
               );
             }}
           />
