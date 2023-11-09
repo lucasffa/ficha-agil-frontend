@@ -174,7 +174,9 @@ export default function CandidatoDashboard({
                               {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
                             </td>
                             <td className="listagem-candidato-email">
-                              {candidato?.EMAIL ?? 'Não cadastrado'}
+                              {candidato?.EMAIL === ''
+                                ? 'Não cadastrado'
+                                : candidato?.EMAIL}
                             </td>
                             <td className="listagem-candidato-editar">
                               <button
