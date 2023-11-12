@@ -283,7 +283,6 @@ export function CandidatoFicha() {
 
   const valuesEditFicha = location.state?.valuesEditFicha;
   const fichaCandidato = location.state?.valuesEditFicha.ficha;
-  console.log(valuesEditFicha);
 
   const getRacaEtnia = useCallback(async () => {
     try {
@@ -502,12 +501,12 @@ export function CandidatoFicha() {
         DespesasSaude: fichaCandidato?.DESPESASSAUDE ?? 0,
         DespesasRpc: fichaCandidato?.DESPESASRPC ?? 0,
         DespesasTotal: fichaCandidato?.DESPESASTOTAL ?? 0,
-        DespesasObs: fichaCandidato?.DESPESASOBS ?? 0,
+        DespesasObs: fichaCandidato?.DESPESASOBS ?? '',
       },
-      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? 0,
+      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? '',
       SituacaoSocioEconomicaFamiliar:
-        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? 0,
-      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? 0,
+        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? '',
+      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? '',
       ParecerAssistSocial: {
         ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIAL ?? '',
         StatusProcesso: fichaCandidato?.STATUSPROCESSO ?? '',
@@ -755,6 +754,57 @@ export function CandidatoFicha() {
     dataForm.append('STATUSPROCESSO', ficha.ParecerAssistSocial.StatusProcesso);
     dataForm.append('DATACAD', ficha.DataCad.toString());
     dataForm.append('IDUSUARIO', ficha.IdUsuario.toString());
+    //forEach usado para transformar o array de BeneficiosPleiteados em um array de objetos
+    ficha.BeneficiosPleiteados.forEach((element, key) => {
+      dataForm.append(
+        `BENEFICIOSPLEITEADOS[${key}].NomeCursoPretendido`,
+        element.NomeCursoPretendido
+      );
+      dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Turno`, element.Turno);
+      dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Horario`, element.Horario);
+    });
+
+    //forEach usado para transformar o array de OutrasFichasGrupoFamiliar em um array de objetos
+    ficha.OutrasFichasGrupoFamiliar.forEach((element, key) => {
+      dataForm.append(
+        `GRUPOFAMILIAR[${key}].IdFichaFamiliar`,
+        element.IdFicha?.toString() ?? ''
+      );
+      dataForm.append(
+        `GRUPOFAMILIAR[${key}].IdParentesco`,
+        element.IdParentesco?.toString() ?? ''
+      );
+    });
+
+    //forEach usado para transformar o array de ComposicaoFamiliar em um array de objetos
+    ficha.ComposicaoFamiliar.forEach((element, key) => {
+      dataForm.append(`COMPFAMILIAR[${key}].Nome`, element.Nome);
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdParentesco`,
+        element.IdParentesco?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].Idade`,
+        element.Idade?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdEstadoCivil`,
+        element.IdEstadoCivil?.toString() ?? ''
+      );
+      dataForm.append(`COMPFAMILIAR[${key}].Profissao`, element.Profissao);
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdSitTrabalhista`,
+        element.IdSitTrabalhista?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdEscolaridade`,
+        element.IdEscolaridade?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].Renda`,
+        element.Renda?.toString() ?? ''
+      );
+    });
     try {
       setIsLoading(true);
       await axiosInstance
