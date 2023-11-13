@@ -1,5 +1,5 @@
 import MoneyInput from '@rschpdr/react-money-input';
-import { FormControl, TextField } from '@material-ui/core';
+import { FormControl, TextField } from '@mui/material';
 import React from 'react';
 
 interface CustomCurrencyFieldInputProps {
