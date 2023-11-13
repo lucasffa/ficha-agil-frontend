@@ -12,10 +12,7 @@ import { Button } from '../../../components/Button/Button';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './editarUsuario.scss';
-import {
-  InputMaskCpf,
-  InputMaskTelefone,
-} from '../../../Shared/InputPadraoForm';
+import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
 import { useState } from 'react';
 import { UsuarioProps } from '../UsuarioDashboard/UsuarioDashboard';
 import axiosInstance from '../../../components/utils/axios';
@@ -28,7 +25,7 @@ export default function EditarUsuario() {
     location.state?.ValuesRefDadosUsuario;
 
   const [cpf, setCpf] = useState(ValuesRefDadosUsuario?.CPF);
-  const [telefone, setTelefone] = useState('');
+  //const [telefone, setTelefone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const {
     control,
@@ -158,7 +155,7 @@ export default function EditarUsuario() {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <Controller
               control={control}
               name="TELEFONE"
@@ -173,7 +170,7 @@ export default function EditarUsuario() {
                 );
               }}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={6}>
             <Controller
@@ -202,6 +199,7 @@ export default function EditarUsuario() {
             />
             {/* <InputErrors error={errors.Senha?.message} /> */}
           </Grid>
+          <Grid item xs={6}></Grid>
           <Grid item xs={6}>
             <Button type="submit">Salvar</Button>
           </Grid>

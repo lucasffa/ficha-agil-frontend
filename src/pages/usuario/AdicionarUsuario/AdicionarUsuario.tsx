@@ -32,19 +32,19 @@ export default function AdicionarUsuario() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  function mascarCelular(celular: any) {
-    console.log(celular.value);
-    const cleanedCellphone = celular.value.replace(/\D/g, '');
+  // function mascarCelular(celular: any) {
+  //   console.log(celular.value);
+  //   const cleanedCellphone = celular.value.replace(/\D/g, '');
 
-    if (cleanedCellphone.length === 11) {
-      return `(${cleanedCellphone.substring(
-        0,
-        2
-      )}) ${cleanedCellphone.substring(2, 6)}-${cleanedCellphone.substring(6)}`;
-    }
+  //   if (cleanedCellphone.length === 11) {
+  //     return `(${cleanedCellphone.substring(
+  //       0,
+  //       2
+  //     )}) ${cleanedCellphone.substring(2, 6)}-${cleanedCellphone.substring(6)}`;
+  //   }
 
-    return celular.value;
-  }
+  //   return celular.value;
+  // }
 
   function removeMask(value: string) {
     return value?.replace(/[.-\s]/g, '');
@@ -205,7 +205,7 @@ export default function AdicionarUsuario() {
             />
             <InputErrors error={errors.email?.message} />
           </Grid>
-          <Grid item xs={6}>
+          {/*  <Grid item xs={6}>
             <Controller
               control={control}
               name="telefone"
@@ -224,8 +224,8 @@ export default function AdicionarUsuario() {
                 );
               }}
             />
-            {/* <InputErrors error={errors.telefone?.message} />  */}
-          </Grid>
+             <InputErrors error={errors.telefone?.message} />  
+          </Grid>*/}
           <Grid item xs={6}>
             <Controller
               control={control}
@@ -301,7 +301,7 @@ export default function AdicionarUsuario() {
             <InputErrors error={errors.confirmarSenha?.message} />
           </Grid>
 
-          <Grid item xs={6}></Grid>
+          {/* <Grid item xs={6}></Grid> */}
           <Grid item xs={6}>
             <Button type="submit">Adicionar</Button>
           </Grid>
