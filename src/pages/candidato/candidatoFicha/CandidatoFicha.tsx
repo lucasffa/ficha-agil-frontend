@@ -820,6 +820,310 @@ export function CandidatoFicha() {
     }
   }
 
+  async function putFicha(ficha: Ficha) {
+    const dataForm = new FormData();
+    dataForm.append('IDFICHA', fichaCandidato.IDFICHA.toString());
+    dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
+    dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
+    dataForm.append(
+      'DOCIDENTIDADE',
+      ficha.IdentificacaoCandidato.DocIdentidade
+    );
+    dataForm.append(
+      'DATANASCIMENTO',
+      ficha.IdentificacaoCandidato.DataNascimento !== null
+        ? DateFormToSend(
+            ficha.IdentificacaoCandidato.DataNascimento?.toString()
+          )
+        : ''
+    );
+    dataForm.append('NATURALIDADE', ficha.IdentificacaoCandidato.Naturalidade);
+    dataForm.append(
+      'IDRACAETNIA',
+      ficha.IdentificacaoCandidato.IdRacaEtnia.toString()
+    );
+    dataForm.append(
+      'IDSITTRABALHISTA',
+      ficha.IdentificacaoCandidato.IdSitTrabalhista.toString()
+    );
+    dataForm.append(
+      'OUTRASITTRABALHISTA',
+      ficha.IdentificacaoCandidato.OutraSitTrabalhista
+    );
+    dataForm.append(
+      'IDESTADOCIVIL',
+      ficha.IdentificacaoCandidato.IdEstadoCivil.toString()
+    );
+    dataForm.append('EMAIL', ficha.IdentificacaoCandidato.Email);
+    dataForm.append(
+      'NECESSIDADEESPECIAL',
+      ficha.IdentificacaoCandidato.NecessidadeEspecial
+    );
+    dataForm.append(
+      'ENDERECORESIDENCIAL',
+      ficha.IdentificacaoCandidato.EnderecoResidencial
+    );
+    dataForm.append('NUMERO', ficha.IdentificacaoCandidato.Numero);
+    dataForm.append('COMPLEMENTO', ficha.IdentificacaoCandidato.Complemento);
+    dataForm.append('BAIRRO', ficha.IdentificacaoCandidato.Bairro);
+    dataForm.append('CEP', removeMask(ficha.IdentificacaoCandidato.Cep));
+    dataForm.append(
+      'TELEFONERESIDENCIAL',
+      removeMask(ficha.IdentificacaoCandidato.TelefoneResidencial)
+    );
+    dataForm.append(
+      'TELEFONERECADO',
+      removeMask(ficha.IdentificacaoCandidato.TelefoneRecado)
+    );
+    dataForm.append(
+      'TELEFONECELULAR',
+      removeMask(ficha.IdentificacaoCandidato.TelefoneCelular)
+    );
+    dataForm.append('NOMEPAI', ficha.IdentificacaoCandidato.NomePai);
+    dataForm.append('CPFPAI', removeMask(ficha.IdentificacaoCandidato.CpfPai));
+    dataForm.append('NOMEMAE', ficha.IdentificacaoCandidato.NomeMae);
+    dataForm.append('CPFMAE', removeMask(ficha.IdentificacaoCandidato.CpfMae));
+    dataForm.append(
+      'NOMERESPONSAVEL',
+      ficha.IdentificacaoCandidato.NomeResponsavel
+    );
+    dataForm.append(
+      'IDPARENTESCORESPONSAVEL',
+      ficha.IdentificacaoCandidato.IdParentescoResponsavel.toString()
+    );
+    dataForm.append(
+      'IDESTADOCIVILPAI',
+      ficha.IdentificacaoCandidato.IdEstadoCivilPai.toString()
+    );
+    dataForm.append(
+      'IDESTADOCIVILMAE',
+      ficha.IdentificacaoCandidato.IdEstadoCivilMae.toString()
+    );
+    dataForm.append('ESTUDA', ficha.DadosEducacionaisCandidato.Estuda);
+    dataForm.append(
+      'INSTITUICAOENSINO',
+      ficha.DadosEducacionaisCandidato.InstituicaoEnsino
+    );
+    dataForm.append(
+      'NOMEINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.NomeInstituicaoEnsino
+    );
+    dataForm.append(
+      'ENDERECOINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.EnderecoInstituicao
+    );
+    dataForm.append(
+      'BAIRROINSTITUICAO',
+      ficha.DadosEducacionaisCandidato.BairroInstituicao
+    );
+    dataForm.append(
+      'SERIEATUAL',
+      ficha.DadosEducacionaisCandidato.SerieAtual.toString()
+    );
+    dataForm.append('TURMA', ficha.DadosEducacionaisCandidato.Turma);
+    dataForm.append('TURNO', ficha.DadosEducacionaisCandidato.Turno);
+    dataForm.append(
+      'IDESCOLARIDADE',
+      ficha.DadosEducacionaisCandidato.IdEscolaridade.toString()
+    );
+    dataForm.append(
+      'OUTROSCURSOSREALIZADOS',
+      ficha.DadosEducacionaisCandidato.OutrosCursosRealizados
+    );
+    dataForm.append(
+      'NOMECONTATOEMERGENCIA',
+      ficha.CondicoesSaudeCandidato.NomeContatoEmergencia
+    );
+    dataForm.append(
+      'TELEFONEEMERGENCIA1',
+      removeMask(ficha.CondicoesSaudeCandidato.TelefoneEmergencia1)
+    );
+    dataForm.append(
+      'TELEFONEEMERGENCIA2',
+      removeMask(ficha.CondicoesSaudeCandidato.TelefoneEmergencia2)
+    );
+    dataForm.append('ALERGIA', ficha.CondicoesSaudeCandidato.Alergia);
+    dataForm.append(
+      'SITMEDICAESPECIAL',
+      ficha.CondicoesSaudeCandidato.SitMedicaEspecial
+    );
+    dataForm.append(
+      'FRATURASCIRURGIAS',
+      ficha.CondicoesSaudeCandidato.FraturasCirurgicas
+    );
+    dataForm.append(
+      'MEDICACAOCONTROLADA',
+      ficha.CondicoesSaudeCandidato.MedicacaoControlada
+    );
+    dataForm.append(
+      'PROVIDENCIARECOMENDADA',
+      ficha.CondicoesSaudeCandidato.ProvidenciaRecomendada
+    );
+    dataForm.append(
+      'FAMILIARTRATAMENTOMEDICO',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarTratamentoMedico
+    );
+    dataForm.append(
+      'FAMILIARUSOMEDICAMENTO',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedico
+    );
+    dataForm.append(
+      'FAMILIARDEFICIENCIA',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarDeficiencia
+    );
+    dataForm.append(
+      'FAMILIARDEPENDENCIAQUIMICA',
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarDependenciaQuimica
+    );
+    dataForm.append(
+      'ACOMPTERAPEUTICO',
+      ficha.CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico
+    );
+    dataForm.append(
+      'PROGRAMASOCIAL',
+      ficha.CondicoesSociaisESaudeFamilia.ProgramaSocial
+    );
+    dataForm.append('AGUAPOTAVEL', ficha.CondicoesMoradia.AguaPotavel);
+    dataForm.append('REDEESGOTO', ficha.CondicoesMoradia.RedeEsgoto);
+    dataForm.append(
+      'IDCOBERTURAMORADIA',
+      ficha.CondicoesMoradia.IdCoberturaMoradia.toString()
+    );
+    dataForm.append('RUAPAVIMENTADA', ficha.CondicoesMoradia.RuaPavimentada);
+    dataForm.append(
+      'POSSUIELETRICIDADE',
+      ficha.CondicoesMoradia.PossuiEletricidade
+    );
+    dataForm.append(
+      'COMODOSMORADIA',
+      ficha.CondicoesMoradia.ComodosMoradia.toString()
+    );
+    dataForm.append(
+      'TIPOIMOVELRESIDENCIA',
+      ficha.CondicoesMoradia.TipoImovelResidencia
+    );
+    dataForm.append(
+      'VALORALUGUEL',
+      ficha.CondicoesMoradia.ValorAluguel.toString()
+    );
+    dataForm.append(
+      'IDPARENTESCOPROPRIETARIO',
+      ficha.CondicoesMoradia.IdParentescoProprietario.toString()
+    );
+    dataForm.append(
+      'PRESTACAOFINANCIAMENTO',
+      ficha.CondicoesMoradia.PrestacaoFinanciamento.toString()
+    );
+    dataForm.append(
+      'DESPESASDESCONTOS',
+      ficha.Despesas.DespesasDescontos.toString()
+    );
+    dataForm.append(
+      'DESPESASRENDABRUTA',
+      ficha.Despesas.DespesasRendaBruta.toString()
+    );
+    dataForm.append(
+      'DESPESASMORADIA',
+      ficha.Despesas.DespesasMoradia.toString()
+    );
+    dataForm.append(
+      'DESPESASRENDALIQUIDA',
+      ficha.Despesas.DespesasRendaLiquida.toString()
+    );
+    dataForm.append(
+      'DESPESASEDUCACAO',
+      ficha.Despesas.DespesasEducacao.toString()
+    );
+    dataForm.append(
+      'DESPESASPESSOASRESIDENCIA',
+      ficha.Despesas.DespesasPessoasResidencia.toString()
+    );
+    dataForm.append('DESPESASSAUDE', ficha.Despesas.DespesasSaude.toString());
+    dataForm.append('DESPESASRPC', ficha.Despesas.DespesasRpc.toString());
+    dataForm.append('DESPESASTOTAL', ficha.Despesas.DespesasTotal.toString());
+    dataForm.append('DESPESASOBS', ficha.Despesas.DespesasObs);
+    dataForm.append('OUTROSGASTOS', ficha.OutrosGastos.toString());
+    dataForm.append(
+      'SITSOCIOECONOMICOFAMILIAR',
+      ficha.SituacaoSocioEconomicaFamiliar.toString()
+    );
+    dataForm.append(
+      'OBSERVACOESNECESSARIAS',
+      ficha.ObservacoesNecessarias.toString()
+    );
+    dataForm.append(
+      'PARECERASSISTSOCIAL',
+      ficha.ParecerAssistSocial.ParecerAssistSocial.toString()
+    );
+    dataForm.append('STATUSPROCESSO', ficha.ParecerAssistSocial.StatusProcesso);
+    dataForm.append('DATACAD', ficha.DataCad.toString());
+    dataForm.append('IDUSUARIO', ficha.IdUsuario.toString());
+    //forEach usado para transformar o array de BeneficiosPleiteados em um array de objetos
+    ficha.BeneficiosPleiteados.forEach((element, key) => {
+      dataForm.append(
+        `BENEFICIOSPLEITEADOS[${key}].NomeCursoPretendido`,
+        element.NomeCursoPretendido
+      );
+      dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Turno`, element.Turno);
+      dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Horario`, element.Horario);
+    });
+
+    //forEach usado para transformar o array de OutrasFichasGrupoFamiliar em um array de objetos
+    ficha.OutrasFichasGrupoFamiliar.forEach((element, key) => {
+      dataForm.append(
+        `GRUPOFAMILIAR[${key}].IdFichaFamiliar`,
+        element.IdFicha?.toString() ?? ''
+      );
+      dataForm.append(
+        `GRUPOFAMILIAR[${key}].IdParentesco`,
+        element.IdParentesco?.toString() ?? ''
+      );
+    });
+
+    //forEach usado para transformar o array de ComposicaoFamiliar em um array de objetos
+    ficha.ComposicaoFamiliar.forEach((element, key) => {
+      dataForm.append(`COMPFAMILIAR[${key}].Nome`, element.Nome);
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdParentesco`,
+        element.IdParentesco?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].Idade`,
+        element.Idade?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdEstadoCivil`,
+        element.IdEstadoCivil?.toString() ?? ''
+      );
+      dataForm.append(`COMPFAMILIAR[${key}].Profissao`, element.Profissao);
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdSitTrabalhista`,
+        element.IdSitTrabalhista?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdEscolaridade`,
+        element.IdEscolaridade?.toString() ?? ''
+      );
+      dataForm.append(
+        `COMPFAMILIAR[${key}].Renda`,
+        element.Renda?.toString() ?? ''
+      );
+    });
+    try {
+      setIsLoading(true);
+      await axiosInstance
+        .put(`/updateFicha`, dataForm)
+        .then(res => toast.success(res.data.message));
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const formComponents = [
     <IdentificacaoCandidato
       control={control}
@@ -949,7 +1253,7 @@ export function CandidatoFicha() {
         onSubmit={handleSubmit((data, event) => {
           event?.preventDefault();
           if (data) {
-            postFicha(data);
+            !valuesEditFicha?.isEdit ? postFicha(data) : putFicha(data);
           }
         })}
         className="form-cadastrar-ficha"
