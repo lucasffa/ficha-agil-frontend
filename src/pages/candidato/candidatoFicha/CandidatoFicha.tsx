@@ -113,6 +113,7 @@ export interface Ficha {
     NomeCursoPretendido: string;
     Turno: string;
     Horario: string;
+    IdBeneficio?: number;
   }[];
   CondicoesSaudeCandidato: {
     NomeContatoEmergencia: string;
@@ -180,6 +181,7 @@ export interface Ficha {
 }
 
 export interface FichaEdit {
+  IDFICHA: number;
   NOMECOMPLETO: string;
   CPF: string;
   DOCIDENTIDADE: string;
@@ -207,7 +209,6 @@ export interface FichaEdit {
   IDPARENTESCORESPONSAVEL: number;
   IDESTADOCIVILPAI: number;
   IDESTADOCIVILMAE: number;
-  IDFICHA: number | undefined;
   IDPARENTESCO: number | undefined;
   ESTUDA: string;
   INSTITUICAOENSINO: string;
@@ -266,6 +267,33 @@ export interface FichaEdit {
   STATUSPROCESSO: string;
   DATACAD: Date;
   IDUSUARIO: number;
+  GRUPOFAMILIAR: {
+    IDFICHAFAMILIAR: number;
+    IDFICHAPRINCIPAL: number;
+    IDGRUPOFAMILIAR: number;
+    IDPARENTESCO: number;
+    NOMECOMPLETO: string;
+  }[];
+  BENEFICIOS: {
+    ATIVIDADECURSO: string;
+    HORARIO: string;
+    IDBENEFICIO: number;
+    IDFICHA: number;
+    PRIORIDADE: null | string;
+    TURNO: string;
+  }[];
+  COMPFAMILIAR: {
+    IDADE?: number;
+    IDCOMPFAMILIAR?: number;
+    IDESCOLARIDADE?: number;
+    IDESTADOCIVIL?: number;
+    IDFICHA?: number;
+    IDPARENTESCO?: number;
+    IDSITTRABALHISTA?: number;
+    NOME?: string;
+    PROFISSAO?: string;
+    RENDA?: number;
+  }[];
 }
 
 export function CandidatoFicha() {
@@ -282,7 +310,7 @@ export function CandidatoFicha() {
   const [isLoading, setIsLoading] = useState(false);
 
   const valuesEditFicha = location.state?.valuesEditFicha;
-  const fichaCandidato = location.state?.valuesEditFicha.ficha;
+  const fichaCandidato: FichaEdit = location.state?.valuesEditFicha.ficha;
 
   const getRacaEtnia = useCallback(async () => {
     try {
@@ -417,13 +445,14 @@ export function CandidatoFicha() {
         IdEstadoCivilPai: fichaCandidato?.IDESTADOCIVILPAI ?? '',
         IdEstadoCivilMae: fichaCandidato?.IDESTADOCIVILMAE ?? '',
       },
-      OutrasFichasGrupoFamiliar: [
-        {
-          IdFicha: fichaCandidato?.IDFICHA ?? '',
-          NomeCompleto: fichaCandidato?.NOMECOMPLETO ?? '',
-          IdParentesco: fichaCandidato?.IDPARENTESCO ?? '',
-        },
-      ],
+      OutrasFichasGrupoFamiliar: fichaCandidato.GRUPOFAMILIAR.map(
+        fichaFamiliar => ({
+          IdFicha: fichaFamiliar?.IDFICHAFAMILIAR ?? '',
+          NomeCompleto: fichaFamiliar?.NOMECOMPLETO ?? '',
+          IdParentesco: fichaFamiliar?.IDPARENTESCO ?? '',
+        })
+      ),
+
       DadosEducacionaisCandidato: {
         Estuda: fichaCandidato?.ESTUDA ?? '',
         InstituicaoEnsino: fichaCandidato?.INSTITUICAOENSINO ?? '',
@@ -436,13 +465,12 @@ export function CandidatoFicha() {
         IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
         OutrosCursosRealizados: fichaCandidato?.OUTROSCURSOSREALIZADOS ?? '',
       },
-      BeneficiosPleiteados: [
-        {
-          NomeCursoPretendido: fichaCandidato?.NOMECURSOPRETENDIDO ?? '',
-          Turno: '',
-          Horario: fichaCandidato?.HORARIO ?? '',
-        },
-      ],
+      BeneficiosPleiteados: fichaCandidato.BENEFICIOS.map(beneficio => ({
+        NomeCursoPretendido: beneficio?.ATIVIDADECURSO ?? '',
+        Turno: beneficio.TURNO ?? '',
+        Horario: beneficio?.HORARIO.slice(0, 5) ?? '',
+        IdBeneficio: beneficio?.IDBENEFICIO ?? 0,
+      })),
       CondicoesSaudeCandidato: {
         NomeContatoEmergencia: fichaCandidato?.NOMECONTATOEMERGENCIA ?? '',
         TelefoneEmergencia1: fichaCandidato?.TELEFONEEMERGENCIA1 ?? '',
@@ -476,20 +504,18 @@ export function CandidatoFicha() {
         IdParentescoProprietario: fichaCandidato?.IDPARENTESCOPROPRIETARIO ?? 1,
         PrestacaoFinanciamento: fichaCandidato?.PRESTACAOFINANCIAMENTO ?? 0,
       },
-      ComposicaoFamiliar: [
-        {
-          IdCompFamiliar: fichaCandidato?.IDCOMPFAMILIAR ?? '',
-          IdFicha: fichaCandidato?.IDFICHA ?? '',
-          Nome: fichaCandidato?.NOME ?? '',
-          IdParentesco: fichaCandidato?.IDPARENTESCO ?? '',
-          Idade: fichaCandidato?.IDADE ?? '',
-          IdEstadoCivil: fichaCandidato?.IDESTADOCIVIL ?? '',
-          Profissao: fichaCandidato?.PROFISSAO ?? '',
-          IdSitTrabalhista: fichaCandidato?.IDSITTRABALHISTA ?? '',
-          IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
-          Renda: fichaCandidato?.RENDA ?? '',
-        },
-      ],
+      ComposicaoFamiliar: fichaCandidato.COMPFAMILIAR.map(compFamiliar => ({
+        IdCompFamiliar: compFamiliar?.IDCOMPFAMILIAR ?? 0,
+        IdFicha: compFamiliar?.IDFICHA ?? 0,
+        Nome: compFamiliar?.NOME ?? '',
+        IdParentesco: compFamiliar?.IDPARENTESCO ?? 0,
+        Idade: compFamiliar?.IDADE ?? 0,
+        IdEstadoCivil: compFamiliar?.IDESTADOCIVIL ?? 0,
+        Profissao: compFamiliar?.PROFISSAO ?? '',
+        IdSitTrabalhista: compFamiliar?.IDSITTRABALHISTA ?? 0,
+        IdEscolaridade: compFamiliar?.IDESCOLARIDADE ?? 0,
+        Renda: compFamiliar?.RENDA ?? 0,
+      })),
       Despesas: {
         DespesasDescontos: fichaCandidato?.DESPESASDESCONTOS ?? 0,
         DespesasRendaBruta: fichaCandidato?.DESPESASRENDABRUTA ?? 0,
@@ -762,6 +788,10 @@ export function CandidatoFicha() {
       );
       dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Turno`, element.Turno);
       dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Horario`, element.Horario);
+      dataForm.append(
+        `BENEFICIOSPLEITEADOS[${key}].IdBeneficio`,
+        `${element.IdBeneficio}`
+      );
     });
 
     //forEach usado para transformar o array de OutrasFichasGrupoFamiliar em um array de objetos
@@ -1066,6 +1096,10 @@ export function CandidatoFicha() {
       );
       dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Turno`, element.Turno);
       dataForm.append(`BENEFICIOSPLEITEADOS[${key}].Horario`, element.Horario);
+      dataForm.append(
+        `BENEFICIOSPLEITEADOS[${key}].IdBeneficio`,
+        `${element.IdBeneficio}`
+      );
     });
 
     //forEach usado para transformar o array de OutrasFichasGrupoFamiliar em um array de objetos
@@ -1082,6 +1116,10 @@ export function CandidatoFicha() {
 
     //forEach usado para transformar o array de ComposicaoFamiliar em um array de objetos
     ficha.ComposicaoFamiliar.forEach((element, key) => {
+      dataForm.append(
+        `COMPFAMILIAR[${key}].IdCompFamiliar`,
+        `${element.IdCompFamiliar}`
+      );
       dataForm.append(`COMPFAMILIAR[${key}].Nome`, element.Nome);
       dataForm.append(
         `COMPFAMILIAR[${key}].IdParentesco`,

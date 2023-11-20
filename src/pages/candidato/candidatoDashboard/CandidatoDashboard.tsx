@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import editIcon from '../../../assets/images/edit.svg';
 import inativoIcon from '../../../assets/images/inativo-icon.svg';
 import ativoIcon from '../../../assets/images/ativo-icon.svg';
+import closeIcon from '../../../assets/images/close.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
 import { Pagination } from '@mui/material';
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
+import Modal from '../../../Shared/Modal';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -37,6 +39,7 @@ export default function CandidatoDashboard({
   const [idFicha, setIdFicha] = useState<number>(0);
   const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
   const [isLoading, setIsLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getFichas = useCallback(
     async (page: number, take: number, status: string) => {
@@ -76,7 +79,7 @@ export default function CandidatoDashboard({
           },
         })
         .then(res => {
-          setFichaCandidato(res.data);
+          setFichaCandidato(res.data.ficha);
         });
     } catch (err: any) {
       const error = err.response?.data;
@@ -125,6 +128,34 @@ export default function CandidatoDashboard({
 
   const numeroDePaginas = Math.ceil(totalPages / 5);
 
+  async function deleteCandidato(idFicha: number) {
+    try {
+      setIsLoading(true);
+      await axiosInstance
+        .delete('/deleteFicha', {
+          params: {
+            idFicha: idFicha,
+          },
+        })
+        .then(res => {
+          setModalOpen(false);
+          toast.success(res.data.message);
+        });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    } finally {
+      setModalOpen(false);
+      setIsLoading(false);
+      getFichas(currentPage, 5, isFilterInativos);
+    }
+  }
+
+  const handleExcluirCandidato = (fichaId: number) => {
+    deleteCandidato(fichaId);
+  };
   return (
     <div className="container-dashboard-candidato">
       <BlockUI blocking={isLoading} />
@@ -155,6 +186,9 @@ export default function CandidatoDashboard({
                     <th className="listagem-candidato-email">Email</th>
                     <th className="listagem-candidato-editar">Editar</th>
                     <th className="listagem-candidato-status">Status</th>
+                    {isFilterInativos === 'N' ? null : (
+                      <th className="listagem-candidato-excluir">Excluir</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -210,6 +244,22 @@ export default function CandidatoDashboard({
                                 </span>
                               )}
                             </td>
+                            {isFilterInativos === 'N' ? null : (
+                              <td className="listagem-candidato-excluir">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setIdFicha(candidato?.IDFICHA);
+                                    setModalOpen(true);
+                                  }}
+                                >
+                                  <img
+                                    src={closeIcon}
+                                    alt="Excluir Candidato"
+                                  />
+                                </button>
+                              </td>
+                            )}
                           </tr>
                         );
                       })
@@ -230,6 +280,16 @@ export default function CandidatoDashboard({
                 name="Cadastrar nova ficha"
               ></ButtonLink>
             </div>
+            <Modal
+              title="Exclusão de Ficha"
+              isOpen={modalOpen}
+              setModalOpen={() => setModalOpen(!modalOpen)}
+              handleConfirm={() => {
+                handleExcluirCandidato(idFicha);
+              }}
+            >
+              Tem certeza que deseja excluir a ficha do candidato?
+            </Modal>
           </React.Fragment>
         )}
       </main>

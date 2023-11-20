@@ -96,7 +96,7 @@ function OutrasFichasGrupoFamiliarComponent(
               <TextField
                 fullWidth
                 id={`outlined-basic-${index}-1`}
-                label="Número"
+                label="Número da Ficha"
                 color="primary"
                 variant="outlined"
                 type="number"
