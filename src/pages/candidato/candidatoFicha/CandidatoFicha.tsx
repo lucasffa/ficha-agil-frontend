@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
 import { useLocation } from 'react-router-dom';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
+import { removeMask } from '../../../Shared/Mascaras';
 
 export type SituacaoTrabalhista = {
   IDSITTRABALHISTA: number;
@@ -96,6 +97,7 @@ export interface Ficha {
     IdFicha: number | undefined;
     NomeCompleto: string;
     IdParentesco: number | undefined;
+    IdGrupoFamiliar: number | undefined;
   }[];
   DadosEducacionaisCandidato: {
     Estuda: string;
@@ -406,13 +408,6 @@ export function CandidatoFicha() {
     getCoberturaMoradia,
   ]);
 
-  function removeMask(value: any) {
-    if (value === undefined || value === null) {
-      return 0;
-    }
-    return value.replace(/[^\w\s]/g, '');
-  }
-
   const { control, handleSubmit, getValues, setValue, watch } = useForm<Ficha>({
     mode: 'onBlur',
     defaultValues: {
@@ -450,6 +445,7 @@ export function CandidatoFicha() {
           IdFicha: fichaFamiliar?.IDFICHAFAMILIAR ?? '',
           NomeCompleto: fichaFamiliar?.NOMECOMPLETO ?? '',
           IdParentesco: fichaFamiliar?.IDPARENTESCO ?? '',
+          IdGrupoFamiliar: fichaFamiliar?.IDGRUPOFAMILIAR ?? '',
         })
       ),
 
@@ -1111,6 +1107,10 @@ export function CandidatoFicha() {
       dataForm.append(
         `GRUPOFAMILIAR[${key}].IdParentesco`,
         element.IdParentesco?.toString() ?? ''
+      );
+      dataForm.append(
+        `GRUPOFAMILIAR[${key}].IdGrupoFamiliar`,
+        element.IdGrupoFamiliar?.toString() ?? ''
       );
     });
 

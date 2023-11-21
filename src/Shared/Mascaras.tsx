@@ -7,3 +7,10 @@ export function cpfMask(cpf: string) {
   const cpfRegex = /^(\d{3})(\d{3})(\d{3})(\d{2})$/;
   return cpf?.replace(cpfRegex, '$1.$2.$3-$4');
 }
+
+export function removeMask(value: any) {
+  if (value === undefined || value === null) {
+    return 0;
+  }
+  return value.replace(/[^\w\s]/g, '');
+}

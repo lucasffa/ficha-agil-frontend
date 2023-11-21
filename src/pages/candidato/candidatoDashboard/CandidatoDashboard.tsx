@@ -6,14 +6,16 @@ import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import closeIcon from '../../../assets/images/close.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
-import { Pagination } from '@mui/material';
-import { ButtonLink } from '../../../components/Button/Button';
+import { Grid, Pagination, TextField } from '@mui/material';
+import { Button, ButtonLink } from '../../../components/Button/Button';
 import axiosInstance from '../../../components/utils/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 import Modal from '../../../Shared/Modal';
+import { Controller, useForm } from 'react-hook-form';
+import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -27,6 +29,10 @@ type CandidatoProps = {
   IDFICHA: number;
 }[];
 
+interface FiltroBuscaCandidato {
+  Nome: string;
+  Cpf: string;
+}
 export default function CandidatoDashboard({
   urlBase,
 }: CandidatoDashboardProps) {
@@ -41,6 +47,14 @@ export default function CandidatoDashboard({
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const { control, getValues, setValue } = useForm<FiltroBuscaCandidato>({
+    mode: 'onBlur',
+    defaultValues: {
+      Nome: '',
+      Cpf: '',
+    },
+    criteriaMode: 'all',
+  });
   const getFichas = useCallback(
     async (page: number, take: number, status: string) => {
       try {
@@ -174,7 +188,45 @@ export default function CandidatoDashboard({
             <label htmlFor="busca-inativos">Mostrar candidatos inativos</label>
           </div>
         </div>
-
+        <div className="filtros-busca-candidato">
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <Controller
+                control={control}
+                name="Nome"
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    id="outlined-basic-12"
+                    label="Nome do Candidato"
+                    color="primary"
+                    variant="outlined"
+                    {...field}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                control={control}
+                name="Cpf"
+                render={() => (
+                  <InputMaskCpf
+                    name="Cpf do Candidato"
+                    value={getValues('Cpf')}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setValue('Cpf', event.target.value);
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Button>Filtrar</Button>
+            </Grid>
+            <Grid item xs={3}></Grid>
+          </Grid>
+        </div>
         {!isLoading && (
           <React.Fragment>
             <div className="listagem-candidato">

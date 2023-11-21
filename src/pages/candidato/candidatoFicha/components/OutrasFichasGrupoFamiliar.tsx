@@ -64,6 +64,7 @@ export default function OutrasFichasGrupoFamiliar(
                 IdFicha: undefined,
                 NomeCompleto: '',
                 IdParentesco: undefined,
+                IdGrupoFamiliar: undefined,
               })
             }
             style={{ background: 'none' }}

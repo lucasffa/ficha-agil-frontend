@@ -110,11 +110,11 @@ export default function Modal({
               <button
                 style={{
                   width: '15%',
-                  height: '100%',
+                  height: '30px',
                   border: 0,
                   fontWeight: 500,
                   color: 'black',
-                  borderRadius: '2px',
+                  borderRadius: '5px',
                   cursor: 'pointer',
                   background: '#80808045',
                 }}
@@ -125,9 +125,9 @@ export default function Modal({
               <button
                 style={{
                   width: '15%',
-                  height: '100%',
+                  height: '30px',
                   background: '#A2B63D',
-                  borderRadius: '2px',
+                  borderRadius: '5px',
                   fontWeight: 500,
                   color: '#fff',
                   padding: '0 32px',
