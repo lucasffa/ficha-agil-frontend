@@ -4,7 +4,7 @@ import editIcon from '../../../assets/images/edit.svg';
 import inativoIcon from '../../../assets/images/inativo-icon.svg';
 import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import closeIcon from '../../../assets/images/close.svg';
-import { cpfMask } from '../../../Shared/Mascaras';
+import { cpfMask, removeMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
 import { Grid, Pagination, TextField } from '@mui/material';
 import { Button, ButtonLink } from '../../../components/Button/Button';
@@ -167,9 +167,38 @@ export default function CandidatoDashboard({
     }
   }
 
+  const getFichaCandidatoFiltrado = useCallback(
+    async (Nome: string, Cpf: string, Ativo: string) => {
+      try {
+        setIsLoading(true);
+        await axiosInstance
+          .get(`/fichaCandidatoFilter`, {
+            params: {
+              nome: Nome,
+              cpf: Cpf,
+              ativo: Ativo,
+            },
+          })
+          .then(res => {
+            setCandidato(res.data.fichasCandidatos);
+            setTotalPages(res.data.totalDefichasCandidatos);
+          });
+      } catch (err: any) {
+        const error = err.response?.data;
+        Object.keys(error).map(key => {
+          return toast.error(error[key]);
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
   const handleExcluirCandidato = (fichaId: number) => {
     deleteCandidato(fichaId);
   };
+
   return (
     <div className="container-dashboard-candidato">
       <BlockUI blocking={isLoading} />
@@ -222,7 +251,17 @@ export default function CandidatoDashboard({
               />
             </Grid>
             <Grid item xs={3}>
-              <Button>Filtrar</Button>
+              <Button
+                onClick={() =>
+                  getFichaCandidatoFiltrado(
+                    getValues('Nome'),
+                    removeMask(getValues('Cpf')),
+                    isFilterInativos
+                  )
+                }
+              >
+                Filtrar
+              </Button>
             </Grid>
             <Grid item xs={3}></Grid>
           </Grid>

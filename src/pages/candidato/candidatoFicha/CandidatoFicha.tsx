@@ -440,7 +440,7 @@ export function CandidatoFicha() {
         IdEstadoCivilPai: fichaCandidato?.IDESTADOCIVILPAI ?? '',
         IdEstadoCivilMae: fichaCandidato?.IDESTADOCIVILMAE ?? '',
       },
-      OutrasFichasGrupoFamiliar: fichaCandidato.GRUPOFAMILIAR.map(
+      OutrasFichasGrupoFamiliar: fichaCandidato?.GRUPOFAMILIAR?.map(
         fichaFamiliar => ({
           IdFicha: fichaFamiliar?.IDFICHAFAMILIAR ?? '',
           NomeCompleto: fichaFamiliar?.NOMECOMPLETO ?? '',
@@ -461,7 +461,7 @@ export function CandidatoFicha() {
         IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
         OutrosCursosRealizados: fichaCandidato?.OUTROSCURSOSREALIZADOS ?? '',
       },
-      BeneficiosPleiteados: fichaCandidato.BENEFICIOS.map(beneficio => ({
+      BeneficiosPleiteados: fichaCandidato?.BENEFICIOS?.map(beneficio => ({
         NomeCursoPretendido: beneficio?.ATIVIDADECURSO ?? '',
         Turno: beneficio.TURNO ?? '',
         Horario: beneficio?.HORARIO.slice(0, 5) ?? '',
@@ -500,7 +500,7 @@ export function CandidatoFicha() {
         IdParentescoProprietario: fichaCandidato?.IDPARENTESCOPROPRIETARIO ?? 1,
         PrestacaoFinanciamento: fichaCandidato?.PRESTACAOFINANCIAMENTO ?? 0,
       },
-      ComposicaoFamiliar: fichaCandidato.COMPFAMILIAR.map(compFamiliar => ({
+      ComposicaoFamiliar: fichaCandidato?.COMPFAMILIAR?.map(compFamiliar => ({
         IdCompFamiliar: compFamiliar?.IDCOMPFAMILIAR ?? 0,
         IdFicha: compFamiliar?.IDFICHA ?? 0,
         Nome: compFamiliar?.NOME ?? '',
