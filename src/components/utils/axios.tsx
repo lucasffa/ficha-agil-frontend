@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     if (
-      error.response.data.message === 'Failed to authenticate token' &&
+      error.response.data.message === 'Token is blacklisted' &&
       error.response.status === 401
     ) {
       const countdown = 5;

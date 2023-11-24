@@ -8,6 +8,8 @@ import relatoriodIcon from '../../assets/images/align-right.svg';
 import userIcon from '../../assets/images/user.svg';
 import { useState } from 'react';
 import uniqid from 'uniqid';
+import axiosInstance from '../utils/axios';
+import { toast } from 'react-toastify';
 
 const sections = [
   { rota: 'candidato', name: 'Candidato', icon: userIcon, isSubRota: false },
@@ -49,6 +51,23 @@ export function SideMenu() {
 
   const location = useLocation();
 
+  async function logout() {
+    try {
+      await axiosInstance.post('/logout').then(res => {
+        localStorage.setItem('token', '');
+        localStorage.setItem('user', '');
+        toast.success(res.data.message);
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 5000);
+      });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }
   return (
     <aside className={hiddenMenu === false ? 'side-menu closed' : 'side-menu'}>
       {hiddenMenu === false ? (
@@ -68,16 +87,14 @@ export function SideMenu() {
         </div>
       )}
       {hiddenMenu === false ? (
-        <Link
-          to="/login"
+        <button
           className="icon-exit"
           onClick={() => {
-            localStorage.setItem('token', '');
-            localStorage.setItem('user', '');
+            logout();
           }}
         >
           <img src={sairIcon} alt="Sair" />
-        </Link>
+        </button>
       ) : (
         <>
           <nav>
@@ -102,16 +119,14 @@ export function SideMenu() {
               )}
             </ul>
           </nav>
-          <Link
-            to="/login"
+          <button
             className="icon-exit-active"
             onClick={() => {
-              localStorage.setItem('token', '');
-              localStorage.setItem('user', '');
+              logout();
             }}
           >
             <img src={sairIcon} alt="Sair" />
-          </Link>
+          </button>
         </>
       )}
     </aside>
