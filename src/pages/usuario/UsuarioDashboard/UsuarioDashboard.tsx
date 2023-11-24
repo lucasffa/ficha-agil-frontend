@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import editIcon from '../../../assets/images/edit.svg';
 import { cpfMask } from '../../../Shared/Mascaras';
 import './usuarioDashboard.scss';
-import { Pagination } from '@mui/material';
+import { Alert, Pagination } from '@mui/material';
 import { ButtonLink } from '../../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../components/utils/axios';
@@ -124,79 +124,89 @@ export default function UsuarioDashboard() {
         </div>
         {!isLoading && (
           <React.Fragment>
-            <div className="listagem-usuario">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="listagem-usuario-nome">Nome</th>
-                    <th className="listagem-usuario-cpf">CPF</th>
-                    <th className="listagem-usuario-email">Email</th>
-                    <th className="listagem-usuario-editar">Editar</th>
-                    <th className="listagem-usuario-status">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {usuarios?.length > 0
-                    ? usuarios?.map((usuario, index) => {
-                        return (
-                          <tr key={index}>
-                            <td className="listagem-usuario-nome">
-                              {usuario?.USUARIO}
-                            </td>
-                            <td
-                              className="listagem-usuario-cpf"
-                              style={{
-                                color: usuario?.CPF ? undefined : 'red',
-                              }}
-                            >
-                              {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
-                            </td>
-                            <td className="listagem-usuario-email">
-                              {usuario?.EMAIL ?? 'Não cadastrado'}
-                            </td>
-                            <td className="listagem-usuario-editar">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  getDadosUsuarioEditar(usuario.IDUSUARIO);
+            {usuarios?.length > 0 ? (
+              <div className="listagem-usuario">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="listagem-usuario-nome">Nome</th>
+                      <th className="listagem-usuario-cpf">CPF</th>
+                      <th className="listagem-usuario-email">Email</th>
+                      <th className="listagem-usuario-editar">Editar</th>
+                      <th className="listagem-usuario-status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {usuarios?.length > 0
+                      ? usuarios?.map((usuario, index) => {
+                          return (
+                            <tr key={index}>
+                              <td className="listagem-usuario-nome">
+                                {usuario?.USUARIO}
+                              </td>
+                              <td
+                                className="listagem-usuario-cpf"
+                                style={{
+                                  color: usuario?.CPF ? undefined : 'red',
                                 }}
                               >
-                                <img src={editIcon} alt="Editar Usuário" />
-                              </button>
-                            </td>
-                            <td className="listagem-usuario-status">
-                              {usuario.ATIVO === 'S' ? (
-                                <span>
-                                  <img
-                                    src={ativoIcon}
-                                    alt="Usuario Ativo"
-                                    title="Usuario Ativo"
-                                  />
-                                </span>
-                              ) : (
-                                <span>
-                                  <img
-                                    src={inativoIcon}
-                                    alt="Usuario Inativo"
-                                    title="Usuario Inativo"
-                                  />
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
-            </div>
+                                {cpfMask(usuario?.CPF) ?? 'Não cadastrado'}
+                              </td>
+                              <td className="listagem-usuario-email">
+                                {usuario?.EMAIL ?? 'Não cadastrado'}
+                              </td>
+                              <td className="listagem-usuario-editar">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    getDadosUsuarioEditar(usuario.IDUSUARIO);
+                                  }}
+                                >
+                                  <img src={editIcon} alt="Editar Usuário" />
+                                </button>
+                              </td>
+                              <td className="listagem-usuario-status">
+                                {usuario.ATIVO === 'S' ? (
+                                  <span>
+                                    <img
+                                      src={ativoIcon}
+                                      alt="Usuario Ativo"
+                                      title="Usuario Ativo"
+                                    />
+                                  </span>
+                                ) : (
+                                  <span>
+                                    <img
+                                      src={inativoIcon}
+                                      alt="Usuario Inativo"
+                                      title="Usuario Inativo"
+                                    />
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <Alert severity="info" style={{ marginTop: '2%' }}>
+                Não foi encontrado nenhum usuário
+              </Alert>
+            )}
+
             <div className="bottom">
-              <Pagination
-                count={numeroDePaginas}
-                color="primary"
-                page={currentPage}
-                onChange={(event, value) => setCurrentPage(value)}
-              />
+              {usuarios?.length > 0 && (
+                <Pagination
+                  count={numeroDePaginas}
+                  color="primary"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                />
+              )}
+
               <ButtonLink
                 className="button"
                 pathname="/usuario/adicionar"
