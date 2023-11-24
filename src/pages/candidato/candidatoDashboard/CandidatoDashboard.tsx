@@ -6,7 +6,7 @@ import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import closeIcon from '../../../assets/images/close.svg';
 import { cpfMask, removeMask } from '../../../Shared/Mascaras';
 import './candidatoDashboard.scss';
-import { Grid, Pagination, TextField } from '@mui/material';
+import { Alert, Grid, Pagination, TextField } from '@mui/material';
 import { Button, ButtonLink } from '../../../components/Button/Button';
 import axiosInstance from '../../../components/utils/axios';
 import { toast } from 'react-toastify';
@@ -46,6 +46,8 @@ export default function CandidatoDashboard({
   const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isFichaCandidatoFiltrado, setIsFichaCandidatoFiltrado] =
+    useState(false);
 
   const { control, getValues, setValue } = useForm<FiltroBuscaCandidato>({
     mode: 'onBlur',
@@ -105,17 +107,90 @@ export default function CandidatoDashboard({
     }
   }, []);
 
+  const getFichaCandidatoFiltrado = useCallback(
+    async (
+      Nome: string,
+      Cpf: string,
+      Ativo: string,
+      page: number,
+      take: number
+    ) => {
+      try {
+        setIsLoading(true);
+        setIsFichaCandidatoFiltrado(true);
+        await axiosInstance
+          .get(`/fichaCandidatoFilter`, {
+            params: {
+              nome: Nome,
+              cpf: Cpf,
+              ativo: Ativo,
+              page: page,
+              take: take,
+            },
+          })
+          .then(res => {
+            setCandidato(res.data.fichasCandidatos);
+            setTotalPages(res.data.totalDefichasCandidatos);
+          });
+      } catch (err: any) {
+        const error = err.response?.data;
+        Object.keys(error).map(key => {
+          return toast.error(error[key]);
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
   useEffect(() => {
-    getFichas(currentPage, 5, isFilterInativos);
-  }, [getFichas, currentPage, isFilterInativos]);
+    !isFichaCandidatoFiltrado
+      ? getFichas(currentPage, 5, isFilterInativos)
+      : getFichaCandidatoFiltrado(
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
+          isFilterInativos,
+          currentPage,
+          5
+        );
+  }, [
+    getFichas,
+    getFichaCandidatoFiltrado,
+    currentPage,
+    isFilterInativos,
+    getValues,
+    isFichaCandidatoFiltrado,
+  ]);
 
   function handleCandidatosInativos(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      getFichas(1, 5, 'N');
       setIsFilterInativos('N');
+      if (!isFichaCandidatoFiltrado) {
+        getFichas(1, 5, 'N');
+      } else {
+        setCurrentPage(1);
+        getFichaCandidatoFiltrado(
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
+          'N',
+          1,
+          5
+        );
+      }
     } else {
-      getFichas(1, 5, 'S');
       setIsFilterInativos('S');
+      if (!isFichaCandidatoFiltrado) {
+        getFichas(1, 5, 'S');
+      } else {
+        setCurrentPage(1);
+        getFichaCandidatoFiltrado(
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
+          'S',
+          1,
+          5
+        );
+      }
     }
   }
 
@@ -166,34 +241,6 @@ export default function CandidatoDashboard({
       getFichas(currentPage, 5, isFilterInativos);
     }
   }
-
-  const getFichaCandidatoFiltrado = useCallback(
-    async (Nome: string, Cpf: string, Ativo: string) => {
-      try {
-        setIsLoading(true);
-        await axiosInstance
-          .get(`/fichaCandidatoFilter`, {
-            params: {
-              nome: Nome,
-              cpf: Cpf,
-              ativo: Ativo,
-            },
-          })
-          .then(res => {
-            setCandidato(res.data.fichasCandidatos);
-            setTotalPages(res.data.totalDefichasCandidatos);
-          });
-      } catch (err: any) {
-        const error = err.response?.data;
-        Object.keys(error).map(key => {
-          return toast.error(error[key]);
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    []
-  );
 
   const handleExcluirCandidato = (fichaId: number) => {
     deleteCandidato(fichaId);
@@ -256,7 +303,9 @@ export default function CandidatoDashboard({
                   getFichaCandidatoFiltrado(
                     getValues('Nome'),
                     removeMask(getValues('Cpf')),
-                    isFilterInativos
+                    isFilterInativos,
+                    currentPage,
+                    5
                   )
                 }
               >
@@ -268,109 +317,119 @@ export default function CandidatoDashboard({
         </div>
         {!isLoading && (
           <React.Fragment>
-            <div className="listagem-candidato">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="listagem-candidato-nome">Nome</th>
-                    <th className="listagem-candidato-cpf">CPF</th>
-                    <th className="listagem-candidato-email">Email</th>
-                    <th className="listagem-candidato-editar">Editar</th>
-                    <th className="listagem-candidato-status">Status</th>
-                    {isFilterInativos === 'N' ? null : (
-                      <th className="listagem-candidato-excluir">Excluir</th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {candidato?.length > 0
-                    ? candidato?.map((candidato, index) => {
-                        return (
-                          <tr key={index}>
-                            <td className="listagem-candidato-nome">
-                              {candidato?.NOMECOMPLETO}
-                            </td>
-                            <td
-                              className="listagem-candidato-cpf"
-                              style={{
-                                color: candidato?.CPF ? undefined : 'red',
-                              }}
-                            >
-                              {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
-                            </td>
-                            <td className="listagem-candidato-email">
-                              {candidato?.EMAIL === ''
-                                ? 'Não cadastrado'
-                                : candidato?.EMAIL}
-                            </td>
-                            <td className="listagem-candidato-editar">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setIsEdit(true);
-                                  setIdFicha(candidato?.IDFICHA);
-                                  getFichaCandidato(candidato?.IDFICHA);
-                                  handleEdit();
+            {candidato?.length > 0 ? (
+              <div className="listagem-candidato">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="listagem-candidato-nome">Nome</th>
+                      <th className="listagem-candidato-cpf">CPF</th>
+                      <th className="listagem-candidato-email">Email</th>
+                      <th className="listagem-candidato-editar">Editar</th>
+                      <th className="listagem-candidato-status">Status</th>
+                      {isFilterInativos === 'N' ? null : (
+                        <th className="listagem-candidato-excluir">Excluir</th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {candidato?.length > 0
+                      ? candidato?.map((candidato, index) => {
+                          return (
+                            <tr key={index}>
+                              <td className="listagem-candidato-nome">
+                                {candidato?.NOMECOMPLETO}
+                              </td>
+                              <td
+                                className="listagem-candidato-cpf"
+                                style={{
+                                  color: candidato?.CPF ? undefined : 'red',
                                 }}
                               >
-                                <img src={editIcon} alt="Editar Candidato" />
-                              </button>
-                            </td>
-                            <td className="listagem-candidato-status">
-                              {candidato.ATIVO === 'S' ? (
-                                <span>
-                                  <img
-                                    src={ativoIcon}
-                                    alt="Candidato Ativo"
-                                    title="Candidato Ativo"
-                                  />
-                                </span>
-                              ) : (
-                                <span>
-                                  <img
-                                    src={inativoIcon}
-                                    alt="Candidato Inativo"
-                                    title="Candidato Inativo"
-                                  />
-                                </span>
-                              )}
-                            </td>
-                            {isFilterInativos === 'N' ? null : (
-                              <td className="listagem-candidato-excluir">
+                                {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
+                              </td>
+                              <td className="listagem-candidato-email">
+                                {candidato?.EMAIL === ''
+                                  ? 'Não cadastrado'
+                                  : candidato?.EMAIL}
+                              </td>
+                              <td className="listagem-candidato-editar">
                                 <button
                                   type="button"
                                   onClick={() => {
+                                    setIsEdit(true);
                                     setIdFicha(candidato?.IDFICHA);
-                                    setModalOpen(true);
+                                    getFichaCandidato(candidato?.IDFICHA);
+                                    handleEdit();
                                   }}
                                 >
-                                  <img
-                                    src={closeIcon}
-                                    alt="Excluir Candidato"
-                                  />
+                                  <img src={editIcon} alt="Editar Candidato" />
                                 </button>
                               </td>
-                            )}
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
-            </div>
+                              <td className="listagem-candidato-status">
+                                {candidato.ATIVO === 'S' ? (
+                                  <span>
+                                    <img
+                                      src={ativoIcon}
+                                      alt="Candidato Ativo"
+                                      title="Candidato Ativo"
+                                    />
+                                  </span>
+                                ) : (
+                                  <span>
+                                    <img
+                                      src={inativoIcon}
+                                      alt="Candidato Inativo"
+                                      title="Candidato Inativo"
+                                    />
+                                  </span>
+                                )}
+                              </td>
+                              {isFilterInativos === 'N' ? null : (
+                                <td className="listagem-candidato-excluir">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setIdFicha(candidato?.IDFICHA);
+                                      setModalOpen(true);
+                                    }}
+                                  >
+                                    <img
+                                      src={closeIcon}
+                                      alt="Excluir Candidato"
+                                    />
+                                  </button>
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <Alert severity="info" style={{ marginTop: '2%' }}>
+                Não foi encontrado nenhum candidato
+              </Alert>
+            )}
             <div className="bottom">
-              <Pagination
-                count={numeroDePaginas}
-                color="primary"
-                page={currentPage}
-                onChange={(event, value) => setCurrentPage(value)}
-              />
+              {candidato?.length > 0 && (
+                <Pagination
+                  count={numeroDePaginas}
+                  color="primary"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                />
+              )}
+
               <ButtonLink
                 className="button"
                 pathname="/candidato/adicionar"
                 name="Cadastrar nova ficha"
               ></ButtonLink>
             </div>
+
             <Modal
               title="Exclusão de Ficha"
               isOpen={modalOpen}
