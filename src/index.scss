@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+@media print{
+  @page {
+      size: A4 portrait;
+      margin:1cm;
+      overflow: hidden;
+  }
+  html {
+    overflow-y: hidden;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

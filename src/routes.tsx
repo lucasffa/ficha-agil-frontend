@@ -13,16 +13,26 @@ import UsuarioDashboard from './pages/usuario/UsuarioDashboard/UsuarioDashboard'
 import AdicionarUsuario from './pages/usuario/AdicionarUsuario/AdicionarUsuario';
 import EditarUsuario from './pages/usuario/EditarUsuario/EditarUsuario';
 import { CandidatoFicha } from './pages/candidato/candidatoFicha/CandidatoFicha';
+import { CandidatoFichaImpressao } from './pages/candidato/candidatoFichaImpressao/CandidatoFichaImpressao';
 
 export default function Rotas() {
   const location = useLocation();
   const validateToken = localStorage.getItem('token') ? true : false;
 
+  const isCandidatoImprimirRoute = location.pathname === '/candidato/imprimir';
+
   return (
     <div className={location.pathname === '/login' ? '' : 'app'}>
-      {location.pathname === '/login' ? null : <SideMenu />}
+      {/* Não pode carregar o SideMenu se estiver na rota /login ou /candidato/imprimir de isCandidatoImprimirRoute */}
+      {location.pathname === '/login' || isCandidatoImprimirRoute ? null : (
+        <SideMenu />
+      )}
       <div className={location.pathname === '/login' ? '' : 'main-content'}>
-        {location.pathname === '/login' ? null : <TopMenu />}
+        {/* Não pode carregar o TopMenu se estiver na rota /login ou /candidato/imprimir de isCandidatoImprimirRoute */}
+        {location.pathname === '/login' || isCandidatoImprimirRoute ? null : (
+          <TopMenu />
+        )}
+        {/* Não pode carregar o main se estiver na rota /login */}
         <main className={location.pathname === '/login' ? '' : 'areas'}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} key={uniqid()} />
@@ -50,6 +60,11 @@ export default function Rotas() {
               <Route
                 path="/candidato/editar"
                 element={<CandidatoFicha />}
+                key={uniqid()}
+              />
+              <Route
+                path="/candidato/imprimir"
+                element={<CandidatoFichaImpressao />}
                 key={uniqid()}
               />
               {/* Usuário rotas */}

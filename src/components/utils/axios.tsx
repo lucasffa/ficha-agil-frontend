@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-const baseUrl = window.location.origin;
+//const baseUrl = window.location.origin;
 
 const axiosInstance = axios.create({
-  baseURL:
-    baseUrl === 'http://localhost:3000' ? 'http://localhost:8000' : baseUrl,
+  baseURL: 'http://itaka.univale.br/api',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorage.getItem('token')}`,
