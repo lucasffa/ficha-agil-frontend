@@ -1,14 +1,14 @@
-import React from 'react';
-import { TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
-import uniqid from 'uniqid';
+import React from "react";
+import { TextField } from "@mui/material";
+import InputMask from "react-input-mask";
+import uniqid from "uniqid";
 export class MascaraInput {
-  static cpf = '999.999.999-99';
-  static cep = '99999-999';
-  static telefone = '(99)99999-9999';
-  static telefoneResidencial = '(99)9999-9999';
-  static telefoneRecado = '(99)9999-9999';
-  static horario = '99:99';
+  static cpf = "999.999.999-99";
+  static cep = "99999-999";
+  static telefone = "(99)99999-9999";
+  static telefoneResidencial = "(99)9999-9999";
+  static telefoneRecado = "(99)9999-9999";
+  static horario = "99:99";
 }
 
 type PropsInput = {
