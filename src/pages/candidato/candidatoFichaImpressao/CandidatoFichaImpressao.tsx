@@ -80,7 +80,7 @@ export interface Ficha {
   };
   OutrasFichasGrupoFamiliar: {
     IdFicha: number | undefined;
-    NomeCompleto: string;
+    NomeCompleto: string | "Vazio";
     IdParentesco: number | undefined;
     IdGrupoFamiliar: number | undefined;
   }[];

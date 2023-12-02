@@ -68,6 +68,11 @@ const theme = createTheme({
           borderRadius: 0,
           // Sobrescreve a borda preta ao contorno do TextField
           borderColor: '#000',
+
+          // Sobrescreve o tamanho da fonte do TextField
+          input: {
+            fontSize: '0.8rem',
+          }
         },
       },
     },
@@ -107,7 +112,20 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          // Sobrescreve a cor do Label do TextField
+          // Sobrescreve o float do Label do TextField, deixando-o ativado por padrão
+          transform: 'translate(14px, -6px) scale(0.75)',
+
+          // Sobrescreve a cor de fundo do Label do TextField
+          backgroundColor: '#fff',
+
+          // Padding do Label do TextField
+          paddingRight: '5%',
+          paddingLeft: '2%',
+
+          // Sobrescreve o tamanho da fonte do Label do TextField
+          fontSize: '0.80rem',
+
+          // Sobrescreve a cor da fonte do Label do TextField
           color: '#000',
 
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver selecionado
@@ -118,23 +136,25 @@ const theme = createTheme({
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver preenchido
           '&.MuiInputLabel-shrink': {
             color: '#000',
+            fontWeight: '700',
           },
 
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver focado
           '&.Mui-focused.MuiInputLabel-shrink': {
             color: '#000',
+            fontWeight: '700',
           },
 
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver em hover
           '&:hover': {
             color: '#000',
+            fontWeight: '700',
           },
         },
       },
     },
   },
 });
-
 
 
 export function IdentificacaoCandidato(props: FichaImpressao) {
@@ -202,7 +222,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.Cpf"
@@ -222,7 +242,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.DocIdentidade"
@@ -253,7 +273,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                   <TextField
                     fullWidth
                     id="outlined-basic 3123"
-                    label="Data de Nascimento"
+                    label="Data de Nasc."
                     color="primary"
                     variant="outlined"
                     value={
@@ -269,7 +289,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.Naturalidade"
@@ -305,7 +325,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.IdRacaEtnia"
@@ -328,8 +348,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
           </Grid>
           <Grid
             item
-            xs={
-              props.watch('IdentificacaoCandidato.IdSitTrabalhista') === 1 ? 2 : 4
+            xs={4
             }
           >
             <Controller
@@ -358,7 +377,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
             />
           </Grid>
           {props.getValues('IdentificacaoCandidato.IdSitTrabalhista') === 1 ? (
-            <Grid item xs={2}>
+            <Grid item xs={4}>
               <Controller
                 control={props.control}
                 name="IdentificacaoCandidato.OutraSitTrabalhista"
@@ -379,7 +398,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               />
             </Grid>
           ) : null}
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.IdEstadoCivil"
@@ -405,7 +424,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.Email"
@@ -426,7 +445,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.NecessidadeEspecial"
@@ -447,7 +466,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.EnderecoResidencial"
@@ -511,7 +530,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.Complemento"
@@ -520,7 +539,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                   <TextField
                     fullWidth
                     id="outlined-basic 7"
-                    label="Complemento (Casa, Bloco, Ap.)"
+                    label="Complemento"
                     color="primary"
                     variant="outlined"
                     {...field}
@@ -647,7 +666,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               render={({ field }) => {
                 return (
                   <InputMaskCpf
-                    name="Cpf Pai"
+                    name="CPF Pai"
                     value={props.getValues('IdentificacaoCandidato.CpfPai')}
                     readOnly={true}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -689,7 +708,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               render={({ field }) => {
                 return (
                   <InputMaskCpf
-                    name="Cpf Mãe"
+                    name="CPF Mãe"
                     value={props.getValues('IdentificacaoCandidato.CpfMae')}
                     readOnly={true}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1442,7 +1461,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <TextField
                       fullWidth
                       id="outlined-read-only-input"
-                      label="Possuí agua potável"
+                      label="Possui agua potável"
                       value={field.value === "S" ? "Sim" : "Não"}
                       InputProps={{
                         readOnly: true,
@@ -1463,7 +1482,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <TextField
                       fullWidth
                       id="outlined-read-only-input"
-                      label="Possuí rede de esgoto"
+                      label="Possui rede de esgoto"
                       value={field.value === "S" ? "Sim" : "Não"}
                       InputProps={{
                         readOnly: true,
@@ -1531,7 +1550,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <TextField
                       fullWidth
                       id="outlined-read-only-input"
-                      label="Possuí eletricidade"
+                      label="Possui eletricidade"
                       value={field.value === "S" ? "Sim" : field.value === "N" ? "Não" : "Coletiva"}
                       InputProps={{
                         readOnly: true,
@@ -2039,38 +2058,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <FormControl fullWidth>
                       <TextField
                         multiline
-                        minRows={3}
-                        {...field}
-                        InputProps={{
-                          readOnly: true,
-                          style: {
-                            textAlign: 'justify',
-                            whiteSpace: 'pre-wrap', // Garante que as quebras de linha e espaços sejam preservados
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {/* Situação socioeconômica familiar */}
-        <Grid container spacing={0}>
-          <div className="cabecalho-form-impressao">11. SITUAÇÃO SOCIOECONÔMICA FAMILIAR</div>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Controller
-                control={props.control}
-                name="SituacaoSocioEconomicaFamiliar"
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        multiline
-                        minRows={7}
+                        minRows={2}
                         {...field}
                         InputProps={{
                           readOnly: true,
@@ -2089,8 +2077,8 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Observações que o candidato ou o entrevistador julguem necessárias */}
+          <div className="cabecalho-form-impressao">11. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS </div>
         <Grid container spacing={0}>
-          <div className="cabecalho-form-impressao">12. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS </div>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Controller
@@ -2101,7 +2089,127 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <FormControl fullWidth>
                       <TextField
                         multiline
-                        minRows={3}
+                        minRows={2}
+                        {...field}
+                        InputProps={{
+                          readOnly: true,
+                          style: {
+                            textAlign: 'justify',
+                            whiteSpace: 'pre-wrap', // Garante que as quebras de linha e espaços sejam preservados
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {/* Declaração de responsabilidade pelas informações e documentos */}
+        <div className="cabecalho-form-impressao"> 12. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS </div>
+        <Grid container spacing={0}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+            }}
+          >
+            <span style={{  
+              width: '100%', 
+              textAlign: 'justify',
+              textJustify: 'inter-word'
+            }}>
+              Declaro, para efeito de estudo socioeconômico, que as informações prestadas nesse documento de 4 (quatro) páginas numeradas estão completas e são verdadeiras e assumo, por elas e pelas cópias dos documentos apresentados, inteira responsabilidade, ciente das penalidades previstas no Código Penal Brasileiro, Artigos 171 e 299. Autorizo a apresentação desses documentos aos órgãos públicos competentes, se necessário. Declaro ainda estar ciente de que os dados apresentados serão submetidos a uma análise técnica e, se convocado (a), deverei comparecer à Instituição, para entrevista com o (a) Assistente Social, em data e horário previamente agendados pela Instituição, apresentando os originais de todos os documentos anexados ao formulário e quaisquer outros que forem solicitados.
+            </span>
+            
+            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', paddingBottom: '0px', paddingTop: '25px' }}>
+              <div className='campos-superiores' style={{ 
+                  display: 'flex', flexDirection: 'row', alignContent: 'space-between', justifyContent: 'center', width: '100%' 
+              }}>
+                <div className="campo-cidade" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
+                  <div className="eixo-horizontal" style={{
+                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
+                  }}>
+                    <div className="linha" style={{
+                        width: '300px', marginTop: '8px', borderBottom: '2px solid black'
+                    }}></div>
+                    <p> , </p>
+                  </div>
+                  <i>(Cidade)</i>
+                </div>
+                <div className="campo-data" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
+                  <div className="eixo-horizontal" style={{
+                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
+                  }}>
+                    <div className="linha" style={{
+                        width: '40px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                    <b> de </b>
+                    <div className="linha" style={{
+                        width: '180px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                    <b> de </b>
+                    <div className="linha" style={{
+                        width: '80px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                  </div>
+                  <i>(Data)</i>
+                </div>
+              </div>
+              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '30px', justifyContent: 'center'}}>
+                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+                <span>Assinatura do(a) responsável pelas informações</span>
+              </div>
+            </div>
+          </div>
+
+
+
+        </Grid>
+        
+        {/* Assinatura do Entrevistador */}
+        <Grid container spacing={0} style={{paddingBottom: '10px', paddingTop: '50px'}}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+            }}
+          >
+            
+            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', marginTop: '16px'}}>
+              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', justifyContent: 'center'}}>
+                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+                <span>Assinatura do(a) Entrevistador(a)</span>
+              </div>
+            </div>
+          </div>
+
+
+
+        </Grid>
+
+        {/* Situação socioeconômica familiar */}
+        <div className="cabecalho-form-impressao">13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR</div>
+        <Grid container spacing={0}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Controller
+                control={props.control}
+                name="SituacaoSocioEconomicaFamiliar"
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        multiline
+                        minRows={5}
                         {...field}
                         InputProps={{
                           readOnly: true,
@@ -2120,10 +2228,9 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Parecer do Assistente Social */}  
-        <div className="cabecalho-form-impressao">13. PARECER DO (A) ASSISTENTE SOCIAL</div>
-        <Grid container spacing={0}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
+        <div className="cabecalho-form-impressao">14. PARECER DO (A) ASSISTENTE SOCIAL</div>    
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
               <Controller
                 control={props.control}
                 name="ParecerAssistSocial.ParecerAssistSocial"
@@ -2132,7 +2239,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     <FormControl fullWidth>
                       <TextField
                         multiline
-                        minRows={3}
+                        minRows={5}
                         {...field}
                         InputProps={{
                           readOnly: true,
@@ -2146,8 +2253,8 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                   );
                 }}
               />
-            </Grid>
-            <Grid item xs={12}>
+          </Grid>
+          <Grid item xs={12}>
               <Controller
                 control={props.control}
                 name="ParecerAssistSocial.StatusProcesso"
@@ -2167,73 +2274,67 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                   );
                 }}
               />
-            </Grid>
           </Grid>
         </Grid>
-
-        <Grid container spacing={0}>
-        <div className="cabecalho-form-impressao"> 14. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-          }}
-        >
-          <span style={{  
-            width: '100%', 
-            textAlign: 'justify',
-            textJustify: 'inter-word'
-          }}>
-            Declaro, para efeito de estudo socioeconômico, que as informações prestadas nesse documento de 4 (quatro) páginas numeradas estão completas e são verdadeiras e assumo, por elas e pelas cópias dos documentos apresentados, inteira responsabilidade, ciente das penalidades previstas no Código Penal Brasileiro, Artigos 171 e 299. Autorizo a apresentação desses documentos aos órgãos públicos competentes, se necessário. Declaro ainda estar ciente de que os dados apresentados serão submetidos a uma análise técnica e, se convocado (a), deverei comparecer à Instituição, para entrevista com o (a) Assistente Social, em data e horário previamente agendados pela Instituição, apresentando os originais de todos os documentos anexados ao formulário e quaisquer outros que forem solicitados.
-          </span>
-          
-          <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', marginTop: '16px', paddingBottom: '300px' }}>
-            <div className='campos-superiores' style={{ 
-                display: 'flex', flexDirection: 'row', alignContent: 'space-between', justifyContent: 'center', width: '100%' 
-            }}>
-              <div className="campo-cidade" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                <div className="eixo-horizontal" style={{
-                  display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                }}>
-                  <div className="linha" style={{
-                      width: '300px', marginTop: '8px', borderBottom: '2px solid black'
-                  }}></div>
-                  <p> , </p>
+        
+        
+        {/* Assinatura da Assistente Social */}
+        <Grid container spacing={0} style={{height: '200px', paddingTop: '0px'}}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+            }}
+          >
+            
+            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', paddingBottom: '20px' /* Este paddingBottom garante que a assinatura fique na mesma página */ }}>
+              <div className='campos-superiores' style={{ 
+                  display: 'flex', flexDirection: 'row', alignContent: 'space-between', justifyContent: 'center', width: '100%' 
+              }}>
+                <div className="campo-cidade" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
+                  <div className="eixo-horizontal" style={{
+                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
+                  }}>
+                    <div className="linha" style={{
+                        width: '300px', marginTop: '8px', borderBottom: '2px solid black'
+                    }}></div>
+                    <p> , </p>
+                  </div>
+                  <i>(Cidade)</i>
                 </div>
-                <i>(Cidade)</i>
-              </div>
-              <div className="campo-data" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                <div className="eixo-horizontal" style={{
-                  display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                }}>
-                  <div className="linha" style={{
-                      width: '40px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                  }}></div>
-                  <b> de </b>
-                  <div className="linha" style={{
-                      width: '180px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                  }}></div>
-                  <b> de </b>
-                  <div className="linha" style={{
-                      width: '80px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                  }}></div>
+                <div className="campo-data" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
+                  <div className="eixo-horizontal" style={{
+                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
+                  }}>
+                    <div className="linha" style={{
+                        width: '40px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                    <b> de </b>
+                    <div className="linha" style={{
+                        width: '180px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                    <b> de </b>
+                    <div className="linha" style={{
+                        width: '80px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
+                    }}></div>
+                  </div>
+                  <i>(Data)</i>
                 </div>
-                <i>(Data)</i>
               </div>
-            </div>
-            <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-              <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
-              <span>Assinatura do(a) responsável pelas informações</span>
+              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', justifyContent: 'center'}}>
+                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+                <span>Assinatura do(a) Assistente Social</span>
+                <span>CRESS Nº {'     '}</span>
+              </div>
             </div>
           </div>
-        </div>
 
 
 
-      </Grid>
+        </Grid>
       </Grid>
     </ThemeProvider>
   );
