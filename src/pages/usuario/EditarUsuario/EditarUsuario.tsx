@@ -12,7 +12,7 @@ import { Button } from '../../../components/Button/Button';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './editarUsuario.scss';
-import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
+import { InputComMascara, MascaraInput } from '../../../Shared/InputPadraoForm';
 import { useState } from 'react';
 import { UsuarioProps } from '../UsuarioDashboard/UsuarioDashboard';
 import axiosInstance from '../../../components/utils/axios';
@@ -24,7 +24,6 @@ export default function EditarUsuario() {
   const ValuesRefDadosUsuario: UsuarioProps =
     location.state?.ValuesRefDadosUsuario;
 
-  const [cpf, setCpf] = useState(ValuesRefDadosUsuario?.CPF);
   //const [telefone, setTelefone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -36,7 +35,7 @@ export default function EditarUsuario() {
     mode: 'onBlur',
     defaultValues: {
       USUARIO: ValuesRefDadosUsuario?.USUARIO,
-      CPF: cpf,
+      CPF: ValuesRefDadosUsuario?.CPF,
       EMAIL: ValuesRefDadosUsuario?.EMAIL,
       ATIVO: ValuesRefDadosUsuario?.ATIVO,
       TELEFONE: undefined,
@@ -126,11 +125,11 @@ export default function EditarUsuario() {
               name="CPF"
               render={({ field }) => {
                 return (
-                  <InputMaskCpf
-                    value={cpf}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setCpf(event.target.value);
-                    }}
+                  <InputComMascara
+                    name="Cpf"
+                    mask={MascaraInput.cpf}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 );
               }}

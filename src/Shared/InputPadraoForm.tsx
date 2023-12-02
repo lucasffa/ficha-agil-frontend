@@ -1,402 +1,46 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-
-interface InputPadraoFormProps {
-  placeholder?: string;
-  type?: string;
-  label: string;
-  className: string;
-  control?: any;
-  error?: string;
-  value?: any;
-}
-
-export function InputPadraoForm({
-  className,
-  label,
-  value,
-}: InputPadraoFormProps) {
-  return (
-    <TextField
-      id="outlined-basic"
-      className={className}
-      label={label}
-      color="primary"
-      variant="outlined"
-      style={{ borderColor: 'yellow' }}
-      value={value}
-    />
-  );
+import InputMask from 'react-input-mask';
+import uniqid from 'uniqid';
+export class MascaraInput {
+  static cpf = '999.999.999-99';
+  static cep = '99999-999';
+  static telefone = '(99)99999-9999';
+  static telefoneResidencial = '(99)9999-9999';
+  static telefoneRecado = '(99)9999-9999';
+  static horario = '99:99';
 }
 
 type PropsInput = {
+  mask: string;
   value: string;
-  name?: string;
-  onChange: Function;
+  name: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   event?: React.ChangeEvent<HTMLInputElement>;
   error?: {};
 };
 
-export function InputMaskCpf(props: PropsInput) {
-  const CPF_MASK = '999.999.999-99';
-  const MAX_LENGTH = 11;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, CPF_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, CPF_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 4"
-      label={props.name ?? 'Cpf'}
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
-
-export function InputMaskTelefone(props: PropsInput) {
-  const TELEFONE_MASK = '(99)99999-9999';
-  const MAX_LENGTH = 11;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, TELEFONE_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, TELEFONE_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 5"
-      label={props.name ?? 'Telefone'}
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
-export function InputMaskTelefoneResidencial(props: PropsInput) {
-  const TELEFONE_MASK = '(99)9999-9999';
-  const MAX_LENGTH = 10;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, TELEFONE_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, TELEFONE_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 5"
-      label="Telefone Residencial"
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
-export function InputMaskTelefoneRecado(props: PropsInput) {
-  const TELEFONE_MASK = '(99)9999-9999';
-  const MAX_LENGTH = 10;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, TELEFONE_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, TELEFONE_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 5"
-      label="Telefone Recado"
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
-
-export function InputMaskCep(props: PropsInput) {
-  const CEP_MASK = '99999-999';
-  const MAX_LENGTH = 8;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, CEP_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, CEP_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 5"
-      label="Cep"
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
-
-export function InputMaskHorario(props: PropsInput) {
-  const HORA_MASK = '99:99';
-  const MAX_LENGTH = 4;
-
-  const { onChange } = props;
-
-  let value = clear(props.value);
-
-  if (value) {
-    value = applyMask(value, HORA_MASK);
-  }
-
-  function onLocalChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    let value = clear(ev.target.value);
-
-    let nextLength = value.length;
-
-    if (nextLength > MAX_LENGTH) return;
-
-    value = applyMask(value, HORA_MASK);
-
-    ev.target.value = value;
-
-    onChange(ev);
-  }
-
-  function applyMask(value: string, mask: string) {
-    let result = '';
-
-    let inc = 0;
-    Array.from(value).forEach((letter, index) => {
-      if (!mask[index + inc]?.match(/[0-9]/)) {
-        result += mask[index + inc];
-        inc++;
-      }
-      result += letter;
-    });
-    return result;
-  }
-
-  function clear(value: string) {
-    return value && value.replace(/[^0-9]/g, '');
-  }
-
-  return (
-    <TextField
-      {...props}
-      id="outlined-basic 4"
-      label={props.name ?? 'Horário'}
-      color="primary"
-      variant="outlined"
-      type="text"
-      name={''}
-      onChange={onLocalChange}
-      value={value}
-      error={!!props.error}
-      fullWidth
-    />
-  );
-}
+export const InputComMascara = React.forwardRef((props: PropsInput, ref) => (
+  <InputMask
+    mask={props.mask}
+    onChange={props.onChange}
+    value={props.value}
+    inputRef={ref as React.Ref<HTMLInputElement>}
+  >
+    {
+      <TextField
+        id={`outlined-basic ${uniqid()}`}
+        label={props.name}
+        color="primary"
+        variant="outlined"
+        type="text"
+        name=""
+        onChange={props.onChange}
+        value={props.value}
+        error={!!props.error}
+        inputRef={ref}
+        fullWidth
+      />
+    }
+  </InputMask>
+));

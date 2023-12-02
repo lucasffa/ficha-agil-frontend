@@ -83,7 +83,7 @@ export default function DadosEducacionaisCandidato(
         <Grid item xs={6}>
           <Controller
             control={props.control}
-            name="DadosEducacionaisCandidato.NomeInstituicaoEnsino"
+            name="DadosEducacionaisCandidato.NomeInstituicao"
             render={({ field }) => {
               return (
                 <TextField

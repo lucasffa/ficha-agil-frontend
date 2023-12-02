@@ -12,14 +12,12 @@ import {
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
+  FieldErrors,
 } from 'react-hook-form';
 import React, { useEffect } from 'react';
 import {
-  InputMaskCep,
-  InputMaskCpf,
-  InputMaskTelefone,
-  InputMaskTelefoneRecado,
-  InputMaskTelefoneResidencial,
+  InputComMascara,
+  MascaraInput,
 } from '../../../../Shared/InputPadraoForm';
 import {
   EstadoCivil,
@@ -41,6 +39,7 @@ interface IdentificacaoCandidatoProps {
   racaEtnia: RacaEtnia[] | undefined;
   estadoCivil: EstadoCivil[] | undefined;
   parentesco: Parentesco[] | undefined;
+  errors: FieldErrors<Ficha>;
 }
 
 //1. IDENTIFICAÇÃO DO CANDIDATO
@@ -72,6 +71,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
   return (
     <React.Fragment>
       <div className="cabecalho-form">1. IDENTIFICAÇÃO DO CANDIDATO</div>
+
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Controller
@@ -86,7 +86,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
-                  //error={!!errors?.name}
+                  error={!!props.errors.IdentificacaoCandidato?.NomeCompleto}
                 />
               );
             }}
@@ -96,16 +96,14 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
           <Controller
             control={props.control}
             name="IdentificacaoCandidato.Cpf"
-            render={() => {
+            render={({ field }) => {
               return (
-                <InputMaskCpf
-                  value={props.getValues('IdentificacaoCandidato.Cpf')}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.Cpf',
-                      event.target.value
-                    );
-                  }}
+                <InputComMascara
+                  name="Cpf"
+                  mask={MascaraInput.cpf}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={!!props.errors.IdentificacaoCandidato?.Cpf}
                 />
               );
             }}
@@ -124,6 +122,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.DocIdentidade}
                 />
               );
             }}
@@ -156,6 +155,9 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                           ? new Date(field.value).toLocaleDateString('pt-BR')
                           : ''
                       }
+                      error={
+                        !!props.errors.IdentificacaoCandidato?.DataNascimento
+                      }
                     />
                   }
                 />
@@ -176,6 +178,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.Naturalidade}
                 />
               );
             }}
@@ -209,6 +212,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Raça/Etnia"
                     {...field}
+                    error={!!props.errors.IdentificacaoCandidato?.IdRacaEtnia}
                   >
                     {props?.racaEtnia?.map((item, index) => {
                       return (
@@ -243,6 +247,9 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Situação Trabalhista"
                     {...field}
+                    error={
+                      !!props.errors.IdentificacaoCandidato?.IdSitTrabalhista
+                    }
                   >
                     {props?.situacaoTrabalhista?.map((item, index) => {
                       return (
@@ -272,6 +279,10 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                       color="primary"
                       variant="outlined"
                       {...field}
+                      error={
+                        !!props.errors.IdentificacaoCandidato
+                          ?.OutraSitTrabalhista
+                      }
                     />
                   </FormControl>
                 );
@@ -294,6 +305,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                     id="demo-simple-select"
                     label="Estado Civil"
                     {...field}
+                    error={!!props.errors.IdentificacaoCandidato?.IdEstadoCivil}
                   >
                     {props?.estadoCivil?.map((item, index) => {
                       return (
@@ -321,6 +333,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.Email}
                 />
               );
             }}
@@ -339,6 +352,9 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={
+                    !!props.errors.IdentificacaoCandidato?.NecessidadeEspecial
+                  }
                 />
               );
             }}
@@ -357,6 +373,9 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={
+                    !!props.errors.IdentificacaoCandidato?.EnderecoResidencial
+                  }
                 />
               );
             }}
@@ -376,6 +395,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   variant="outlined"
                   type="number"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.Numero}
                 />
               );
             }}
@@ -394,6 +414,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.Bairro}
                 />
               );
             }}
@@ -412,6 +433,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   color="primary"
                   variant="outlined"
                   {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.Complemento}
                 />
               );
             }}
@@ -423,14 +445,12 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
             name="IdentificacaoCandidato.Cep"
             render={({ field }) => {
               return (
-                <InputMaskCep
-                  value={props.getValues('IdentificacaoCandidato.Cep')}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.Cep',
-                      event.target.value
-                    );
-                  }}
+                <InputComMascara
+                  name="Cep"
+                  mask={MascaraInput.cep}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={!!props.errors.IdentificacaoCandidato?.Cep}
                 />
               );
             }}
@@ -442,16 +462,11 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
             name="IdentificacaoCandidato.TelefoneResidencial"
             render={({ field }) => {
               return (
-                <InputMaskTelefoneResidencial
-                  value={props.getValues(
-                    'IdentificacaoCandidato.TelefoneResidencial'
-                  )}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.TelefoneResidencial',
-                      event.target.value
-                    );
-                  }}
+                <InputComMascara
+                  name="Telefone Residencial"
+                  mask={MascaraInput.telefoneResidencial}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -463,16 +478,11 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
             name="IdentificacaoCandidato.TelefoneRecado"
             render={({ field }) => {
               return (
-                <InputMaskTelefoneRecado
-                  value={props.getValues(
-                    'IdentificacaoCandidato.TelefoneRecado'
-                  )}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.TelefoneRecado',
-                      event.target.value
-                    );
-                  }}
+                <InputComMascara
+                  name="Telefone Recado"
+                  mask={MascaraInput.telefoneRecado}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -482,18 +492,13 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
           <Controller
             control={props.control}
             name="IdentificacaoCandidato.TelefoneCelular"
-            render={() => {
+            render={({ field }) => {
               return (
-                <InputMaskTelefone
-                  value={props.getValues(
-                    'IdentificacaoCandidato.TelefoneCelular'
-                  )}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.TelefoneCelular',
-                      event.target.value
-                    );
-                  }}
+                <InputComMascara
+                  name="Telefone Celular"
+                  mask={MascaraInput.telefone}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -537,15 +542,11 @@ export function IdentificacaoCandidatoPaiMae(
             name="IdentificacaoCandidato.CpfPai"
             render={({ field }) => {
               return (
-                <InputMaskCpf
+                <InputComMascara
+                  mask={MascaraInput.cpf}
                   name="Cpf Pai"
-                  value={props.getValues('IdentificacaoCandidato.CpfPai')}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.CpfPai',
-                      event.target.value
-                    );
-                  }}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -575,15 +576,11 @@ export function IdentificacaoCandidatoPaiMae(
             name="IdentificacaoCandidato.CpfMae"
             render={({ field }) => {
               return (
-                <InputMaskCpf
+                <InputComMascara
+                  mask={MascaraInput.cpf}
                   name="Cpf Mãe"
-                  value={props.getValues('IdentificacaoCandidato.CpfMae')}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'IdentificacaoCandidato.CpfMae',
-                      event.target.value
-                    );
-                  }}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}

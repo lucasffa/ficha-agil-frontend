@@ -29,6 +29,8 @@ import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
 import { useLocation } from 'react-router-dom';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 import { removeMask } from '../../../Shared/Mascaras';
+import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchemaFicha from './components/FichaCandidatoValidate';
 
 export type SituacaoTrabalhista = {
   IDSITTRABALHISTA: number;
@@ -102,7 +104,7 @@ export interface Ficha {
   DadosEducacionaisCandidato: {
     Estuda: string;
     InstituicaoEnsino: string;
-    NomeInstituicaoEnsino: string;
+    NomeInstituicao: string;
     EnderecoInstituicao: string;
     BairroInstituicao: string;
     SerieAtual: number;
@@ -123,16 +125,16 @@ export interface Ficha {
     TelefoneEmergencia2: string;
     Alergia: string;
     SitMedicaEspecial: string;
-    FraturasCirurgicas: string;
+    FraturasCirurgias: string;
     MedicacaoControlada: string;
     ProvidenciaRecomendada: string;
   };
   CondicoesSociaisESaudeFamilia: {
     FamiliarTratamentoMedico: string;
-    FamiliarUsoMedico: string;
+    FamiliarUsoMedicamento: string;
     FamiliarDeficiencia: string;
     FamiliarDependenciaQuimica: string;
-    AcompanhamentoTerapeutico: string;
+    AcompTerapeutico: string;
     ProgramaSocial: string;
   };
   CondicoesMoradia: {
@@ -172,7 +174,7 @@ export interface Ficha {
     DespesasObs: string;
   };
   OutrosGastos: string;
-  SituacaoSocioEconomicaFamiliar: string;
+  SitSocioEconomicoFamiliar: string;
   ObservacoesNecessarias: string;
   ParecerAssistSocial: {
     ParecerAssistSocial: string;
@@ -180,6 +182,7 @@ export interface Ficha {
   };
   DataCad: Date;
   IdUsuario: number;
+  IdFicha: number;
 }
 
 export interface FichaEdit {
@@ -214,11 +217,12 @@ export interface FichaEdit {
   IDPARENTESCO: number | undefined;
   ESTUDA: string;
   INSTITUICAOENSINO: string;
-  NOMEINSTITUICAOENSINO: string;
+  NOMEINSTITUICAO: string;
   ENDERECOINSTITUICAO: string;
   BAIRROINSTITUICAO: string;
   SERIEATUAL: number;
   TURMA: string;
+  TURNO: string;
   IDESCOLARIDADE: number;
   OUTROSCURSOSREALIZADOS: string;
   NOMECURSOPRETENDIDO: string;
@@ -228,14 +232,14 @@ export interface FichaEdit {
   TELEFONEEMERGENCIA2: string;
   ALERGIA: string;
   SITMEDICAESPECIAL: string;
-  FRATURASCIRURGICAS: string;
+  FRATURASCIRURGIAS: string;
   MEDICACAOCONTROLADA: string;
   PROVIDENCIARECOMENDADA: string;
   FAMILIARTRATAMENTOMEDICO: string;
-  FAMILIARUSOMEDICO: string;
+  FAMILIARUSOMEDICAMENTO: string;
+  FAMILIARDEPENDENCIAQUIMICA: string;
   FAMILIARDEFICIENCIA: string;
-  FAMILARDEPENDENCIAQUIMICA: string;
-  ACOMPANHAMENTOTERAPEUTICO: string;
+  ACOMPTERAPEUTICO: string;
   PROGRAMASOCIAL: string;
   AGUAPOTAVEL: string;
   REDEESGOTO: string;
@@ -261,11 +265,11 @@ export interface FichaEdit {
   DESPESASSAUDE: number;
   DESPESASRPC: number;
   DESPESASTOTAL: number;
-  DESPESASOBS: string;
-  OUTROSGASTOS: string;
-  SITUACAOSOCIOECONOMICAFAMILIAR: string;
-  OBSERVACOESNECESSARIAS: string;
-  PARECERASSISTSOCIAL: string;
+  DESPESASOBSAUX: string;
+  OUTROSGASTOSAUX: string;
+  SITSOCIOECONOMICOFAMILIARAUX: string;
+  OBSERVACOESNECESSARIASAUX: string;
+  PARECERASSISTSOCIALAUX: string;
   STATUSPROCESSO: string;
   DATACAD: Date;
   IDUSUARIO: number;
@@ -408,8 +412,16 @@ export function CandidatoFicha() {
     getCoberturaMoradia,
   ]);
 
-  const { control, handleSubmit, getValues, setValue, watch } = useForm<Ficha>({
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<Ficha>({
     mode: 'onBlur',
+    resolver: yupResolver(validationSchemaFicha),
     defaultValues: {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
@@ -448,16 +460,15 @@ export function CandidatoFicha() {
           IdGrupoFamiliar: fichaFamiliar?.IDGRUPOFAMILIAR ?? '',
         })
       ),
-
       DadosEducacionaisCandidato: {
         Estuda: fichaCandidato?.ESTUDA ?? '',
         InstituicaoEnsino: fichaCandidato?.INSTITUICAOENSINO ?? '',
-        NomeInstituicaoEnsino: fichaCandidato?.NOMEINSTITUICAOENSINO ?? '',
+        NomeInstituicao: fichaCandidato?.NOMEINSTITUICAO ?? '',
         EnderecoInstituicao: fichaCandidato?.ENDERECOINSTITUICAO ?? '',
         BairroInstituicao: fichaCandidato?.BAIRROINSTITUICAO ?? '',
         SerieAtual: fichaCandidato?.SERIEATUAL ?? '',
         Turma: fichaCandidato?.TURMA ?? '',
-        Turno: '',
+        Turno: fichaCandidato?.TURNO ?? '',
         IdEscolaridade: fichaCandidato?.IDESCOLARIDADE ?? '',
         OutrosCursosRealizados: fichaCandidato?.OUTROSCURSOSREALIZADOS ?? '',
       },
@@ -473,19 +484,18 @@ export function CandidatoFicha() {
         TelefoneEmergencia2: fichaCandidato?.TELEFONEEMERGENCIA2 ?? '',
         Alergia: fichaCandidato?.ALERGIA ?? '',
         SitMedicaEspecial: fichaCandidato?.SITMEDICAESPECIAL ?? '',
-        FraturasCirurgicas: fichaCandidato?.FRATURASCIRURGICAS ?? '',
+        FraturasCirurgias: fichaCandidato?.FRATURASCIRURGIAS ?? '',
         MedicacaoControlada: fichaCandidato?.MEDICACAOCONTROLADA ?? '',
         ProvidenciaRecomendada: fichaCandidato?.PROVIDENCIARECOMENDADA ?? '',
       },
       CondicoesSociaisESaudeFamilia: {
         FamiliarTratamentoMedico:
           fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
-        FamiliarUsoMedico: fichaCandidato?.FAMILIARUSOMEDICO ?? '',
+        FamiliarUsoMedicamento: fichaCandidato?.FAMILIARUSOMEDICAMENTO ?? '',
         FamiliarDeficiencia: fichaCandidato?.FAMILIARDEFICIENCIA ?? '',
         FamiliarDependenciaQuimica:
-          fichaCandidato?.FAMILARDEPENDENCIAQUIMICA ?? '',
-        AcompanhamentoTerapeutico:
-          fichaCandidato?.ACOMPANHAMENTOTERAPEUTICO ?? '',
+          fichaCandidato?.FAMILIARDEPENDENCIAQUIMICA ?? '',
+        AcompTerapeutico: fichaCandidato?.ACOMPTERAPEUTICO ?? '',
         ProgramaSocial: fichaCandidato?.PROGRAMASOCIAL ?? '',
       },
       CondicoesMoradia: {
@@ -523,18 +533,19 @@ export function CandidatoFicha() {
         DespesasSaude: fichaCandidato?.DESPESASSAUDE ?? 0,
         DespesasRpc: fichaCandidato?.DESPESASRPC ?? 0,
         DespesasTotal: fichaCandidato?.DESPESASTOTAL ?? 0,
-        DespesasObs: fichaCandidato?.DESPESASOBS ?? '',
+        DespesasObs: fichaCandidato?.DESPESASOBSAUX ?? '',
       },
-      OutrosGastos: fichaCandidato?.OUTROSGASTOS ?? '',
-      SituacaoSocioEconomicaFamiliar:
-        fichaCandidato?.SITUACAOSOCIOECONOMICAFAMILIAR ?? '',
-      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIAS ?? '',
+      OutrosGastos: fichaCandidato?.OUTROSGASTOSAUX ?? '',
+      SitSocioEconomicoFamiliar:
+        fichaCandidato?.SITSOCIOECONOMICOFAMILIARAUX ?? '',
+      ObservacoesNecessarias: fichaCandidato?.OBSERVACOESNECESSARIASAUX ?? '',
       ParecerAssistSocial: {
-        ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIAL ?? '',
+        ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIALAUX ?? '',
         StatusProcesso: fichaCandidato?.STATUSPROCESSO ?? '',
       },
       DataCad: fichaCandidato?.DATACAD ?? new Date(),
       IdUsuario: fichaCandidato?.IDUSUARIO ?? 0,
+      IdFicha: fichaCandidato?.IDFICHA ?? undefined,
     },
     criteriaMode: 'all',
   });
@@ -624,7 +635,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'NOMEINSTITUICAO',
-      ficha.DadosEducacionaisCandidato.NomeInstituicaoEnsino
+      ficha.DadosEducacionaisCandidato.NomeInstituicao
     );
     dataForm.append(
       'ENDERECOINSTITUICAO',
@@ -667,7 +678,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'FRATURASCIRURGIAS',
-      ficha.CondicoesSaudeCandidato.FraturasCirurgicas
+      ficha.CondicoesSaudeCandidato.FraturasCirurgias
     );
     dataForm.append(
       'MEDICACAOCONTROLADA',
@@ -683,7 +694,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'FAMILIARUSOMEDICAMENTO',
-      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedico
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedicamento
     );
     dataForm.append(
       'FAMILIARDEFICIENCIA',
@@ -695,7 +706,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'ACOMPTERAPEUTICO',
-      ficha.CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico
+      ficha.CondicoesSociaisESaudeFamilia.AcompTerapeutico
     );
     dataForm.append(
       'PROGRAMASOCIAL',
@@ -763,7 +774,7 @@ export function CandidatoFicha() {
     dataForm.append('OUTROSGASTOS', ficha.OutrosGastos.toString());
     dataForm.append(
       'SITSOCIOECONOMICOFAMILIAR',
-      ficha.SituacaoSocioEconomicaFamiliar.toString()
+      ficha.SitSocioEconomicoFamiliar.toString()
     );
     dataForm.append(
       'OBSERVACOESNECESSARIAS',
@@ -932,7 +943,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'NOMEINSTITUICAO',
-      ficha.DadosEducacionaisCandidato.NomeInstituicaoEnsino
+      ficha.DadosEducacionaisCandidato.NomeInstituicao
     );
     dataForm.append(
       'ENDERECOINSTITUICAO',
@@ -975,7 +986,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'FRATURASCIRURGIAS',
-      ficha.CondicoesSaudeCandidato.FraturasCirurgicas
+      ficha.CondicoesSaudeCandidato.FraturasCirurgias
     );
     dataForm.append(
       'MEDICACAOCONTROLADA',
@@ -991,7 +1002,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'FAMILIARUSOMEDICAMENTO',
-      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedico
+      ficha.CondicoesSociaisESaudeFamilia.FamiliarUsoMedicamento
     );
     dataForm.append(
       'FAMILIARDEFICIENCIA',
@@ -1003,7 +1014,7 @@ export function CandidatoFicha() {
     );
     dataForm.append(
       'ACOMPTERAPEUTICO',
-      ficha.CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico
+      ficha.CondicoesSociaisESaudeFamilia.AcompTerapeutico
     );
     dataForm.append(
       'PROGRAMASOCIAL',
@@ -1071,7 +1082,7 @@ export function CandidatoFicha() {
     dataForm.append('OUTROSGASTOS', ficha.OutrosGastos.toString());
     dataForm.append(
       'SITSOCIOECONOMICOFAMILIAR',
-      ficha.SituacaoSocioEconomicaFamiliar.toString()
+      ficha.SitSocioEconomicoFamiliar.toString()
     );
     dataForm.append(
       'OBSERVACOESNECESSARIAS',
@@ -1172,6 +1183,7 @@ export function CandidatoFicha() {
       racaEtnia={racaEtnia}
       situacaoTrabalhista={situacaoTrabalhista}
       parentesco={parentesco}
+      errors={errors}
     />,
     <IdentificacaoCandidatoPaiMae
       control={control}
@@ -1182,6 +1194,7 @@ export function CandidatoFicha() {
       racaEtnia={racaEtnia}
       situacaoTrabalhista={situacaoTrabalhista}
       parentesco={parentesco}
+      errors={errors}
     />,
     <OutrasFichasGrupoFamiliar
       control={control}

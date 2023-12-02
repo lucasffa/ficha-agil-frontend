@@ -8,7 +8,10 @@ import {
   UseFormWatch,
 } from 'react-hook-form';
 import { Ficha } from '../CandidatoFicha';
-import { InputMaskTelefone } from '../../../../Shared/InputPadraoForm';
+import {
+  InputComMascara,
+  MascaraInput,
+} from '../../../../Shared/InputPadraoForm';
 
 interface CondicoesSaudeCandidatoProps {
   control: Control<Ficha>;
@@ -20,10 +23,6 @@ interface CondicoesSaudeCandidatoProps {
 export default function CondicoesSaudeCandidato(
   props: CondicoesSaudeCandidatoProps
 ) {
-  // const  candidato: Ficha['IdentificacaoCandidato'] = {
-
-  // }
-  // console.log(candidato);
   return (
     <React.Fragment>
       <div className="cabecalho-form">5. CONDIÇÕES DE SAÚDE DO CANDIDATO</div>
@@ -48,19 +47,13 @@ export default function CondicoesSaudeCandidato(
           <Controller
             control={props.control}
             name="CondicoesSaudeCandidato.TelefoneEmergencia1"
-            render={() => {
+            render={({ field }) => {
               return (
-                <InputMaskTelefone
+                <InputComMascara
+                  mask={MascaraInput.telefone}
                   name="Telefone de Emergência 1"
-                  value={props.getValues(
-                    'CondicoesSaudeCandidato.TelefoneEmergencia1'
-                  )}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'CondicoesSaudeCandidato.TelefoneEmergencia1',
-                      event.target.value
-                    );
-                  }}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -70,19 +63,13 @@ export default function CondicoesSaudeCandidato(
           <Controller
             control={props.control}
             name="CondicoesSaudeCandidato.TelefoneEmergencia2"
-            render={() => {
+            render={({ field }) => {
               return (
-                <InputMaskTelefone
+                <InputComMascara
+                  mask={MascaraInput.telefone}
                   name="Telefone de Emergência 2"
-                  value={props.getValues(
-                    'CondicoesSaudeCandidato.TelefoneEmergencia2'
-                  )}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    props.setValue(
-                      'CondicoesSaudeCandidato.TelefoneEmergencia2',
-                      event.target.value
-                    );
-                  }}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               );
             }}
@@ -123,7 +110,7 @@ export default function CondicoesSaudeCandidato(
         <Grid item xs={6}>
           <Controller
             control={props.control}
-            name={`CondicoesSaudeCandidato.FraturasCirurgicas`}
+            name={`CondicoesSaudeCandidato.FraturasCirurgias`}
             render={({ field }) => (
               <TextField
                 fullWidth

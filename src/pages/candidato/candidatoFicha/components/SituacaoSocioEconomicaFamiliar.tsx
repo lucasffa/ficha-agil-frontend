@@ -28,7 +28,7 @@ export default function SituacaoSocioEconomicaFamiliar(
         <Grid item xs={12}>
           <Controller
             control={props.control}
-            name="SituacaoSocioEconomicaFamiliar"
+            name="SitSocioEconomicoFamiliar"
             render={({ field }) => {
               return (
                 <FormControl fullWidth>

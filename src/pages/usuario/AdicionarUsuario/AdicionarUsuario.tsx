@@ -4,7 +4,7 @@ import { Button } from '../../../components/Button/Button';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './adicionarUsuario.scss';
-import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
+import { InputComMascara, MascaraInput } from '../../../Shared/InputPadraoForm';
 import { useState } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -68,8 +68,6 @@ export default function AdicionarUsuario() {
   const {
     control,
     handleSubmit,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm<UsuarioProps>({
     resolver,
@@ -173,11 +171,11 @@ export default function AdicionarUsuario() {
               name="cpf"
               render={({ field }) => {
                 return (
-                  <InputMaskCpf
-                    value={getValues('cpf')}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setValue('cpf', event.target.value);
-                    }}
+                  <InputComMascara
+                    name="Cpf"
+                    mask={MascaraInput.cpf}
+                    value={field.value}
+                    onChange={field.onChange}
                     error={errors?.cpf}
                   />
                 );

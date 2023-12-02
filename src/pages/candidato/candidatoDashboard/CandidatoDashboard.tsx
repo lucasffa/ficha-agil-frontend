@@ -15,7 +15,8 @@ import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 import Modal from '../../../Shared/Modal';
 import { Controller, useForm } from 'react-hook-form';
-import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
+import { InputComMascara, MascaraInput } from '../../../Shared/InputPadraoForm';
+import { AxiosError } from 'axios';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -73,8 +74,9 @@ export default function CandidatoDashboard({
             setCandidato(res.data.fichasCandidatos);
             setTotalPages(res.data.totalDefichasCandidatos);
           });
-      } catch (err: any) {
-        const error = err.response?.data;
+      } catch (err) {
+        const errorResponse = err as AxiosError;
+        const error = errorResponse.response?.data as Record<string, string>;
         Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
@@ -287,7 +289,8 @@ export default function CandidatoDashboard({
                 control={control}
                 name="Cpf"
                 render={() => (
-                  <InputMaskCpf
+                  <InputComMascara
+                    mask={MascaraInput.cpf}
                     name="Cpf do Candidato"
                     value={getValues('Cpf')}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
