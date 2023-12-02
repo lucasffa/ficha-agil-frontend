@@ -1,26 +1,11 @@
 import { useForm } from 'react-hook-form';
 import useFormSteps from '../../../hooks/useFormSteps';
-import './candidatoFicha.scss';
-import Tabs from '../../../Shared/Tabs/Tabs';
+import './candidatoFichaImpressao.scss';
 
 //Import dos componentes/etapas do formulário
 import {
   IdentificacaoCandidato,
-  IdentificacaoCandidatoPaiMae,
 } from './components/IdentificacaoCandidato';
-import OutrasFichasGrupoFamiliar from './components/OutrasFichasGrupoFamiliar';
-import DadosEducacionaisCandidato from './components/DadosEducacionaisCandidato';
-import BeneficiosPleiteados from './components/BeneficiosPleiteados';
-import CondicoesSaudeCandidato from './components/CondicoesSaudeCandidato';
-import CondicoesSociaisESaudeFamilia from './components/CondicoesSociaisESaudeFamilia';
-import CondicoesMoradia from './components/CondicoesMoradia';
-import ComposicaoFamiliar from './components/ComposicaoFamiliar';
-import Despesas from './components/Despesas';
-import OutrosGastos from './components/OutrosGastos';
-import SituacaoSocioEconomicaFamiliar from './components/SituacaoSocioEconomicaFamiliar';
-import ObservacoesNecessarias from './components/ObservacoesNecessarias';
-import ParecerAssistSocial from './components/ParecerAssistSocial';
-import DeclaracaoResponsabilidadeInfoDoc from './components/DeclaracaoResponsabilidadeInfoDoc';
 //import TermoAutorizacaoUsoDeImagemEVoz from './components/TermoAutorizacaoUsoDeImagemEVoz';
 import axiosInstance from '../../../components/utils/axios';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -308,7 +293,6 @@ export function CandidatoFichaImpressao() {
   const [escolaridade, setEscolaridade] = useState<Escolaridade[]>();
   const [coberturaMoradia, setCoberturaMoradia] =
     useState<CoberturaMoradia[]>();
-  const [aceitarTermos, setAceitarTermos] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const valuesEditFicha = location.state?.valuesEditFicha;
@@ -1172,103 +1156,9 @@ export function CandidatoFichaImpressao() {
       racaEtnia={racaEtnia}
       situacaoTrabalhista={situacaoTrabalhista}
       parentesco={parentesco}
-    />,
-    <IdentificacaoCandidatoPaiMae
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-      estadoCivil={estadoCivil}
-      racaEtnia={racaEtnia}
-      situacaoTrabalhista={situacaoTrabalhista}
-      parentesco={parentesco}
-    />,
-    <OutrasFichasGrupoFamiliar
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-      parentesco={parentesco}
-    />,
-    <DadosEducacionaisCandidato
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
       escolaridade={escolaridade}
-    />,
-    <BeneficiosPleiteados
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <CondicoesSaudeCandidato
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <CondicoesSociaisESaudeFamilia
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <CondicoesMoradia
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
       coberturaMoradia={coberturaMoradia}
-      parentesco={parentesco}
     />,
-    <ComposicaoFamiliar
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-      parentesco={parentesco}
-      estadoCivil={estadoCivil}
-      situacaoTrabalhista={situacaoTrabalhista}
-      escolaridade={escolaridade}
-    />,
-    <Despesas
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <OutrosGastos
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <SituacaoSocioEconomicaFamiliar
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <ObservacoesNecessarias
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    <ParecerAssistSocial
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-    />,
-    !valuesEditFicha?.isEdit && (
-      <DeclaracaoResponsabilidadeInfoDoc
-        aceitarTermos={aceitarTermos}
-        setAceitarTermos={setAceitarTermos}
-      />
-    ),
     //<TermoAutorizacaoUsoDeImagemEVoz />,
   ];
 
@@ -1284,19 +1174,14 @@ export function CandidatoFichaImpressao() {
               !valuesEditFicha?.isEdit ? postFicha(data) : putFicha(data);
             }
           })}
-          className="form-cadastrar-ficha"
+          className="form-cadastrar-ficha-impressao"
         >
-          <div className="container-ficha">
+          <div className="container-ficha-impressao">
             {formComponents.map((Component, index) => (
               <div key={index}>
                 {Component}
               </div>
             ))}
-          </div>
-          <div className="container-btn">
-            <button type="submit" className="btn-avancar">
-              {valuesEditFicha?.isEdit ? 'Salvar' : 'Adicionar'}
-            </button>
           </div>
         </form>
       </React.Fragment>

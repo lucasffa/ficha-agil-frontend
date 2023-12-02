@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import editIcon from '../../../assets/images/edit.svg';
+import viewIcon from '../../../assets/images/view.svg';
 import inativoIcon from '../../../assets/images/inativo-icon.svg';
 import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import closeIcon from '../../../assets/images/close.svg';
@@ -42,6 +43,7 @@ export default function CandidatoDashboard({
   const [totalPages, setTotalPages] = useState(0);
   const [isFilterInativos, setIsFilterInativos] = useState<string>('S');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isView, setIsView] = useState<boolean>(false);
   const [idFicha, setIdFicha] = useState<number>(0);
   const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
   const [isLoading, setIsLoading] = useState(false);
@@ -215,6 +217,29 @@ export default function CandidatoDashboard({
     handleEdit();
   }, [isEdit, navigate, handleEdit, idFicha]);
 
+
+  const handleView = useCallback(
+    function () {
+      if (isView && fichaCandidato !== undefined) {
+        navigate('/candidato/imprimir', {
+          state: {
+            valuesEditFicha: {
+              isView: isView,
+              idFicha: idFicha,
+              ficha: fichaCandidato,
+            },
+          },
+        });
+      }
+    },
+    [isView, navigate, idFicha, fichaCandidato]
+  );
+
+  useEffect(() => {
+    handleView();
+  }, [isEdit, navigate, handleView, idFicha]);
+
+
   const numeroDePaginas = Math.ceil(totalPages / 5);
 
   async function deleteCandidato(idFicha: number) {
@@ -326,6 +351,7 @@ export default function CandidatoDashboard({
                       <th className="listagem-candidato-cpf">CPF</th>
                       <th className="listagem-candidato-email">Email</th>
                       <th className="listagem-candidato-editar">Editar</th>
+                      <th className="listagem-candidato-visualizar">Visualizar</th>
                       <th className="listagem-candidato-status">Status</th>
                       {isFilterInativos === 'N' ? null : (
                         <th className="listagem-candidato-excluir">Excluir</th>
@@ -364,6 +390,19 @@ export default function CandidatoDashboard({
                                   }}
                                 >
                                   <img src={editIcon} alt="Editar Candidato" />
+                                </button>
+                              </td>
+                              <td className="listagem-candidato-visualizar">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setIsView(true);
+                                    setIdFicha(candidato?.IDFICHA);
+                                    getFichaCandidato(candidato?.IDFICHA);
+                                    handleView();
+                                  }}
+                                >
+                                  <img src={viewIcon} alt="Visualizar Candidato" />
                                 </button>
                               </td>
                               <td className="listagem-candidato-status">

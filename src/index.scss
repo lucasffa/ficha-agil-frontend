@@ -25,4 +25,15 @@ code {
   ::-webkit-scrollbar {
     display: none;
   }
+  
+  .linha {
+    border-bottom: 1px solid black !important;
+    position: relative;
+    bottom: 2px !important;
+  }
+
+  
+  .secao-form-impressao, .cabecalho-form-impressao {
+    break-inside: page;
+  }
 }

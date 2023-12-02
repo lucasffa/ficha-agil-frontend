@@ -35,6 +35,7 @@ type PropsInput = {
   onChange: Function;
   event?: React.ChangeEvent<HTMLInputElement>;
   error?: {};
+  readOnly?: boolean;
 };
 
 export function InputMaskCpf(props: PropsInput) {
@@ -94,6 +95,9 @@ export function InputMaskCpf(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
@@ -155,6 +159,9 @@ export function InputMaskTelefone(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
@@ -215,6 +222,9 @@ export function InputMaskTelefoneResidencial(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
@@ -275,6 +285,9 @@ export function InputMaskTelefoneRecado(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
@@ -336,6 +349,9 @@ export function InputMaskCep(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
@@ -397,6 +413,9 @@ export function InputMaskHorario(props: PropsInput) {
       value={value}
       error={!!props.error}
       fullWidth
+      InputProps={{
+        readOnly: props.readOnly,
+      }}
     />
   );
 }
