@@ -895,7 +895,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
                 <Grid item xs={8}>
                   <Controller
                     control={props.control}
-                    name={`OutrasFichasGrupoFamiliar.${index}.NomeCompleto`}
+                    name={`OutrasFichasGrupoFamiliar.${index}.NomeCompletoFamiliar`}
                     render={({ field }) => (
                       <TextField
                         fullWidth

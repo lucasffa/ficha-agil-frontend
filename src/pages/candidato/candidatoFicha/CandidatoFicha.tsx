@@ -421,7 +421,7 @@ export function CandidatoFicha() {
     formState: { errors },
   } = useForm<Ficha>({
     mode: 'onBlur',
-    //resolver: yupResolver(validationSchemaFicha),
+    resolver: yupResolver(validationSchemaFicha),
     defaultValues: {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
