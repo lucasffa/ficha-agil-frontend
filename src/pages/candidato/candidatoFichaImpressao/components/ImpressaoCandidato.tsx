@@ -7,6 +7,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
+import logoItaka from '../../../../assets/images/logo-itaka.svg';
 import { useEffect, useState } from 'react';
 import {
   InputComMascara,
@@ -161,7 +162,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
     );
 
     setTotalRendaFamiliar(totalRenda);
-  }, [props.getValues, props.watch, props]);
+  }, [props.getValues, props.watch]);
 
   useEffect(() => {
     registerLocale('pt-BR', ptBR);
@@ -190,6 +191,58 @@ export function ImpressaoCandidato(props: FichaImpressao) {
   return (
     <ThemeProvider theme={theme}>
       <Grid container spacing={0}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '50%',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              style={{ width: '150px', height: '150px' }}
+              src={logoItaka}
+              alt="Logo Itaka Ficha"
+              title="Logo Itaka Ficha"
+            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <b>
+                <p>Obra Social Itaka Escolápios</p>
+                <p>Governador Valadares</p>
+              </b>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <b>
+              <h2 style={{ textAlign: 'right' }}>
+                Ficha cadastral e Formulário socioeconômico
+                <br />
+                para atendimento socioassistencial
+              </h2>
+            </b>
+          </div>
+        </div>
         {/* Identificação do candidato */}
         <div className="cabecalho-form-impressao">
           1. IDENTIFICAÇÃO DO CANDIDATO
