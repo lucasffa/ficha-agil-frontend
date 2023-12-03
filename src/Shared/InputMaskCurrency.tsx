@@ -4,6 +4,7 @@ import React from 'react';
 
 interface CustomCurrencyFieldInputProps {
   label: string;
+  readOnly?: boolean;
 }
 
 const CustomCurrencyFieldInput = React.forwardRef(
@@ -18,7 +19,10 @@ const CustomCurrencyFieldInput = React.forwardRef(
           currencyDisplay: 'symbol',
         }}
         inputRef={ref}
-        {...props}
+        {...props}   
+        InputProps={{
+          readOnly: props.readOnly,
+        }}
       />
     </FormControl>
   )

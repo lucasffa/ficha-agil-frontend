@@ -9,7 +9,7 @@ export default function Copyright() {
       style={{ position: 'static' }}
     >
       {'Copyright © '}
-      Itaka {new Date().getFullYear()}
+      Univale/Technamina {new Date().getFullYear()}
     </Typography>
   );
 }
