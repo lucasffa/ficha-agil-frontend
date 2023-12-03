@@ -224,7 +224,7 @@ export default function CandidatoDashboard({
       if (isView && fichaCandidato !== undefined) {
         navigate('/candidato/imprimir', {
           state: {
-            valuesEditFicha: {
+            valuesImpressaoFicha: {
               isView: isView,
               idFicha: idFicha,
               ficha: fichaCandidato,

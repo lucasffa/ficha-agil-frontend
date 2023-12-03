@@ -152,7 +152,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
   const [totalRendaFamiliar, setTotalRendaFamiliar] = useState<Number>(0);
 
   useEffect(() => {
-    const rendas = props.getValues('ComposicaoFamiliar').map(f => f.Renda);
+    const rendas = props.getValues('ComposicaoFamiliar')?.map(f => f.Renda);
     const totalRenda = rendas.reduce(
       (total: number, rendaAtual: number | undefined) => {
         const renda = parseFloat(String(rendaAtual ?? '')) || 0;
@@ -190,8 +190,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container className='print-section' spacing={0}>
-        
+      <Grid container className="print-section" spacing={0}>
         <div
           style={{
             display: 'flex',
@@ -246,10 +245,66 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         </div>
 
         {/* Identificação do candidato */}
-        <div className="cabecalho-form-impressao">
-          1. IDENTIFICAÇÃO DO CANDIDATO
-        </div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid
+          container
+          className="print-section"
+          spacing={1}
+          style={{ marginBottom: '8px' }}
+        >
+          <Grid item xs={6}>
+            <div className="cabecalho-form-impressao">
+              1. IDENTIFICAÇÃO DO CANDIDATO
+            </div>
+          </Grid>
+
+          <Grid item xs={3}>
+            <Controller
+              control={props.control}
+              name="IdentificacaoCandidato.CadUnico"
+              render={({ field }) => {
+                return (
+                  <TextField
+                    fullWidth
+                    id="outlined-basic 2"
+                    label="Nº Cad. Único"
+                    color="primary"
+                    variant="outlined"
+                    {...field}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                );
+              }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Controller
+              control={props.control}
+              name="DataCad"
+              render={({ field }) => {
+                return (
+                  <TextField
+                    fullWidth
+                    id="outlined-basic 2"
+                    label="Data de Preenchimento"
+                    color="primary"
+                    variant="outlined"
+                    value={
+                      field.value
+                        ? new Date(field.value).toLocaleDateString('pt-BR')
+                        : ''
+                    }
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                );
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -865,90 +920,94 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           2. OUTRAS FICHAS DO GRUPO FAMILIAR
         </div>
-        <Grid container className='print-section' spacing={0}>
-          {props.getValues('OutrasFichasGrupoFamiliar').map((item, index) => {
-            return (
-              <Grid
-                container className='print-section'
-                key={index}
-                spacing={1}
-                style={{ marginBottom: '16px' }}
-              >
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`OutrasFichasGrupoFamiliar.${index}.IdFicha`}
-                    render={({ field }) => (
-                      <TextField
-                        fullWidth
-                        id={`outlined-basic-${index}-1`}
-                        label="Nº Ficha"
-                        color="primary"
-                        variant="outlined"
-                        type="number"
-                        {...field}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={8}>
-                  <Controller
-                    control={props.control}
-                    name={`OutrasFichasGrupoFamiliar.${index}.NomeCompletoFamiliar`}
-                    render={({ field }) => (
-                      <TextField
-                        fullWidth
-                        id={`outlined-basic-${index}-2`}
-                        label="Nome Completo"
-                        color="primary"
-                        variant="outlined"
-                        {...field}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`OutrasFichasGrupoFamiliar.${index}.IdParentesco`}
-                    render={({ field }) => {
-                      const parentescoValue =
-                        props.parentesco?.find(
-                          item => item.IDPARENTESCO === field.value
-                        )?.DESCRICAO || '';
+        <Grid container className="print-section" spacing={0}>
+          {props.getValues('OutrasFichasGrupoFamiliar').length > 0 ? (
+            props.getValues('OutrasFichasGrupoFamiliar')?.map((item, index) => {
+              return (
+                <Grid
+                  container
+                  className="print-section"
+                  key={index}
+                  spacing={1}
+                  style={{ marginBottom: '16px' }}
+                >
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`OutrasFichasGrupoFamiliar.${index}.IdFicha`}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          id={`outlined-basic-${index}-1`}
+                          label="Nº Ficha"
+                          color="primary"
+                          variant="outlined"
+                          type="number"
+                          {...field}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Controller
+                      control={props.control}
+                      name={`OutrasFichasGrupoFamiliar.${index}.NomeCompletoFamiliar`}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          id={`outlined-basic-${index}-2`}
+                          label="Nome Completo"
+                          color="primary"
+                          variant="outlined"
+                          {...field}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`OutrasFichasGrupoFamiliar.${index}.IdParentesco`}
+                      render={({ field }) => {
+                        const parentescoValue =
+                          props.parentesco?.find(
+                            item => item.IDPARENTESCO === field.value
+                          )?.DESCRICAO || '';
 
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id="outlined-read-only-input"
-                            label="Parentesco"
-                            value={parentescoValue}
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id="outlined-read-only-input"
+                              label="Parentesco"
+                              value={parentescoValue}
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p>Não há fichas do Grupo Familiar</p>
+          )}
         </Grid>
-
         {/* Dados educacionais da ficha */}
         <div className="cabecalho-form-impressao">
           3. DADOS EDUCACIONAIS DO CANDIDATO
         </div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={3}>
             <Controller
               control={props.control}
@@ -1174,11 +1233,12 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Benefícios pleiteados da ficha */}
         <div className="cabecalho-form-impressao">4. BENEFÍCIOS PLEITEADOS</div>
-        <Grid container className='print-section' spacing={0}>
+        <Grid container className="print-section" spacing={0}>
           {props.getValues('BeneficiosPleiteados').map((item, index) => {
             return (
               <Grid
-                container className='print-section'
+                container
+                className="print-section"
                 key={index}
                 spacing={1}
                 style={{ marginBottom: '16px' }}
@@ -1252,7 +1312,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           5. CONDIÇÕES DE SAÚDE DO CANDIDATO
         </div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -1395,7 +1455,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
         </div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -1502,7 +1562,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Condições de moradia */}
         <div className="cabecalho-form-impressao">7. CONDIÇÕES DE MORADIA</div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={3}>
             <Controller
               control={props.control}
@@ -1768,11 +1828,12 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             })}
           </div>
         </div>
-        <Grid container className='print-section' spacing={0}>
+        <Grid container className="print-section" spacing={0}>
           {props.getValues('ComposicaoFamiliar').map((item, index) => {
             return (
               <Grid
-                container className='print-section'
+                container
+                className="print-section"
                 key={index}
                 spacing={1}
                 style={{ marginBottom: '16px' }}
@@ -1969,8 +2030,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Despesas */}
         <div className="cabecalho-form-impressao">9. DESPESAS</div>
-        <Grid container className='print-section' spacing={0}>
-          <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={0}>
+          <Grid container className="print-section" spacing={1}>
             <Grid item xs={6}>
               <Controller
                 control={props.control}
@@ -2155,8 +2216,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Outros gastos */}
         <div className="cabecalho-form-impressao">10. OUTROS GASTOS</div>
-        <Grid container className='print-section' spacing={0}>
-          <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={0}>
+          <Grid container className="print-section" spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2188,8 +2249,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           11. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS{' '}
         </div>
-        <Grid container className='print-section' spacing={0}>
-          <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={0}>
+          <Grid container className="print-section" spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2222,7 +2283,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           {' '}
           12. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS{' '}
         </div>
-        <Grid container className='print-section' spacing={0}>
+        <Grid container className="print-section" spacing={0}>
           <div
             style={{
               display: 'flex',
@@ -2384,7 +2445,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Assinatura do Entrevistador */}
         <Grid
-          container className='print-section'
+          container
+          className="print-section"
           spacing={0}
           style={{ paddingBottom: '10px', paddingTop: '50px' }}
         >
@@ -2429,8 +2491,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR
         </div>
-        <Grid container className='print-section' spacing={0}>
-          <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={0}>
+          <Grid container className="print-section" spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2462,7 +2524,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           14. PARECER DO (A) ASSISTENTE SOCIAL
         </div>
-        <Grid container className='print-section' spacing={1}>
+        <Grid container className="print-section" spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -2518,7 +2580,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Assinatura da Assistente Social */}
         <Grid
-          container className='print-section'
+          container
+          className="print-section"
           spacing={0}
           style={{ height: '300px', paddingTop: '20px', paddingBottom: '20px' }}
         >

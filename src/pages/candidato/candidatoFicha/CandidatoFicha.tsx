@@ -320,6 +320,13 @@ export function CandidatoFicha() {
   const valuesEditFicha = location.state?.valuesEditFicha;
   const fichaCandidato: FichaEdit = location.state?.valuesEditFicha.ficha;
 
+  if (
+    location.pathname === '/candidato/editar' &&
+    fichaCandidato === undefined
+  ) {
+    window.location.href = '/candidato';
+  }
+
   const getRacaEtnia = useCallback(async () => {
     try {
       await axiosInstance.get(`/racaEtnia`).then(res => {
@@ -423,7 +430,7 @@ export function CandidatoFicha() {
     formState: { errors },
   } = useForm<Ficha>({
     mode: 'onBlur',
-    //resolver: yupResolver(validationSchemaFicha),
+    resolver: yupResolver(validationSchemaFicha),
     defaultValues: {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,

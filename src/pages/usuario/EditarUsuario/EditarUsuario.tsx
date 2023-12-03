@@ -24,6 +24,13 @@ export default function EditarUsuario() {
   const ValuesRefDadosUsuario: UsuarioProps =
     location.state?.ValuesRefDadosUsuario;
 
+  if (
+    location.pathname === '/usuario/editar' &&
+    ValuesRefDadosUsuario === undefined
+  ) {
+    window.location.href = '/usuario';
+  }
+
   //const [telefone, setTelefone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const {

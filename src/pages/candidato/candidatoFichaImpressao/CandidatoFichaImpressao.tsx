@@ -43,6 +43,8 @@ export type CoberturaMoradia = {
 export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
+    CadUnico: string;
+    DataUltimaAlt: Date;
     Cpf: string;
     DocIdentidade: string;
     DataNascimento: Date | null;
@@ -162,6 +164,8 @@ export interface Ficha {
 export interface FichaEdit {
   IDFICHA: number;
   NOMECOMPLETO: string;
+  CADUNICO: string;
+  DATAULTIMAALT: Date;
   CPF: string;
   DOCIDENTIDADE: string;
   DATANASCIMENTO: Date | null;
@@ -277,6 +281,15 @@ export interface FichaEdit {
 
 export function CandidatoFichaImpressao() {
   const location = useLocation();
+  const fichaCandidato: FichaEdit = location.state?.valuesImpressaoFicha.ficha;
+
+  if (
+    location.pathname === '/candidato/imprimir' &&
+    fichaCandidato === undefined
+  ) {
+    window.location.href = '/candidato';
+  }
+
   const [situacaoTrabalhista, setSituacaoTrabalhista] =
     useState<SituacaoTrabalhista[]>();
   const [racaEtnia, setRacaEtnia] = useState<RacaEtnia[]>();
@@ -285,9 +298,6 @@ export function CandidatoFichaImpressao() {
   const [escolaridade, setEscolaridade] = useState<Escolaridade[]>();
   const [coberturaMoradia, setCoberturaMoradia] =
     useState<CoberturaMoradia[]>();
-
-  const fichaCandidato: FichaEdit = location.state?.valuesEditFicha.ficha;
-
   const getRacaEtnia = useCallback(async () => {
     try {
       await axiosInstance.get(`/racaEtnia`).then(res => {
@@ -387,6 +397,8 @@ export function CandidatoFichaImpressao() {
     defaultValues: {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
+        CadUnico: fichaCandidato?.CADUNICO ?? '',
+        DataUltimaAlt: fichaCandidato?.DATAULTIMAALT ?? undefined,
         Cpf: fichaCandidato?.CPF ?? '',
         DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',
         DataNascimento: fichaCandidato?.DATANASCIMENTO ?? null,
@@ -414,14 +426,13 @@ export function CandidatoFichaImpressao() {
         IdEstadoCivilPai: fichaCandidato?.IDESTADOCIVILPAI ?? '',
         IdEstadoCivilMae: fichaCandidato?.IDESTADOCIVILMAE ?? '',
       },
-      OutrasFichasGrupoFamiliar: fichaCandidato?.GRUPOFAMILIAR?.map(
-        fichaFamiliar => ({
+      OutrasFichasGrupoFamiliar:
+        fichaCandidato?.GRUPOFAMILIAR?.map(fichaFamiliar => ({
           IdFicha: fichaFamiliar?.IDFICHAFAMILIAR ?? '',
           NomeCompletoFamiliar: fichaFamiliar?.NOMECOMPLETOFAMILIAR ?? '',
           IdParentesco: fichaFamiliar?.IDPARENTESCO ?? '',
           IdGrupoFamiliar: fichaFamiliar?.IDGRUPOFAMILIAR ?? '',
-        })
-      ),
+        })) ?? [],
 
       DadosEducacionaisCandidato: {
         Estuda: fichaCandidato?.ESTUDA ?? '',
@@ -507,7 +518,7 @@ export function CandidatoFichaImpressao() {
         ParecerAssistSocial: fichaCandidato?.PARECERASSISTSOCIAL ?? '',
         StatusProcesso: fichaCandidato?.STATUSPROCESSO ?? '',
       },
-      DataCad: fichaCandidato?.DATACAD ?? new Date(),
+      DataCad: fichaCandidato?.DATACAD ?? undefined,
       IdUsuario: fichaCandidato?.IDUSUARIO ?? 0,
     },
     criteriaMode: 'all',

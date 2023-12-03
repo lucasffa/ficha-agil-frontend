@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 const validationSchemaFicha = object().shape({
   IdentificacaoCandidato: object({
