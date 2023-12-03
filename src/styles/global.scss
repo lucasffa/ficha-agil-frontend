@@ -15,8 +15,7 @@ textarea {
 .app {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  //width: 100vw;
+  width: 100vw;
   height: 100vh;
 }
 
@@ -39,8 +38,9 @@ textarea {
 .areas {
   width: 97%;
   height: 100%;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  // Se adicionar esses margins, a ficha não vai imprimir corretamente nem no Chrome nem no Edge
+  //margin-top: 10px;
+  //margin-bottom: 30px;
   background-color: #FFF;
   border-radius: 25px;
   overflow-y: auto; 
