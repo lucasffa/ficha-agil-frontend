@@ -20,6 +20,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Ficha, Parentesco } from '../CandidatoFicha';
 import { useFieldArray } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import axiosInstance from '../../../../components/utils/axios';
 
 interface OutrasFichasGrupoFamiliarProps {
   control: Control<Ficha>;
@@ -38,6 +40,31 @@ export default function OutrasFichasGrupoFamiliar(
     name: 'OutrasFichasGrupoFamiliar',
   });
 
+  async function deleteGrupoFamiliar(
+    idFicha: number,
+    index: number,
+    idGrupoFamiliar?: number | undefined
+  ) {
+    try {
+      await axiosInstance
+        .delete('deleteGrupoFamiliar', {
+          params: {
+            idFicha: idFicha,
+            idGrupoFamiliar: idGrupoFamiliar,
+          },
+        })
+        .then(res => {
+          toast.success(res.data.message);
+          remove(index);
+        });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="cabecalho-form">2. OUTRAS FICHAS DO GRUPO FAMILIAR</div>
@@ -50,8 +77,8 @@ export default function OutrasFichasGrupoFamiliar(
           getValues={props.getValues}
           setValue={props.setValue}
           watch={props.watch}
-          remove={remove}
           parentesco={props.parentesco}
+          deleteGrupoFamiliar={deleteGrupoFamiliar}
         />
       ))}
       <Grid container spacing={1}>
@@ -81,10 +108,14 @@ function OutrasFichasGrupoFamiliarComponent(
   props: OutrasFichasGrupoFamiliarProps & {
     index: number;
     field: any;
-    remove: any;
+    deleteGrupoFamiliar: (
+      idFicha: number,
+      index: number,
+      idGrupoFamiliar: number
+    ) => void;
   }
 ) {
-  const { index, control, remove } = props;
+  const { index, control } = props;
 
   return (
     <React.Fragment>
@@ -155,7 +186,16 @@ function OutrasFichasGrupoFamiliarComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() => remove(index)}
+            onClick={() => {
+              const idGrupoFamiliar = props.getValues(
+                `OutrasFichasGrupoFamiliar.${index}.IdGrupoFamiliar`
+              );
+              props.deleteGrupoFamiliar(
+                props.getValues('IdFicha'),
+                index,
+                idGrupoFamiliar ?? 0
+              );
+            }}
           >
             <DeleteIcon color="inherit" />
           </IconButton>

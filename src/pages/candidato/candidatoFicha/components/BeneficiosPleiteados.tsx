@@ -20,7 +20,12 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Ficha } from '../CandidatoFicha';
 import { useFieldArray } from 'react-hook-form';
-import { InputMaskHorario } from '../../../../Shared/InputPadraoForm';
+import {
+  InputComMascara,
+  MascaraInput,
+} from '../../../../Shared/InputPadraoForm';
+import axiosInstance from '../../../../components/utils/axios';
+import { toast } from 'react-toastify';
 
 interface BeneficiosPleiteadosProps {
   control: Control<Ficha>;
@@ -36,6 +41,30 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
     control,
     name: 'BeneficiosPleiteados',
   });
+  async function deleteBeneficio(
+    idFicha: number,
+    index: number,
+    idBeneficio?: number | undefined
+  ) {
+    try {
+      await axiosInstance
+        .delete('deleteBeneficio', {
+          params: {
+            idFicha: idFicha,
+            idBeneficio: idBeneficio,
+          },
+        })
+        .then(res => {
+          toast.success(res.data.message);
+          remove(index);
+        });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }
   return (
     <React.Fragment>
       <div className="cabecalho-form">4. BENEFÍCIOS PLEITEADOS</div>
@@ -48,7 +77,7 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
           getValues={props.getValues}
           setValue={props.setValue}
           watch={props.watch}
-          remove={remove}
+          deleteBeneficio={deleteBeneficio}
         />
       ))}
       <Grid container spacing={1}>
@@ -74,9 +103,17 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
 }
 
 function BeneficiosPleiteadosComponent(
-  props: BeneficiosPleiteadosProps & { index: number; field: any; remove: any }
+  props: BeneficiosPleiteadosProps & {
+    index: number;
+    field: any;
+    deleteBeneficio: (
+      idFicha: number,
+      index: number,
+      idBeneficio: number
+    ) => void;
+  }
 ) {
-  const { index, control, remove } = props;
+  const { index, control } = props;
 
   return (
     <React.Fragment>
@@ -127,14 +164,11 @@ function BeneficiosPleiteadosComponent(
             control={control}
             name={`BeneficiosPleiteados.${index}.Horario`}
             render={({ field }) => (
-              <InputMaskHorario
-                value={props.getValues(`BeneficiosPleiteados.${index}.Horario`)}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  props.setValue(
-                    `BeneficiosPleiteados.${index}.Horario`,
-                    event.target.value
-                  );
-                }}
+              <InputComMascara
+                name="Horário"
+                mask={MascaraInput.horario}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -143,7 +177,16 @@ function BeneficiosPleiteadosComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() => remove(index)}
+            onClick={() => {
+              const idBeneficio = props.getValues(
+                `BeneficiosPleiteados.${index}.IdBeneficio`
+              );
+              props.deleteBeneficio(
+                props.getValues('IdFicha'),
+                index,
+                idBeneficio ?? 0
+              );
+            }}
           >
             <DeleteIcon color="inherit" />
           </IconButton>

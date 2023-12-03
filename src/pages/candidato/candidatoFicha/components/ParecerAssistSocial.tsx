@@ -4,11 +4,11 @@ import {
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
-import React from 'react';
-import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
+import React from "react";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 interface ParecerAssistSocialProps {
   control: Control<Ficha>;
@@ -33,10 +33,12 @@ export default function ParecerAssistSocial(props: ParecerAssistSocialProps) {
                   <TextareaAutosize
                     minRows={3}
                     style={{
-                      borderRadius: '12px 12px 0 12px',
-                      padding: '12px',
+                      borderRadius: "12px 12px 0 12px",
+                      padding: "12px",
                     }}
-                    {...field}
+                    defaultValue={field.value}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
                   />
                 </FormControl>
               );
@@ -51,7 +53,7 @@ export default function ParecerAssistSocial(props: ParecerAssistSocialProps) {
               return (
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
-                    O Processo foi{' '}
+                    O Processo foi{" "}
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"

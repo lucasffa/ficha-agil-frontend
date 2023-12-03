@@ -1,14 +1,14 @@
+import React from "react";
+import { FormControl, Grid } from "@mui/material";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import {
   Control,
   Controller,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
-import React from 'react';
-import { FormControl, Grid } from '@mui/material';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
 
 interface ObservacoesNecessariasProps {
   control: Control<Ficha>;
@@ -16,7 +16,7 @@ interface ObservacoesNecessariasProps {
   setValue: UseFormSetValue<Ficha>;
   watch: UseFormWatch<Ficha>;
 }
-//12. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS
+
 export default function ObservacoesNecessarias(
   props: ObservacoesNecessariasProps
 ) {
@@ -30,20 +30,21 @@ export default function ObservacoesNecessarias(
           <Controller
             control={props.control}
             name="ObservacoesNecessarias"
-            render={({ field }) => {
-              return (
-                <FormControl fullWidth>
-                  <TextareaAutosize
-                    minRows={3}
-                    style={{
-                      borderRadius: '12px 12px 0 12px',
-                      padding: '12px',
-                    }}
-                    {...field}
-                  />
-                </FormControl>
-              );
-            }}
+            render={({ field }) => (
+              <FormControl fullWidth>
+                <TextareaAutosize
+                  placeholder="Observação"
+                  minRows={3}
+                  style={{
+                    borderRadius: "12px 12px 0 12px",
+                    padding: "12px",
+                  }}
+                  defaultValue={field.value}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+            )}
           />
         </Grid>
       </Grid>

@@ -26,6 +26,8 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
+import axiosInstance from '../../../../components/utils/axios';
+import { toast } from 'react-toastify';
 
 interface ComposicaoFamiliarProps {
   control: Control<Ficha>;
@@ -62,6 +64,31 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
     calcularTotalRendaFamiliar();
   }, [calcularTotalRendaFamiliar]);
 
+  async function deleteCompFamiliar(
+    idFicha: number,
+    index: number,
+    idCompFamiliar?: number | undefined
+  ) {
+    try {
+      await axiosInstance
+        .delete('deleteCompFamiliar', {
+          params: {
+            idFicha: idFicha,
+            idCompFamiliar: idCompFamiliar,
+          },
+        })
+        .then(res => {
+          toast.success(res.data.message);
+          remove(index);
+        });
+    } catch (err: any) {
+      const error = err.response?.data;
+      Object.keys(error).map(key => {
+        return toast.error(error[key]);
+      });
+    }
+  }
+
   return (
     <React.Fragment>
       <div
@@ -90,12 +117,12 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
           getValues={props.getValues}
           setValue={props.setValue}
           watch={props.watch}
-          remove={remove}
           parentesco={props.parentesco}
           escolaridade={props.escolaridade}
           estadoCivil={props.estadoCivil}
           situacaoTrabalhista={props.situacaoTrabalhista}
           calcularTotalRendaFamiliar={calcularTotalRendaFamiliar}
+          deleteCompFamiliar={deleteCompFamiliar}
         />
       ))}
       <Grid container spacing={1}>
@@ -131,11 +158,15 @@ function ComposicaoFamiliarComponent(
   props: ComposicaoFamiliarProps & {
     index: number;
     field: any;
-    remove: any;
-    calcularTotalRendaFamiliar: Function;
+    calcularTotalRendaFamiliar: () => void;
+    deleteCompFamiliar: (
+      idFicha: number,
+      index: number,
+      idCompFamiliar: number
+    ) => void;
   }
 ) {
-  const { index, control, remove, calcularTotalRendaFamiliar } = props;
+  const { index, control, calcularTotalRendaFamiliar } = props;
 
   useEffect(() => {
     calcularTotalRendaFamiliar();
@@ -338,7 +369,16 @@ function ComposicaoFamiliarComponent(
           <IconButton
             type="button"
             style={{ background: 'none', marginTop: '5px' }}
-            onClick={() => remove(index)}
+            onClick={() => {
+              const idCompFamiliar = props.getValues(
+                `ComposicaoFamiliar.${index}.IdCompFamiliar`
+              );
+              props.deleteCompFamiliar(
+                props.getValues('IdFicha'),
+                index,
+                idCompFamiliar ?? 0
+              );
+            }}
           >
             <DeleteIcon color="inherit" />
           </IconButton>
