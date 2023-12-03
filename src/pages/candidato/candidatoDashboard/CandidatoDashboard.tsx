@@ -1,22 +1,23 @@
-import React from "react";
-import { useCallback, useEffect, useState } from "react";
-import editIcon from "../../../assets/images/edit.svg";
-import inativoIcon from "../../../assets/images/inativo-icon.svg";
-import ativoIcon from "../../../assets/images/ativo-icon.svg";
-import closeIcon from "../../../assets/images/close.svg";
-import { cpfMask, removeMask } from "../../../Shared/Mascaras";
-import "./candidatoDashboard.scss";
-import { Alert, Grid, Pagination, TextField } from "@mui/material";
-import { Button, ButtonLink } from "../../../components/Button/Button";
-import axiosInstance from "../../../components/utils/axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { FichaEdit } from "../candidatoFicha/CandidatoFicha";
-import BlockUI from "../../../components/utils/BlockUI/BlockUI";
-import Modal from "../../../Shared/Modal";
-import { Controller, useForm } from "react-hook-form";
-import { InputComMascara, MascaraInput } from "../../../Shared/InputPadraoForm";
-import { AxiosError } from "axios";
+import React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import editIcon from '../../../assets/images/edit.svg';
+import inativoIcon from '../../../assets/images/inativo-icon.svg';
+import viewIcon from '../../../assets/images/view.svg';
+import ativoIcon from '../../../assets/images/ativo-icon.svg';
+import closeIcon from '../../../assets/images/close.svg';
+import { cpfMask, removeMask } from '../../../Shared/Mascaras';
+import './candidatoDashboard.scss';
+import { Alert, Grid, Pagination, TextField } from '@mui/material';
+import { Button, ButtonLink } from '../../../components/Button/Button';
+import axiosInstance from '../../../components/utils/axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
+import BlockUI from '../../../components/utils/BlockUI/BlockUI';
+import Modal from '../../../Shared/Modal';
+import { Controller, useForm } from 'react-hook-form';
+import { InputComMascara, MascaraInput } from '../../../Shared/InputPadraoForm';
+import { AxiosError } from 'axios';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -41,8 +42,9 @@ export default function CandidatoDashboard({
   const [currentPage, setCurrentPage] = useState(1);
   const [candidato, setCandidato] = useState<CandidatoProps>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [isFilterInativos, setIsFilterInativos] = useState<string>("S");
+  const [isFilterInativos, setIsFilterInativos] = useState<string>('S');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isView, setIsView] = useState<boolean>(false);
   const [idFicha, setIdFicha] = useState<number>(0);
   const [fichaCandidato, setFichaCandidato] = useState<FichaEdit>();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,33 +53,33 @@ export default function CandidatoDashboard({
     useState(false);
 
   const { control, getValues, setValue } = useForm<FiltroBuscaCandidato>({
-    mode: "onBlur",
+    mode: 'onBlur',
     defaultValues: {
-      Nome: "",
-      Cpf: "",
+      Nome: '',
+      Cpf: '',
     },
-    criteriaMode: "all",
+    criteriaMode: 'all',
   });
   const getFichas = useCallback(
     async (page: number, take: number, status: string) => {
       try {
         setIsLoading(true);
         await axiosInstance
-          .get("/fichas", {
+          .get('/fichas', {
             params: {
               page: page,
               take: take,
               ativo: status,
             },
           })
-          .then((res) => {
+          .then(res => {
             setCandidato(res.data.fichasCandidatos);
             setTotalPages(res.data.totalDefichasCandidatos);
           });
       } catch (err) {
         const errorResponse = err as AxiosError;
         const error = errorResponse.response?.data as Record<string, string>;
-        Object.keys(error).map((key) => {
+        Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
       } finally {
@@ -96,12 +98,12 @@ export default function CandidatoDashboard({
             idFicha: IDFICHA,
           },
         })
-        .then((res) => {
+        .then(res => {
           setFichaCandidato(res.data.ficha);
         });
     } catch (err: any) {
       const error = err.response?.data;
-      Object.keys(error).map((key) => {
+      Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
     } finally {
@@ -130,13 +132,13 @@ export default function CandidatoDashboard({
               take: take,
             },
           })
-          .then((res) => {
+          .then(res => {
             setCandidato(res.data.fichasCandidatos);
             setTotalPages(res.data.totalDefichasCandidatos);
           });
       } catch (err: any) {
         const error = err.response?.data;
-        Object.keys(error).map((key) => {
+        Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
       } finally {
@@ -149,8 +151,8 @@ export default function CandidatoDashboard({
     !isFichaCandidatoFiltrado
       ? getFichas(currentPage, 5, isFilterInativos)
       : getFichaCandidatoFiltrado(
-          getValues("Nome"),
-          removeMask(getValues("Cpf")),
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
           isFilterInativos,
           currentPage,
           5
@@ -166,29 +168,29 @@ export default function CandidatoDashboard({
 
   function handleCandidatosInativos(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setIsFilterInativos("N");
+      setIsFilterInativos('N');
       if (!isFichaCandidatoFiltrado) {
-        getFichas(1, 5, "N");
+        getFichas(1, 5, 'N');
       } else {
         setCurrentPage(1);
         getFichaCandidatoFiltrado(
-          getValues("Nome"),
-          removeMask(getValues("Cpf")),
-          "N",
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
+          'N',
           1,
           5
         );
       }
     } else {
-      setIsFilterInativos("S");
+      setIsFilterInativos('S');
       if (!isFichaCandidatoFiltrado) {
-        getFichas(1, 5, "S");
+        getFichas(1, 5, 'S');
       } else {
         setCurrentPage(1);
         getFichaCandidatoFiltrado(
-          getValues("Nome"),
-          removeMask(getValues("Cpf")),
-          "S",
+          getValues('Nome'),
+          removeMask(getValues('Cpf')),
+          'S',
           1,
           5
         );
@@ -199,7 +201,7 @@ export default function CandidatoDashboard({
   const handleEdit = useCallback(
     function () {
       if (isEdit && fichaCandidato !== undefined) {
-        navigate("/candidato/editar", {
+        navigate('/candidato/editar', {
           state: {
             valuesEditFicha: {
               isEdit: isEdit,
@@ -217,24 +219,45 @@ export default function CandidatoDashboard({
     handleEdit();
   }, [isEdit, navigate, handleEdit, idFicha]);
 
+  const handleView = useCallback(
+    function () {
+      if (isView && fichaCandidato !== undefined) {
+        navigate('/candidato/imprimir', {
+          state: {
+            valuesImpressaoFicha: {
+              isView: isView,
+              idFicha: idFicha,
+              ficha: fichaCandidato,
+            },
+          },
+        });
+      }
+    },
+    [isView, navigate, idFicha, fichaCandidato]
+  );
+
+  useEffect(() => {
+    handleView();
+  }, [isView, navigate, handleView, idFicha]);
+
   const numeroDePaginas = Math.ceil(totalPages / 5);
 
   async function deleteCandidato(idFicha: number) {
     try {
       setIsLoading(true);
       await axiosInstance
-        .delete("/deleteFicha", {
+        .delete('/deleteFicha', {
           params: {
             idFicha: idFicha,
           },
         })
-        .then((res) => {
+        .then(res => {
           setModalOpen(false);
           toast.success(res.data.message);
         });
     } catch (err: any) {
       const error = err.response?.data;
-      Object.keys(error).map((key) => {
+      Object.keys(error).map(key => {
         return toast.error(error[key]);
       });
     } finally {
@@ -254,14 +277,14 @@ export default function CandidatoDashboard({
 
       <main>
         <div className="busca-content">
-          <h1 style={{ paddingLeft: "20px", paddingTop: "20px" }}>
+          <h1 style={{ paddingLeft: '20px', paddingTop: '20px' }}>
             Candidatos
           </h1>
           <div className="busca-inativos-content">
             <input
               type="checkbox"
               id="busca-inativos"
-              onChange={(e) => handleCandidatosInativos(e)}
+              onChange={e => handleCandidatosInativos(e)}
             />
             <label htmlFor="busca-inativos">Mostrar candidatos inativos</label>
           </div>
@@ -292,9 +315,9 @@ export default function CandidatoDashboard({
                   <InputComMascara
                     mask={MascaraInput.cpf}
                     name="Cpf do Candidato"
-                    value={getValues("Cpf")}
+                    value={getValues('Cpf')}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setValue("Cpf", event.target.value);
+                      setValue('Cpf', event.target.value);
                     }}
                   />
                 )}
@@ -305,8 +328,8 @@ export default function CandidatoDashboard({
                 onClick={() => {
                   setCurrentPage(1);
                   getFichaCandidatoFiltrado(
-                    getValues("Nome"),
-                    removeMask(getValues("Cpf")),
+                    getValues('Nome'),
+                    removeMask(getValues('Cpf')),
                     isFilterInativos,
                     1,
                     5
@@ -330,8 +353,11 @@ export default function CandidatoDashboard({
                       <th className="listagem-candidato-cpf">CPF</th>
                       <th className="listagem-candidato-email">Email</th>
                       <th className="listagem-candidato-editar">Editar</th>
+                      <th className="listagem-candidato-visualizar">
+                        Visualizar
+                      </th>
                       <th className="listagem-candidato-status">Status</th>
-                      {isFilterInativos === "N" ? null : (
+                      {isFilterInativos === 'N' ? null : (
                         <th className="listagem-candidato-excluir">Excluir</th>
                       )}
                     </tr>
@@ -347,14 +373,14 @@ export default function CandidatoDashboard({
                               <td
                                 className="listagem-candidato-cpf"
                                 style={{
-                                  color: candidato?.CPF ? undefined : "red",
+                                  color: candidato?.CPF ? undefined : 'red',
                                 }}
                               >
-                                {cpfMask(candidato?.CPF) ?? "Não cadastrado"}
+                                {cpfMask(candidato?.CPF) ?? 'Não cadastrado'}
                               </td>
                               <td className="listagem-candidato-email">
-                                {candidato?.EMAIL === ""
-                                  ? "Não cadastrado"
+                                {candidato?.EMAIL === ''
+                                  ? 'Não cadastrado'
                                   : candidato?.EMAIL}
                               </td>
                               <td className="listagem-candidato-editar">
@@ -370,8 +396,24 @@ export default function CandidatoDashboard({
                                   <img src={editIcon} alt="Editar Candidato" />
                                 </button>
                               </td>
+                              <td className="listagem-candidato-visualizar">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setIsView(true);
+                                    setIdFicha(candidato?.IDFICHA);
+                                    getFichaCandidato(candidato?.IDFICHA);
+                                    handleView();
+                                  }}
+                                >
+                                  <img
+                                    src={viewIcon}
+                                    alt="Visualizar Candidato"
+                                  />
+                                </button>
+                              </td>
                               <td className="listagem-candidato-status">
-                                {candidato.ATIVO === "S" ? (
+                                {candidato.ATIVO === 'S' ? (
                                   <span>
                                     <img
                                       src={ativoIcon}
@@ -389,7 +431,7 @@ export default function CandidatoDashboard({
                                   </span>
                                 )}
                               </td>
-                              {isFilterInativos === "N" ? null : (
+                              {isFilterInativos === 'N' ? null : (
                                 <td className="listagem-candidato-excluir">
                                   <button
                                     type="button"
@@ -413,7 +455,7 @@ export default function CandidatoDashboard({
                 </table>
               </div>
             ) : (
-              <Alert severity="info" style={{ marginTop: "2%" }}>
+              <Alert severity="info" style={{ marginTop: '2%' }}>
                 Não foi encontrado nenhum candidato
               </Alert>
             )}

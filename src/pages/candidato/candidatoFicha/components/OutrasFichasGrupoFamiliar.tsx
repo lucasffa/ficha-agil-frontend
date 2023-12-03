@@ -89,7 +89,7 @@ export default function OutrasFichasGrupoFamiliar(
             onClick={() =>
               append({
                 IdFicha: undefined,
-                NomeCompleto: '',
+                NomeCompletoFamiliar: '',
                 IdParentesco: undefined,
                 IdGrupoFamiliar: undefined,
               })
@@ -140,7 +140,7 @@ function OutrasFichasGrupoFamiliarComponent(
         <Grid item xs={7}>
           <Controller
             control={control}
-            name={`OutrasFichasGrupoFamiliar.${index}.NomeCompleto`}
+            name={`OutrasFichasGrupoFamiliar.${index}.NomeCompletoFamiliar`}
             render={({ field }) => (
               <TextField
                 fullWidth

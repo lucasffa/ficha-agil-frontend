@@ -11,3 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+@media print{
+  @page {
+      size: A4 portrait;
+      margin:1cm;
+      overflow: hidden;
+  }
+  html {
+    overflow-y: hidden;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .linha {
+    border-bottom: 1px solid black !important;
+    position: relative;
+    bottom: 2px !important;
+  }
+
+  
+  .secao-form-impressao, .cabecalho-form-impressao {
+    break-inside: page;
+  }
+
+  
+    .print-section{
+      //page-break-inside: avoid;
+      // break-inside: avoid;
+      // page-break-inside: avoid;
+      // break-inside: avoid;
+      // display: block;
+      // width: 100%;
+      margin-bottom: 10px; /* Ajuste conforme necessário */
+    }
+}

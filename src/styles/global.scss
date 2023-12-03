@@ -15,8 +15,7 @@ textarea {
 .app {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  //width: 100vw;
+  width: 100vw;
   height: 100vh;
 }
 
@@ -44,5 +43,10 @@ textarea {
   background-color: #FFF;
   border-radius: 25px;
   overflow-y: auto; 
+
+    @media print {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    }
 }
 

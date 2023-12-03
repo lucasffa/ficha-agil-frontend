@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 const validationSchemaFicha = object().shape({
   IdentificacaoCandidato: object({
@@ -22,14 +22,6 @@ const validationSchemaFicha = object().shape({
     Bairro: string().required('Campo obrigatório'),
     Cep: string().required('Campo obrigatório'),
   }),
-  OutrasFichasGrupoFamiliar: array().of(
-    object({
-      IdFicha: number().required('Campo obrigatório'),
-      NomeCompleto: string().required('Campo obrigatório'),
-      IdParentesco: number().required('Campo obrigatório'),
-      IdGrupoFamiliar: number().required('Campo obrigatório'),
-    })
-  ),
   DadosEducacionaisCandidato: object({
     Estuda: string().required('Campo obrigatório'),
     InstituicaoEnsino: string().required('Campo obrigatório'),
@@ -42,14 +34,6 @@ const validationSchemaFicha = object().shape({
     IdEscolaridade: number().required('Campo obrigatório'),
     OutrosCursosRealizados: string().required('Campo obrigatório'),
   }),
-  BeneficiosPleiteados: array().of(
-    object({
-      NomeCursoPretendido: string().required('Campo obrigatório'),
-      Turno: string().required('Campo obrigatório'),
-      Horario: string().required('Campo obrigatório'),
-      IdBeneficio: number().required('Campo obrigatório'),
-    })
-  ),
   CondicoesSaudeCandidato: object({
     NomeContatoEmergencia: string().required('Campo obrigatório'),
     TelefoneEmergencia1: string().required('Campo obrigatório'),
@@ -80,20 +64,6 @@ const validationSchemaFicha = object().shape({
     IdParentescoProprietario: number().required('Campo obrigatório'),
     PrestacaoFinanciamento: number().required('Campo obrigatório'),
   }),
-  ComposicaoFamiliar: array().of(
-    object({
-      IdCompFamiliar: number().required('Campo obrigatório'),
-      IdFicha: number().required('Campo obrigatório'),
-      Nome: string().required('Campo obrigatório'),
-      IdParentesco: number().required('Campo obrigatório'),
-      Idade: number().required('Campo obrigatório'),
-      IdEstadoCivil: number().required('Campo obrigatório'),
-      Profissao: string().required('Campo obrigatório'),
-      IdSitTrabalhista: number().required('Campo obrigatório'),
-      IdEscolaridade: number().required('Campo obrigatório'),
-      Renda: number().required('Campo obrigatório'),
-    })
-  ),
   Despesas: object({
     DespesasDescontos: number().required('Campo obrigatório'),
     DespesasRendaBruta: number().required('Campo obrigatório'),
