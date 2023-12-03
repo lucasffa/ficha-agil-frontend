@@ -1,8 +1,8 @@
 import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import editIcon from '../../../assets/images/edit.svg';
-import viewIcon from '../../../assets/images/view.svg';
 import inativoIcon from '../../../assets/images/inativo-icon.svg';
+import viewIcon from '../../../assets/images/view.svg';
 import ativoIcon from '../../../assets/images/ativo-icon.svg';
 import closeIcon from '../../../assets/images/close.svg';
 import { cpfMask, removeMask } from '../../../Shared/Mascaras';
@@ -16,7 +16,8 @@ import { FichaEdit } from '../candidatoFicha/CandidatoFicha';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 import Modal from '../../../Shared/Modal';
 import { Controller, useForm } from 'react-hook-form';
-import { InputMaskCpf } from '../../../Shared/InputPadraoForm';
+import { InputComMascara, MascaraInput } from '../../../Shared/InputPadraoForm';
+import { AxiosError } from 'axios';
 
 type CandidatoDashboardProps = {
   urlBase?: string;
@@ -75,8 +76,9 @@ export default function CandidatoDashboard({
             setCandidato(res.data.fichasCandidatos);
             setTotalPages(res.data.totalDefichasCandidatos);
           });
-      } catch (err: any) {
-        const error = err.response?.data;
+      } catch (err) {
+        const errorResponse = err as AxiosError;
+        const error = errorResponse.response?.data as Record<string, string>;
         Object.keys(error).map(key => {
           return toast.error(error[key]);
         });
@@ -217,7 +219,6 @@ export default function CandidatoDashboard({
     handleEdit();
   }, [isEdit, navigate, handleEdit, idFicha]);
 
-
   const handleView = useCallback(
     function () {
       if (isView && fichaCandidato !== undefined) {
@@ -237,8 +238,7 @@ export default function CandidatoDashboard({
 
   useEffect(() => {
     handleView();
-  }, [isEdit, navigate, handleView, idFicha]);
-
+  }, [isView, navigate, handleView, idFicha]);
 
   const numeroDePaginas = Math.ceil(totalPages / 5);
 
@@ -312,7 +312,8 @@ export default function CandidatoDashboard({
                 control={control}
                 name="Cpf"
                 render={() => (
-                  <InputMaskCpf
+                  <InputComMascara
+                    mask={MascaraInput.cpf}
                     name="Cpf do Candidato"
                     value={getValues('Cpf')}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -324,15 +325,16 @@ export default function CandidatoDashboard({
             </Grid>
             <Grid item xs={3}>
               <Button
-                onClick={() =>
+                onClick={() => {
+                  setCurrentPage(1);
                   getFichaCandidatoFiltrado(
                     getValues('Nome'),
                     removeMask(getValues('Cpf')),
                     isFilterInativos,
-                    currentPage,
+                    1,
                     5
-                  )
-                }
+                  );
+                }}
               >
                 Filtrar
               </Button>
@@ -351,7 +353,9 @@ export default function CandidatoDashboard({
                       <th className="listagem-candidato-cpf">CPF</th>
                       <th className="listagem-candidato-email">Email</th>
                       <th className="listagem-candidato-editar">Editar</th>
-                      <th className="listagem-candidato-visualizar">Visualizar</th>
+                      <th className="listagem-candidato-visualizar">
+                        Visualizar
+                      </th>
                       <th className="listagem-candidato-status">Status</th>
                       {isFilterInativos === 'N' ? null : (
                         <th className="listagem-candidato-excluir">Excluir</th>
@@ -402,7 +406,10 @@ export default function CandidatoDashboard({
                                     handleView();
                                   }}
                                 >
-                                  <img src={viewIcon} alt="Visualizar Candidato" />
+                                  <img
+                                    src={viewIcon}
+                                    alt="Visualizar Candidato"
+                                  />
                                 </button>
                               </td>
                               <td className="listagem-candidato-status">

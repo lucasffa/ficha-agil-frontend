@@ -1,12 +1,7 @@
 import { useForm } from 'react-hook-form';
-import useFormSteps from '../../../hooks/useFormSteps';
 import './candidatoFichaImpressao.scss';
 
-//Import dos componentes/etapas do formulário
-import {
-  IdentificacaoCandidato,
-} from './components/IdentificacaoCandidato';
-//import TermoAutorizacaoUsoDeImagemEVoz from './components/TermoAutorizacaoUsoDeImagemEVoz';
+import { ImpressaoCandidato } from './components/ImpressaoCandidato';
 import axiosInstance from '../../../components/utils/axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -80,7 +75,7 @@ export interface Ficha {
   };
   OutrasFichasGrupoFamiliar: {
     IdFicha: number | undefined;
-    NomeCompleto: string | "Vazio";
+    NomeCompleto: string | 'Vazio';
     IdParentesco: number | undefined;
     IdGrupoFamiliar: number | undefined;
   }[];
@@ -1146,45 +1141,33 @@ export function CandidatoFichaImpressao() {
     }
   }
 
-  const formComponents = [
-    <IdentificacaoCandidato
-      control={control}
-      getValues={getValues}
-      setValue={setValue}
-      watch={watch}
-      estadoCivil={estadoCivil}
-      racaEtnia={racaEtnia}
-      situacaoTrabalhista={situacaoTrabalhista}
-      parentesco={parentesco}
-      escolaridade={escolaridade}
-      coberturaMoradia={coberturaMoradia}
-    />,
-    //<TermoAutorizacaoUsoDeImagemEVoz />,
-  ];
-
-  const { changeStep, currentComponent, currentStep, isLastStep, isFirstStep } =
-    useFormSteps(formComponents);
-    return (
-      <React.Fragment>
-        <BlockUI blocking={isLoading} />
-        <form
-          onSubmit={handleSubmit((data, event) => {
-            event?.preventDefault();
-            if (data) {
-              !valuesEditFicha?.isEdit ? postFicha(data) : putFicha(data);
-            }
-          })}
-          className="form-cadastrar-ficha-impressao"
-        >
-          <div className="container-ficha-impressao">
-            {formComponents.map((Component, index) => (
-              <div key={index}>
-                {Component}
-              </div>
-            ))}
-          </div>
-        </form>
-      </React.Fragment>
-    );
-    
+  return (
+    <React.Fragment>
+      <BlockUI blocking={isLoading} />
+      <form
+        onSubmit={handleSubmit((data, event) => {
+          event?.preventDefault();
+          if (data) {
+            !valuesEditFicha?.isEdit ? postFicha(data) : putFicha(data);
+          }
+        })}
+        className="form-cadastrar-ficha-impressao"
+      >
+        <div className="container-ficha-impressao">
+          <ImpressaoCandidato
+            control={control}
+            getValues={getValues}
+            setValue={setValue}
+            watch={watch}
+            estadoCivil={estadoCivil}
+            racaEtnia={racaEtnia}
+            situacaoTrabalhista={situacaoTrabalhista}
+            parentesco={parentesco}
+            escolaridade={escolaridade}
+            coberturaMoradia={coberturaMoradia}
+          />
+        </div>
+      </form>
+    </React.Fragment>
+  );
 }

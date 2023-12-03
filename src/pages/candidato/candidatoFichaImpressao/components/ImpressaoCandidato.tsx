@@ -1,8 +1,4 @@
-import {
-  FormControl,
-  Grid,
-  TextField,
-} from '@mui/material';
+import { FormControl, Grid, TextField } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   Controller,
@@ -11,13 +7,10 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  InputMaskCep,
-  InputMaskCpf,
-  InputMaskTelefone,
-  InputMaskTelefoneRecado,
-  InputMaskTelefoneResidencial,
+  InputComMascara,
+  MascaraInput,
 } from '../../../../Shared/InputPadraoForm';
 import {
   EstadoCivil,
@@ -26,17 +19,15 @@ import {
   RacaEtnia,
   SituacaoTrabalhista,
   Escolaridade,
-  CoberturaMoradia
+  CoberturaMoradia,
 } from '../CandidatoFichaImpressao';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ptBR from 'date-fns/locale/pt-BR';
-import { InputMaskHorario } from '../../../../Shared/InputPadraoForm';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 import '../candidatoFichaImpressao.scss';
 
-
-interface FichaImpressao{
+interface FichaImpressao {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -47,7 +38,6 @@ interface FichaImpressao{
   parentesco: Parentesco[] | undefined;
   escolaridade: Escolaridade[] | undefined;
   coberturaMoradia: CoberturaMoradia[] | undefined;
-
 }
 
 const theme = createTheme({
@@ -72,29 +62,30 @@ const theme = createTheme({
           // Sobrescreve o tamanho da fonte do TextField
           input: {
             fontSize: '0.8rem',
-          }
+          },
         },
       },
     },
     // Sobrescrevendo MuiOutlinedInput para estilizar o Input do TextField
-    MuiOutlinedInput: { 
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
           // Sobrescreve o borderRadius 0 a todos os Inputs de TextField
           borderRadius: 0,
 
           // Sobrescreve a borda preta ao contorno do Input de TextField
-          '& .MuiOutlinedInput-notchedOutline': { 
+          '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#000',
           },
-          
+
           // Sobrescreve a borda preta ao contorno do Input de TextField quando o mesmo estiver em hover
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: '#000', // Cor da borda no hover
           },
 
           // Sobrescreve a borda preta ao contorno do Input de TextField quando o mesmo estiver selecionado
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { // Está aparecendo "focused", mas é a seleção do input, que é diferente quando passamos o mouse por cima quando clicado e quando não clicado
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            // Está aparecendo "focused", mas é a seleção do input, que é diferente quando passamos o mouse por cima quando clicado e quando não clicado
             borderColor: '#000', // Cor da borda quando selecionado
             // Borda com espessura
             borderWidth: 1,
@@ -156,20 +147,22 @@ const theme = createTheme({
   },
 });
 
-
-export function IdentificacaoCandidato(props: FichaImpressao) {
+export function ImpressaoCandidato(props: FichaImpressao) {
   const [totalRendaFamiliar, setTotalRendaFamiliar] = useState<Number>(0);
 
   useEffect(() => {
     const rendas = props.getValues('ComposicaoFamiliar').map(f => f.Renda);
-    const totalRenda = rendas.reduce((total: number, rendaAtual: number | undefined) => {
-      const renda = parseFloat(String(rendaAtual ?? '')) || 0;
-      return total + renda;
-    }, 0);
-  
+    const totalRenda = rendas.reduce(
+      (total: number, rendaAtual: number | undefined) => {
+        const renda = parseFloat(String(rendaAtual ?? '')) || 0;
+        return total + renda;
+      },
+      0
+    );
+
     setTotalRendaFamiliar(totalRenda);
-  }, [props.getValues, props.watch]);
-  
+  }, [props.getValues, props.watch, props]);
+
   useEffect(() => {
     registerLocale('pt-BR', ptBR);
   }, []);
@@ -198,7 +191,9 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
     <ThemeProvider theme={theme}>
       <Grid container spacing={0}>
         {/* Identificação do candidato */}
-        <div className="cabecalho-form-impressao">1. IDENTIFICAÇÃO DO CANDIDATO</div>
+        <div className="cabecalho-form-impressao">
+          1. IDENTIFICAÇÃO DO CANDIDATO
+        </div>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Controller
@@ -226,17 +221,14 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.Cpf"
-              render={() => {
+              render={({ field }) => {
                 return (
-                  <InputMaskCpf
-                    value={props.getValues('IdentificacaoCandidato.Cpf')}
+                  <InputComMascara
+                    name="Cpf"
+                    mask={MascaraInput.cpf}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.Cpf',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -268,7 +260,6 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               control={props.control}
               name="IdentificacaoCandidato.DataNascimento"
               render={({ field }) => {
-                const dateValue = field.value ? new Date(field.value) : null;
                 return (
                   <TextField
                     fullWidth
@@ -278,8 +269,8 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     variant="outlined"
                     value={
                       field.value
-                      ? new Date(field.value).toLocaleDateString('pt-BR')
-                      : ''
+                        ? new Date(field.value).toLocaleDateString('pt-BR')
+                        : ''
                     }
                     InputProps={{
                       readOnly: true,
@@ -336,7 +327,15 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-basic"
                       label="Raça/Etnia"
-                      value={props.racaEtnia?.find(item => item.IDRACAETNIA === props.getValues('IdentificacaoCandidato.IdRacaEtnia'))?.DESCRICAO || ''}
+                      value={
+                        props.racaEtnia?.find(
+                          item =>
+                            item.IDRACAETNIA ===
+                            props.getValues(
+                              'IdentificacaoCandidato.IdRacaEtnia'
+                            )
+                        )?.DESCRICAO || ''
+                      }
                       InputProps={{
                         readOnly: true,
                       }}
@@ -346,32 +345,31 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               }}
             />
           </Grid>
-          <Grid
-            item
-            xs={4
-            }
-          >
+          <Grid item xs={4}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.IdSitTrabalhista"
               render={({ field }) => {
                 return (
-                <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    id="outlined-read-only-input"
-                    label="Situação Trabalhista"
-                    value={
-                      props.situacaoTrabalhista?.find(
-                        item => item.IDSITTRABALHISTA === props.getValues('IdentificacaoCandidato.IdSitTrabalhista')
-                      )?.DESCRICAO || ''
-                    }
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </FormControl>
-                
+                  <FormControl fullWidth>
+                    <TextField
+                      fullWidth
+                      id="outlined-read-only-input"
+                      label="Situação Trabalhista"
+                      value={
+                        props.situacaoTrabalhista?.find(
+                          item =>
+                            item.IDSITTRABALHISTA ===
+                            props.getValues(
+                              'IdentificacaoCandidato.IdSitTrabalhista'
+                            )
+                        )?.DESCRICAO || ''
+                      }
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </FormControl>
                 );
               }}
             />
@@ -411,7 +409,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       label="Estado Civil"
                       value={
                         props.estadoCivil?.find(
-                          item => item.IDESTADOCIVIL === props.getValues('IdentificacaoCandidato.IdEstadoCivil')
+                          item =>
+                            item.IDESTADOCIVIL ===
+                            props.getValues(
+                              'IdentificacaoCandidato.IdEstadoCivil'
+                            )
                         )?.DESCRICAO || ''
                       }
                       InputProps={{
@@ -420,7 +422,6 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     />
                   </FormControl>
                 );
-              
               }}
             />
           </Grid>
@@ -557,15 +558,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="IdentificacaoCandidato.Cep"
               render={({ field }) => {
                 return (
-                  <InputMaskCep
-                    value={props.getValues('IdentificacaoCandidato.Cep')}
+                  <InputComMascara
+                    name="Cep"
+                    mask={MascaraInput.cep}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.Cep',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -577,17 +575,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="IdentificacaoCandidato.TelefoneResidencial"
               render={({ field }) => {
                 return (
-                  <InputMaskTelefoneResidencial
-                    value={props.getValues(
-                      'IdentificacaoCandidato.TelefoneResidencial'
-                    )}
+                  <InputComMascara
+                    name="Telefone Residencial"
+                    mask={MascaraInput.telefoneResidencial}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.TelefoneResidencial',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -599,17 +592,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="IdentificacaoCandidato.TelefoneRecado"
               render={({ field }) => {
                 return (
-                  <InputMaskTelefoneRecado
-                    value={props.getValues(
-                      'IdentificacaoCandidato.TelefoneRecado'
-                    )}
+                  <InputComMascara
+                    name="Telefone Recado"
+                    mask={MascaraInput.telefoneRecado}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.TelefoneRecado',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -619,25 +607,20 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.TelefoneCelular"
-              render={() => {
+              render={({ field }) => {
                 return (
-                  <InputMaskTelefone
-                    value={props.getValues(
-                      'IdentificacaoCandidato.TelefoneCelular'
-                    )}
+                  <InputComMascara
+                    name="Telefone Celular"
+                    mask={MascaraInput.telefone}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.TelefoneCelular',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
             />
           </Grid>
-          
+
           <Grid item xs={9}>
             <Controller
               control={props.control}
@@ -665,16 +648,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="IdentificacaoCandidato.CpfPai"
               render={({ field }) => {
                 return (
-                  <InputMaskCpf
-                    name="CPF Pai"
-                    value={props.getValues('IdentificacaoCandidato.CpfPai')}
+                  <InputComMascara
+                    name="Cpf Pai"
+                    mask={MascaraInput.cpf}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.CpfPai',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -707,16 +686,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="IdentificacaoCandidato.CpfMae"
               render={({ field }) => {
                 return (
-                  <InputMaskCpf
-                    name="CPF Mãe"
-                    value={props.getValues('IdentificacaoCandidato.CpfMae')}
+                  <InputComMascara
+                    name="Cpf Mãe"
+                    mask={MascaraInput.cpf}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'IdentificacaoCandidato.CpfMae',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -756,7 +731,10 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       label="Parentesco do Responsável"
                       value={
                         props.parentesco?.find(
-                          item => item.IDPARENTESCO === props.getValues("IdentificacaoCandidato")?.IdParentescoResponsavel
+                          item =>
+                            item.IDPARENTESCO ===
+                            props.getValues('IdentificacaoCandidato')
+                              ?.IdParentescoResponsavel
                         )?.DESCRICAO || ''
                       }
                       InputProps={{
@@ -765,7 +743,6 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     />
                   </FormControl>
                 );
-                
               }}
             />
           </Grid>
@@ -782,7 +759,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       label="Estado Civil Pai"
                       value={
                         props.estadoCivil?.find(
-                          item => item.IDESTADOCIVIL === props.getValues('IdentificacaoCandidato.IdEstadoCivilPai')
+                          item =>
+                            item.IDESTADOCIVIL ===
+                            props.getValues(
+                              'IdentificacaoCandidato.IdEstadoCivilPai'
+                            )
                         )?.DESCRICAO || ''
                       }
                       InputProps={{
@@ -790,7 +771,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       }}
                     />
                   </FormControl>
-                );              
+                );
               }}
             />
           </Grid>
@@ -807,7 +788,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       label="Estado Civil Mãe"
                       value={
                         props.estadoCivil?.find(
-                          item => item.IDESTADOCIVIL === props.getValues('IdentificacaoCandidato.IdEstadoCivilMae')
+                          item =>
+                            item.IDESTADOCIVIL ===
+                            props.getValues(
+                              'IdentificacaoCandidato.IdEstadoCivilMae'
+                            )
                         )?.DESCRICAO || ''
                       }
                       InputProps={{
@@ -822,84 +807,92 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Dados de outras fichas do grupo familiar */}
-        <div className="cabecalho-form-impressao">2. OUTRAS FICHAS DO GRUPO FAMILIAR</div>
+        <div className="cabecalho-form-impressao">
+          2. OUTRAS FICHAS DO GRUPO FAMILIAR
+        </div>
         <Grid container spacing={0}>
-            {props.getValues('OutrasFichasGrupoFamiliar').map((item, index) => {
-              return(
-            <Grid container key={index}  spacing={1} style={{ marginBottom: '16px'}}>
-            <Grid item xs={2}>
-              <Controller
-                control={props.control}
-                name={`OutrasFichasGrupoFamiliar.${index}.IdFicha`}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    id={`outlined-basic-${index}-1`}
-                    label="Nº Ficha"
-                    color="primary"
-                    variant="outlined"
-                    type="number"
-                    {...field}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={8}>
-              <Controller
-                control={props.control}
-                name={`OutrasFichasGrupoFamiliar.${index}.NomeCompleto`}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    id={`outlined-basic-${index}-2`}
-                    label="Nome Completo"
-                    color="primary"
-                    variant="outlined"
-                    {...field}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <Controller
-                control={props.control}
-                name={`OutrasFichasGrupoFamiliar.${index}.IdParentesco`}
-                render={({ field }) => {
-                  const parentescoValue = props.parentesco?.find(
-                    item => item.IDPARENTESCO === field.value
-                  )?.DESCRICAO || '';
-
-                  return (
-                    <FormControl fullWidth>
+          {props.getValues('OutrasFichasGrupoFamiliar').map((item, index) => {
+            return (
+              <Grid
+                container
+                key={index}
+                spacing={1}
+                style={{ marginBottom: '16px' }}
+              >
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`OutrasFichasGrupoFamiliar.${index}.IdFicha`}
+                    render={({ field }) => (
                       <TextField
                         fullWidth
-                        id="outlined-read-only-input"
-                        label="Parentesco"
-                        value={parentescoValue}
+                        id={`outlined-basic-${index}-1`}
+                        label="Nº Ficha"
+                        color="primary"
+                        variant="outlined"
+                        type="number"
+                        {...field}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </FormControl>
-                  );
-                }}
-              />
-            </Grid>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={8}>
+                  <Controller
+                    control={props.control}
+                    name={`OutrasFichasGrupoFamiliar.${index}.NomeCompleto`}
+                    render={({ field }) => (
+                      <TextField
+                        fullWidth
+                        id={`outlined-basic-${index}-2`}
+                        label="Nome Completo"
+                        color="primary"
+                        variant="outlined"
+                        {...field}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`OutrasFichasGrupoFamiliar.${index}.IdParentesco`}
+                    render={({ field }) => {
+                      const parentescoValue =
+                        props.parentesco?.find(
+                          item => item.IDPARENTESCO === field.value
+                        )?.DESCRICAO || '';
 
-          
-            </Grid>
-          );
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id="outlined-read-only-input"
+                            label="Parentesco"
+                            value={parentescoValue}
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            );
           })}
         </Grid>
 
         {/* Dados educacionais da ficha */}
-        <div className="cabecalho-form-impressao">3. DADOS EDUCACIONAIS DO CANDIDATO</div>
+        <div className="cabecalho-form-impressao">
+          3. DADOS EDUCACIONAIS DO CANDIDATO
+        </div>
         <Grid container spacing={1}>
           <Grid item xs={3}>
             <Controller
@@ -912,7 +905,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Estuda"
-                      value={field.value === "S" ? "Sim" : "Não"}
+                      value={field.value === 'S' ? 'Sim' : 'Não'}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -933,12 +926,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Instituição de Ensino"
-                      value={field.value === "U" ? "Pública" : "Privada"}
+                      value={field.value === 'U' ? 'Pública' : 'Privada'}
                       InputProps={{
                         readOnly: true,
                       }}
                     />
-
                   </FormControl>
                 );
               }}
@@ -1061,7 +1053,13 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Turno"
-                      value={field.value === "M" ? "Manhã" : field.value === "T" ? "Tarde" : "Noite"}
+                      value={
+                        field.value === 'M'
+                          ? 'Manhã'
+                          : field.value === 'T'
+                          ? 'Tarde'
+                          : 'Noite'
+                      }
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1123,73 +1121,82 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">4. BENEFÍCIOS PLEITEADOS</div>
         <Grid container spacing={0}>
           {props.getValues('BeneficiosPleiteados').map((item, index) => {
-                return(   
-                  <Grid container key={index} spacing={1} style={{ marginBottom: '16px'}}>
-                  <Grid item xs={8}>
-                    <Controller
-                      control={props.control}
-                      name={`BeneficiosPleiteados.${index}.NomeCursoPretendido`}
-                      render={({ field }) => (
-                        <TextField
-                          fullWidth
-                          id={`outlined-basic-${index}-1`}
-                          label="Cursos ou Atividades pretendidos (Na ordem de prioridade)
+            return (
+              <Grid
+                container
+                key={index}
+                spacing={1}
+                style={{ marginBottom: '16px' }}
+              >
+                <Grid item xs={8}>
+                  <Controller
+                    control={props.control}
+                    name={`BeneficiosPleiteados.${index}.NomeCursoPretendido`}
+                    render={({ field }) => (
+                      <TextField
+                        fullWidth
+                        id={`outlined-basic-${index}-1`}
+                        label="Cursos ou Atividades pretendidos (Na ordem de prioridade)
                           "
-                          color="primary"
-                          variant="outlined"
-                          {...field}
-                          inputProps={{ readOnly: true }}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Controller
-                      control={props.control}
-                      name={`BeneficiosPleiteados.${index}.Turno`}
-                      render={({ field }) => {
-                        return (
-                          <FormControl fullWidth>
-                            <TextField
-                              fullWidth
-                              id="outlined-read-only-input"
-                              label="Turno"
-                              value={field.value === "M" ? "Manhã" : field.value === "T" ? "Tarde" : "Noite"}
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </FormControl>
-                        );
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Controller
-                      control={props.control}
-                      name={`BeneficiosPleiteados.${index}.Horario`}
-                      render={({ field }) => (
-                        <InputMaskHorario
-                          value={props.getValues(`BeneficiosPleiteados.${index}.Horario`)}
-                          readOnly={true}
-                          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            props.setValue(
-                              `BeneficiosPleiteados.${index}.Horario`,
-                              event.target.value
-                            );
-                          }}
-                        />
-                      )}
-                    />
-                  </Grid>
+                        color="primary"
+                        variant="outlined"
+                        {...field}
+                        inputProps={{ readOnly: true }}
+                      />
+                    )}
+                  />
                 </Grid>
-                );
-              }
-            )}
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`BeneficiosPleiteados.${index}.Turno`}
+                    render={({ field }) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id="outlined-read-only-input"
+                            label="Turno"
+                            value={
+                              field.value === 'M'
+                                ? 'Manhã'
+                                : field.value === 'T'
+                                ? 'Tarde'
+                                : 'Noite'
+                            }
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`BeneficiosPleiteados.${index}.Horario`}
+                    render={({ field }) => (
+                      <InputComMascara
+                        name="Horário"
+                        mask={MascaraInput.horario}
+                        value={field.value}
+                        readOnly={true}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+            );
+          })}
         </Grid>
-        
+
         {/* Condições de saúde do candidato */}
-        <div className="cabecalho-form-impressao">5. CONDIÇÕES DE SAÚDE DO CANDIDATO</div>
+        <div className="cabecalho-form-impressao">
+          5. CONDIÇÕES DE SAÚDE DO CANDIDATO
+        </div>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Controller
@@ -1212,20 +1219,14 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
             <Controller
               control={props.control}
               name="CondicoesSaudeCandidato.TelefoneEmergencia1"
-              render={() => {
+              render={({ field }) => {
                 return (
-                  <InputMaskTelefone
+                  <InputComMascara
                     name="Telefone de Emergência 1"
-                    value={props.getValues(
-                      'CondicoesSaudeCandidato.TelefoneEmergencia1'
-                    )}
+                    mask={MascaraInput.telefone}
+                    value={field.value}
                     readOnly={true}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'CondicoesSaudeCandidato.TelefoneEmergencia1',
-                        event.target.value
-                      );
-                    }}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -1235,20 +1236,14 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
             <Controller
               control={props.control}
               name="CondicoesSaudeCandidato.TelefoneEmergencia2"
-              render={() => {
+              render={({ field }) => {
                 return (
-                  <InputMaskTelefone
+                  <InputComMascara
                     name="Telefone de Emergência 2"
+                    mask={MascaraInput.telefone}
                     readOnly={true}
-                    value={props.getValues(
-                      'CondicoesSaudeCandidato.TelefoneEmergencia2'
-                    )}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      props.setValue(
-                        'CondicoesSaudeCandidato.TelefoneEmergencia2',
-                        event.target.value
-                      );
-                    }}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 );
               }}
@@ -1342,7 +1337,9 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Condições sociais e de saúde da família */}
-        <div className="cabecalho-form-impressao">6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA</div>
+        <div className="cabecalho-form-impressao">
+          6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
+        </div>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Controller
@@ -1462,7 +1459,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Possui agua potável"
-                      value={field.value === "S" ? "Sim" : "Não"}
+                      value={field.value === 'S' ? 'Sim' : 'Não'}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1483,7 +1480,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Possui rede de esgoto"
-                      value={field.value === "S" ? "Sim" : "Não"}
+                      value={field.value === 'S' ? 'Sim' : 'Não'}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1515,7 +1512,6 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                     />
                   </FormControl>
                 );
-                
               }}
             />
           </Grid>
@@ -1525,12 +1521,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="CondicoesMoradia.RuaPavimentada"
               render={({ field }) => {
                 return (
-                  <FormControl fullWidth>                  
+                  <FormControl fullWidth>
                     <TextField
                       fullWidth
                       id="outlined-read-only-input"
                       label="A rua é pavimentada"
-                      value={field.value === "S" ? "Sim" : "Não"}
+                      value={field.value === 'S' ? 'Sim' : 'Não'}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1551,7 +1547,13 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                       fullWidth
                       id="outlined-read-only-input"
                       label="Possui eletricidade"
-                      value={field.value === "S" ? "Sim" : field.value === "N" ? "Não" : "Coletiva"}
+                      value={
+                        field.value === 'S'
+                          ? 'Sim'
+                          : field.value === 'N'
+                          ? 'Não'
+                          : 'Coletiva'
+                      }
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1593,12 +1595,20 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               name="CondicoesMoradia.TipoImovelResidencia"
               render={({ field }) => {
                 return (
-                  <FormControl fullWidth>     
+                  <FormControl fullWidth>
                     <TextField
                       fullWidth
                       id="outlined-read-only-input"
                       label="Tipo de imóvel da residência"
-                      value={field.value === "P" ? "Próprio" : field.value === "A" ? "Alugado" : field.value === "C" ? "Cedido" : "Financiado"}
+                      value={
+                        field.value === 'P'
+                          ? 'Próprio'
+                          : field.value === 'A'
+                          ? 'Alugado'
+                          : field.value === 'C'
+                          ? 'Cedido'
+                          : 'Financiado'
+                      }
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1616,8 +1626,12 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Valor do Aluguel" {...field} readOnly={true}/>
-                    </FormControl>       
+                      <CurrencyFieldInput
+                        label="Valor do Aluguel"
+                        {...field}
+                        readOnly={true}
+                      />
+                    </FormControl>
                   );
                 }}
               />
@@ -1637,7 +1651,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                         label="Parentesco com o proprietário"
                         value={
                           props.parentesco?.find(
-                            item => item.IDPARENTESCO === props.getValues('CondicoesMoradia.IdParentescoProprietario')
+                            item =>
+                              item.IDPARENTESCO ===
+                              props.getValues(
+                                'CondicoesMoradia.IdParentescoProprietario'
+                              )
                           )?.DESCRICAO || ''
                         }
                         InputProps={{
@@ -1688,206 +1706,213 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         >
           <div className="cabecalho-form-impressao">8. COMPOSIÇÃO FAMILIAR</div>
           <div>
-              TOTAL DA RENDA FAMILIAR:{' '}
-              {totalRendaFamiliar.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
+            TOTAL DA RENDA FAMILIAR:{' '}
+            {totalRendaFamiliar.toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
           </div>
         </div>
         <Grid container spacing={0}>
           {props.getValues('ComposicaoFamiliar').map((item, index) => {
-                return(            
-                  <Grid container key={index} spacing={1} style={{ marginBottom: '16px'}}>
-                    <Grid item xs={3}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.Nome`}
-                        render={({ field }) => {
-                          return (
-                            <FormControl fullWidth>
-                              <TextField
-                                fullWidth
-                                id="outlined-basic 3"
-                                label="Nome"
-                                color="primary"
-                                variant="outlined"
-                                {...field}
-                                inputProps={{ readOnly: true }}
-                              />
-                            </FormControl>
-                          );
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={2}>
-                    <Controller
-                      control={props.control}
-                      name={`ComposicaoFamiliar.${index}.IdParentesco`}
-                      render={({ field }) => {
-                        const parentescoDescricao = props.parentesco?.find(
+            return (
+              <Grid
+                container
+                key={index}
+                spacing={1}
+                style={{ marginBottom: '16px' }}
+              >
+                <Grid item xs={3}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.Nome`}
+                    render={({ field }) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id="outlined-basic 3"
+                            label="Nome"
+                            color="primary"
+                            variant="outlined"
+                            {...field}
+                            inputProps={{ readOnly: true }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.IdParentesco`}
+                    render={({ field }) => {
+                      const parentescoDescricao =
+                        props.parentesco?.find(
                           item => item.IDPARENTESCO === field.value
                         )?.DESCRICAO || '';
 
-                        return (
-                          <FormControl fullWidth>
-                            <TextField
-                              fullWidth
-                              id={`outlined-read-only-input-parentesco-${index}`}
-                              label="Parentesco"
-                              value={parentescoDescricao}
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </FormControl>
-                        );
-                      }}
-                    />
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id={`outlined-read-only-input-parentesco-${index}`}
+                            label="Parentesco"
+                            value={parentescoDescricao}
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.Idade`}
+                    render={({ field }) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id="outlined-basic 3"
+                            label="Idade"
+                            color="primary"
+                            variant="outlined"
+                            type="number"
+                            {...field}
+                            inputProps={{ readOnly: true }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.IdEstadoCivil`}
+                    render={({ field }) => {
+                      const estadoCivilDescricao =
+                        props.estadoCivil?.find(
+                          item => item.IDESTADOCIVIL === field.value
+                        )?.DESCRICAO || '';
 
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.Idade`}
-                        render={({ field }) => {
-                          return (
-                            <FormControl fullWidth>
-                              <TextField
-                                fullWidth
-                                id="outlined-basic 3"
-                                label="Idade"
-                                color="primary"
-                                variant="outlined"
-                                type="number"
-                                {...field}
-                                inputProps={{ readOnly: true }}
-                              />
-                            </FormControl>
-                          );
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.IdEstadoCivil`}
-                        render={({ field }) => {
-                          const estadoCivilDescricao = props.estadoCivil?.find(
-                            item => item.IDESTADOCIVIL === field.value
-                          )?.DESCRICAO || '';
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id={`outlined-read-only-input-estado-civil-${index}`}
+                            label="Estado Civil"
+                            value={estadoCivilDescricao}
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.IdSitTrabalhista`}
+                    render={({ field }) => {
+                      const situacaoTrabalhistaDescricao =
+                        props.situacaoTrabalhista?.find(
+                          item => item.IDSITTRABALHISTA === field.value
+                        )?.DESCRICAO || '';
 
-                          return (
-                            <FormControl fullWidth>
-                              <TextField
-                                fullWidth
-                                id={`outlined-read-only-input-estado-civil-${index}`}
-                                label="Estado Civil"
-                                value={estadoCivilDescricao}
-                                InputProps={{
-                                  readOnly: true,
-                                }}
-                              />
-                            </FormControl>
-                          );
-                        }}
-                      />
-
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.IdSitTrabalhista`}
-                        render={({ field }) => {
-                          const situacaoTrabalhistaDescricao = props.situacaoTrabalhista?.find(
-                            item => item.IDSITTRABALHISTA === field.value
-                          )?.DESCRICAO || '';
-
-                          return (
-                            <FormControl fullWidth>
-                              <TextField
-                                fullWidth
-                                id={`outlined-read-only-input-situacao-trabalhista-${index}`}
-                                label="Situação Trabalhista"
-                                value={situacaoTrabalhistaDescricao}
-                                InputProps={{
-                                  readOnly: true,
-                                }}
-                              />
-                            </FormControl>
-                          );
-                        }}
-                      />
-
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.Profissao`}
-                        render={({ field }) => {
-                          return (
-                            <FormControl fullWidth>
-                              <TextField
-                                fullWidth
-                                id="outlined-basic 3"
-                                label="Profissão"
-                                color="primary"
-                                variant="outlined"
-                                {...field}
-                                inputProps={{ readOnly: true }}
-                              />
-                            </FormControl>
-                          );
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                    <Controller
-                      control={props.control}
-                      name={`ComposicaoFamiliar.${index}.IdEscolaridade`}
-                      render={({ field }) => {
-                        const escolaridadeDescricao = props.escolaridade?.find(
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id={`outlined-read-only-input-situacao-trabalhista-${index}`}
+                            label="Situação Trabalhista"
+                            value={situacaoTrabalhistaDescricao}
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.Profissao`}
+                    render={({ field }) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id="outlined-basic 3"
+                            label="Profissão"
+                            color="primary"
+                            variant="outlined"
+                            {...field}
+                            inputProps={{ readOnly: true }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.IdEscolaridade`}
+                    render={({ field }) => {
+                      const escolaridadeDescricao =
+                        props.escolaridade?.find(
                           item => item.IDESCOLARIDADE === field.value
                         )?.DESCRICAO || '';
 
-                        return (
-                          <FormControl fullWidth>
-                            <TextField
-                              fullWidth
-                              id={`outlined-read-only-input-${index}`}
-                              label="Escolaridade"
-                              value={escolaridadeDescricao}
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </FormControl>
-                        );
-                      }}
-                    />
-
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Controller
-                        control={props.control}
-                        name={`ComposicaoFamiliar.${index}.Renda`}
-                        render={({ field }) => {
-                          return (
-                            <FormControl fullWidth>
-                              <CurrencyFieldInput label="Renda" {...field} readOnly={true}/>
-                            </FormControl>
-                          );
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                  
-                );
-              }
-            )}
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            fullWidth
+                            id={`outlined-read-only-input-${index}`}
+                            label="Escolaridade"
+                            value={escolaridadeDescricao}
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Controller
+                    control={props.control}
+                    name={`ComposicaoFamiliar.${index}.Renda`}
+                    render={({ field }) => {
+                      return (
+                        <FormControl fullWidth>
+                          <CurrencyFieldInput
+                            label="Renda"
+                            {...field}
+                            readOnly={true}
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            );
+          })}
         </Grid>
 
-        {/* Despesas */} 
+        {/* Despesas */}
         <div className="cabecalho-form-impressao">9. DESPESAS</div>
         <Grid container spacing={0}>
           <Grid container spacing={1}>
@@ -1915,7 +1940,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Renda bruta" {...field} readOnly={true} />
+                      <CurrencyFieldInput
+                        label="Renda bruta"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -1928,7 +1957,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Moradia" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="Moradia"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -1941,7 +1974,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Renda líquida" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="Renda líquida"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -1954,7 +1991,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Educação" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="Educação"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -1989,7 +2030,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Saúde" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="Saúde"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -2002,7 +2047,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="RPC" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="RPC"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -2015,7 +2064,11 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                 render={({ field }) => {
                   return (
                     <FormControl fullWidth>
-                      <CurrencyFieldInput label="Total" {...field} readOnly={true}/>
+                      <CurrencyFieldInput
+                        label="Total"
+                        {...field}
+                        readOnly={true}
+                      />
                     </FormControl>
                   );
                 }}
@@ -2077,7 +2130,9 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Observações que o candidato ou o entrevistador julguem necessárias */}
-          <div className="cabecalho-form-impressao">11. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS </div>
+        <div className="cabecalho-form-impressao">
+          11. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS{' '}
+        </div>
         <Grid container spacing={0}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
@@ -2108,7 +2163,10 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Declaração de responsabilidade pelas informações e documentos */}
-        <div className="cabecalho-form-impressao"> 12. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS </div>
+        <div className="cabecalho-form-impressao">
+          {' '}
+          12. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS{' '}
+        </div>
         <Grid container spacing={0}>
           <div
             style={{
@@ -2119,61 +2177,162 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               width: '100%',
             }}
           >
-            <span style={{  
-              width: '100%', 
-              textAlign: 'justify',
-              textJustify: 'inter-word'
-            }}>
-              Declaro, para efeito de estudo socioeconômico, que as informações prestadas nesse documento de 4 (quatro) páginas numeradas estão completas e são verdadeiras e assumo, por elas e pelas cópias dos documentos apresentados, inteira responsabilidade, ciente das penalidades previstas no Código Penal Brasileiro, Artigos 171 e 299. Autorizo a apresentação desses documentos aos órgãos públicos competentes, se necessário. Declaro ainda estar ciente de que os dados apresentados serão submetidos a uma análise técnica e, se convocado (a), deverei comparecer à Instituição, para entrevista com o (a) Assistente Social, em data e horário previamente agendados pela Instituição, apresentando os originais de todos os documentos anexados ao formulário e quaisquer outros que forem solicitados.
+            <span
+              style={{
+                width: '100%',
+                textAlign: 'justify',
+                textJustify: 'inter-word',
+              }}
+            >
+              Declaro, para efeito de estudo socioeconômico, que as informações
+              prestadas nesse documento de 4 (quatro) páginas numeradas estão
+              completas e são verdadeiras e assumo, por elas e pelas cópias dos
+              documentos apresentados, inteira responsabilidade, ciente das
+              penalidades previstas no Código Penal Brasileiro, Artigos 171 e
+              299. Autorizo a apresentação desses documentos aos órgãos públicos
+              competentes, se necessário. Declaro ainda estar ciente de que os
+              dados apresentados serão submetidos a uma análise técnica e, se
+              convocado (a), deverei comparecer à Instituição, para entrevista
+              com o (a) Assistente Social, em data e horário previamente
+              agendados pela Instituição, apresentando os originais de todos os
+              documentos anexados ao formulário e quaisquer outros que forem
+              solicitados.
             </span>
-            
-            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', paddingBottom: '0px', paddingTop: '25px' }}>
-              <div className='campos-superiores' style={{ 
-                  display: 'flex', flexDirection: 'row', alignContent: 'space-between', justifyContent: 'center', width: '100%' 
-              }}>
-                <div className="campo-cidade" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                  <div className="eixo-horizontal" style={{
-                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                  }}>
-                    <div className="linha" style={{
-                        width: '300px', marginTop: '8px', borderBottom: '2px solid black'
-                    }}></div>
+
+            <div
+              className="assinatura-container"
+              style={{
+                fontFamily: 'Arial, sans-serif',
+                paddingBottom: '0px',
+                paddingTop: '25px',
+              }}
+            >
+              <div
+                className="campos-superiores"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignContent: 'space-between',
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                <div
+                  className="campo-cidade"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingRight: '30px',
+                  }}
+                >
+                  <div
+                    className="eixo-horizontal"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <div
+                      className="linha"
+                      style={{
+                        width: '300px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                      }}
+                    ></div>
                     <p> , </p>
                   </div>
                   <i>(Cidade)</i>
                 </div>
-                <div className="campo-data" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                  <div className="eixo-horizontal" style={{
-                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                  }}>
-                    <div className="linha" style={{
-                        width: '40px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                <div
+                  className="campo-data"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingRight: '30px',
+                  }}
+                >
+                  <div
+                    className="eixo-horizontal"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <div
+                      className="linha"
+                      style={{
+                        width: '40px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                     <b> de </b>
-                    <div className="linha" style={{
-                        width: '180px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                    <div
+                      className="linha"
+                      style={{
+                        width: '180px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                     <b> de </b>
-                    <div className="linha" style={{
-                        width: '80px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                    <div
+                      className="linha"
+                      style={{
+                        width: '80px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                   </div>
                   <i>(Data)</i>
                 </div>
               </div>
-              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '30px', justifyContent: 'center'}}>
-                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+              <div
+                className="campo-assinatura"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  paddingTop: '30px',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  className="linha"
+                  style={{
+                    width: '400px',
+                    marginTop: '8px',
+                    borderBottom: '1px solid black',
+                  }}
+                ></div>
                 <span>Assinatura do(a) responsável pelas informações</span>
               </div>
             </div>
           </div>
-
-
-
         </Grid>
-        
+
         {/* Assinatura do Entrevistador */}
-        <Grid container spacing={0} style={{paddingBottom: '10px', paddingTop: '50px'}}>
+        <Grid
+          container
+          spacing={0}
+          style={{ paddingBottom: '10px', paddingTop: '50px' }}
+        >
           <div
             style={{
               display: 'flex',
@@ -2183,21 +2342,38 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               width: '100%',
             }}
           >
-            
-            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', marginTop: '16px'}}>
-              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', justifyContent: 'center'}}>
-                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+            <div
+              className="assinatura-container"
+              style={{ fontFamily: 'Arial, sans-serif', marginTop: '16px' }}
+            >
+              <div
+                className="campo-assinatura"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: '20px',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  className="linha"
+                  style={{
+                    width: '400px',
+                    marginTop: '8px',
+                    borderBottom: '1px solid black',
+                  }}
+                ></div>
                 <span>Assinatura do(a) Entrevistador(a)</span>
               </div>
             </div>
           </div>
-
-
-
         </Grid>
 
         {/* Situação socioeconômica familiar */}
-        <div className="cabecalho-form-impressao">13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR</div>
+        <div className="cabecalho-form-impressao">
+          13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR
+        </div>
         <Grid container spacing={0}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
@@ -2227,59 +2403,70 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
           </Grid>
         </Grid>
 
-        {/* Parecer do Assistente Social */}  
-        <div className="cabecalho-form-impressao">14. PARECER DO (A) ASSISTENTE SOCIAL</div>    
+        {/* Parecer do Assistente Social */}
+        <div className="cabecalho-form-impressao">
+          14. PARECER DO (A) ASSISTENTE SOCIAL
+        </div>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-              <Controller
-                control={props.control}
-                name="ParecerAssistSocial.ParecerAssistSocial"
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        multiline
-                        minRows={5}
-                        {...field}
-                        InputProps={{
-                          readOnly: true,
-                          style: {
-                            textAlign: 'justify',
-                            whiteSpace: 'pre-wrap', // Garante que as quebras de linha e espaços sejam preservados
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
+            <Controller
+              control={props.control}
+              name="ParecerAssistSocial.ParecerAssistSocial"
+              render={({ field }) => {
+                return (
+                  <FormControl fullWidth>
+                    <TextField
+                      multiline
+                      minRows={5}
+                      {...field}
+                      InputProps={{
+                        readOnly: true,
+                        style: {
+                          textAlign: 'justify',
+                          whiteSpace: 'pre-wrap', // Garante que as quebras de linha e espaços sejam preservados
+                        },
+                      }}
+                    />
+                  </FormControl>
+                );
+              }}
+            />
           </Grid>
           <Grid item xs={12}>
-              <Controller
-                control={props.control}
-                name="ParecerAssistSocial.StatusProcesso"
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        fullWidth
-                        id="outlined-basic 3"
-                        label="O Processo foi"
-                        color="primary"
-                        variant="outlined"
-                        value={field.value === "D" ? "Deferido" : field.value === "A" ? "Em Análise" : "Indeferido"}
-                        inputProps={{ readOnly: true }}
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
+            <Controller
+              control={props.control}
+              name="ParecerAssistSocial.StatusProcesso"
+              render={({ field }) => {
+                return (
+                  <FormControl fullWidth>
+                    <TextField
+                      fullWidth
+                      id="outlined-basic 3"
+                      label="O Processo foi"
+                      color="primary"
+                      variant="outlined"
+                      value={
+                        field.value === 'D'
+                          ? 'Deferido'
+                          : field.value === 'A'
+                          ? 'Em Análise'
+                          : 'Indeferido'
+                      }
+                      inputProps={{ readOnly: true }}
+                    />
+                  </FormControl>
+                );
+              }}
+            />
           </Grid>
         </Grid>
-        
-        
+
         {/* Assinatura da Assistente Social */}
-        <Grid container spacing={0} style={{height: '200px', paddingTop: '0px'}}>
+        <Grid
+          container
+          spacing={0}
+          style={{ height: '200px', paddingTop: '0px' }}
+        >
           <div
             style={{
               display: 'flex',
@@ -2289,54 +2476,135 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
               width: '100%',
             }}
           >
-            
-            <div className="assinatura-container" style={{ fontFamily: 'Arial, sans-serif', paddingBottom: '20px' /* Este paddingBottom garante que a assinatura fique na mesma página */ }}>
-              <div className='campos-superiores' style={{ 
-                  display: 'flex', flexDirection: 'row', alignContent: 'space-between', justifyContent: 'center', width: '100%' 
-              }}>
-                <div className="campo-cidade" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                  <div className="eixo-horizontal" style={{
-                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                  }}>
-                    <div className="linha" style={{
-                        width: '300px', marginTop: '8px', borderBottom: '2px solid black'
-                    }}></div>
+            <div
+              className="assinatura-container"
+              style={{
+                fontFamily: 'Arial, sans-serif',
+                paddingBottom:
+                  '20px' /* Este paddingBottom garante que a assinatura fique na mesma página */,
+              }}
+            >
+              <div
+                className="campos-superiores"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignContent: 'space-between',
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                <div
+                  className="campo-cidade"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingRight: '30px',
+                  }}
+                >
+                  <div
+                    className="eixo-horizontal"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <div
+                      className="linha"
+                      style={{
+                        width: '300px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                      }}
+                    ></div>
                     <p> , </p>
                   </div>
                   <i>(Cidade)</i>
                 </div>
-                <div className="campo-data" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '30px' }}>
-                  <div className="eixo-horizontal" style={{
-                    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'
-                  }}>
-                    <div className="linha" style={{
-                        width: '40px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                <div
+                  className="campo-data"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingRight: '30px',
+                  }}
+                >
+                  <div
+                    className="eixo-horizontal"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <div
+                      className="linha"
+                      style={{
+                        width: '40px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                     <b> de </b>
-                    <div className="linha" style={{
-                        width: '180px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                    <div
+                      className="linha"
+                      style={{
+                        width: '180px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                     <b> de </b>
-                    <div className="linha" style={{
-                        width: '80px', marginTop: '8px', borderBottom: '2px solid black', marginRight: '8px', marginLeft: '8px'
-                    }}></div>
+                    <div
+                      className="linha"
+                      style={{
+                        width: '80px',
+                        marginTop: '8px',
+                        borderBottom: '2px solid black',
+                        marginRight: '8px',
+                        marginLeft: '8px',
+                      }}
+                    ></div>
                   </div>
                   <i>(Data)</i>
                 </div>
               </div>
-              <div className="campo-assinatura" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', justifyContent: 'center'}}>
-                <div className="linha" style={{ width: '400px', marginTop: '8px', borderBottom: '1px solid black' }}></div>
+              <div
+                className="campo-assinatura"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: '20px',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  className="linha"
+                  style={{
+                    width: '400px',
+                    marginTop: '8px',
+                    borderBottom: '1px solid black',
+                  }}
+                ></div>
                 <span>Assinatura do(a) Assistente Social</span>
                 <span>CRESS Nº {'     '}</span>
               </div>
             </div>
           </div>
-
-
-
         </Grid>
       </Grid>
     </ThemeProvider>
   );
 }
-
