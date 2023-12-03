@@ -42,36 +42,14 @@ interface IdentificacaoCandidatoProps {
   errors: FieldErrors<Ficha>;
 }
 
-//1. IDENTIFICAÇÃO DO CANDIDATO
 export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
   useEffect(() => {
     registerLocale('pt-BR', ptBR);
   }, []);
 
-  function calcularIdade(dataNascimento: Date | null) {
-    if (dataNascimento === null) {
-      return '';
-    }
-    const hoje = new Date();
-    const dataNasc = new Date(dataNascimento);
-    let idade = hoje.getFullYear() - dataNasc.getFullYear();
-    // Verificar se o aniversário já ocorreu neste ano
-    const mesAtual = hoje.getMonth();
-    const diaAtual = hoje.getDate();
-    const mesNasc = dataNasc.getMonth();
-    const diaNasc = dataNasc.getDate();
-
-    if (mesAtual < mesNasc || (mesAtual === mesNasc && diaAtual < diaNasc)) {
-      idade--;
-    }
-
-    return idade + ' anos';
-  }
-
   return (
     <React.Fragment>
       <div className="cabecalho-form">1. IDENTIFICAÇÃO DO CANDIDATO</div>
-
       <Grid container spacing={1}>
         <Grid item xs={10}>
           <Controller
@@ -204,16 +182,22 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
           />
         </Grid>
         <Grid item xs={2}>
-          <TextField
-            fullWidth
-            id="outlined-basic 3"
-            label="Idade"
-            color="primary"
-            variant="outlined"
-            value={`${calcularIdade(
-              props.watch('IdentificacaoCandidato.DataNascimento')
-            )}`}
-            disabled
+          <Controller
+            control={props.control}
+            name="IdentificacaoCandidato.EncaminhadoPor"
+            render={({ field }) => {
+              return (
+                <TextField
+                  fullWidth
+                  id="outlined-basic 334"
+                  label="Encaminhado por"
+                  color="primary"
+                  variant="outlined"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              );
+            }}
           />
         </Grid>
         <Grid item xs={2}>

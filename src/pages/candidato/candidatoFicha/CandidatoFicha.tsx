@@ -26,7 +26,7 @@ import axiosInstance from '../../../components/utils/axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DateFormToSend } from '../../../Shared/FormatadoresDadosEnvio';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BlockUI from '../../../components/utils/BlockUI/BlockUI';
 import { removeMask } from '../../../Shared/Mascaras';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -69,6 +69,7 @@ export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
     CadUnico: string;
+    EncaminhadoPor: string;
     Cpf: string;
     DocIdentidade: string;
     DataNascimento: Date | null;
@@ -189,6 +190,7 @@ export interface Ficha {
 export interface FichaEdit {
   IDFICHA: number;
   CADUNICO: string;
+  ENCAMINHADOPOR: string;
   NOMECOMPLETO: string;
   CPF: string;
   DOCIDENTIDADE: string;
@@ -306,6 +308,7 @@ export interface FichaEdit {
 
 export function CandidatoFicha() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [situacaoTrabalhista, setSituacaoTrabalhista] =
     useState<SituacaoTrabalhista[]>();
   const [racaEtnia, setRacaEtnia] = useState<RacaEtnia[]>();
@@ -435,6 +438,7 @@ export function CandidatoFicha() {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
         CadUnico: fichaCandidato?.CADUNICO ?? '',
+        EncaminhadoPor: fichaCandidato?.ENCAMINHADOPOR ?? '',
         Cpf: fichaCandidato?.CPF ?? '',
         DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',
         DataNascimento: fichaCandidato?.DATANASCIMENTO ?? null,
@@ -564,6 +568,10 @@ export function CandidatoFicha() {
     const dataForm = new FormData();
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
     dataForm.append('CADUNICO', ficha.IdentificacaoCandidato.CadUnico);
+    dataForm.append(
+      'ENCAMINHADOPOR',
+      ficha.IdentificacaoCandidato.EncaminhadoPor
+    );
     dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
     dataForm.append(
       'DOCIDENTIDADE',
@@ -859,9 +867,10 @@ export function CandidatoFicha() {
     });
     try {
       setIsLoading(true);
-      await axiosInstance
-        .post(`/createFichaCandidato`, dataForm)
-        .then(res => toast.success(res.data.message));
+      await axiosInstance.post(`/createFichaCandidato`, dataForm).then(res => {
+        toast.success(res.data.message);
+        navigate('/candidato');
+      });
     } catch (err: any) {
       const error = err.response?.data;
       Object.keys(error).map(key => {
@@ -877,6 +886,10 @@ export function CandidatoFicha() {
     dataForm.append('IDFICHA', fichaCandidato.IDFICHA.toString());
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
     dataForm.append('CADUNICO', ficha.IdentificacaoCandidato.CadUnico);
+    dataForm.append(
+      'ENCAMINHADOPOR',
+      ficha.IdentificacaoCandidato.EncaminhadoPor
+    );
     dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
     dataForm.append(
       'DOCIDENTIDADE',
@@ -1180,9 +1193,10 @@ export function CandidatoFicha() {
     });
     try {
       setIsLoading(true);
-      await axiosInstance
-        .put(`/updateFicha`, dataForm)
-        .then(res => toast.success(res.data.message));
+      await axiosInstance.put(`/updateFicha`, dataForm).then(res => {
+        toast.success(res.data.message);
+        navigate('/candidato');
+      });
     } catch (err: any) {
       const error = err.response?.data;
       Object.keys(error).map(key => {

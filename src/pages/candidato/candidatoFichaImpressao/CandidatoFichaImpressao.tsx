@@ -44,6 +44,7 @@ export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
     CadUnico: string;
+    EncaminhadoPor: string;
     DataUltimaAlt: Date;
     Cpf: string;
     DocIdentidade: string;
@@ -165,6 +166,7 @@ export interface FichaEdit {
   IDFICHA: number;
   NOMECOMPLETO: string;
   CADUNICO: string;
+  ENCAMINHADOPOR: string;
   DATAULTIMAALT: Date;
   CPF: string;
   DOCIDENTIDADE: string;
@@ -298,6 +300,7 @@ export function CandidatoFichaImpressao() {
   const [escolaridade, setEscolaridade] = useState<Escolaridade[]>();
   const [coberturaMoradia, setCoberturaMoradia] =
     useState<CoberturaMoradia[]>();
+
   const getRacaEtnia = useCallback(async () => {
     try {
       await axiosInstance.get(`/racaEtnia`).then(res => {
@@ -398,6 +401,7 @@ export function CandidatoFichaImpressao() {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
         CadUnico: fichaCandidato?.CADUNICO ?? '',
+        EncaminhadoPor: fichaCandidato?.ENCAMINHADOPOR ?? '',
         DataUltimaAlt: fichaCandidato?.DATAULTIMAALT ?? undefined,
         Cpf: fichaCandidato?.CPF ?? '',
         DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',

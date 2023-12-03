@@ -162,7 +162,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
     );
 
     setTotalRendaFamiliar(totalRenda);
-  }, [props.getValues, props.watch]);
+  }, [props, props.getValues, props.watch]);
 
   useEffect(() => {
     registerLocale('pt-BR', ptBR);
@@ -305,7 +305,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           </Grid>
         </Grid>
         <Grid container className="print-section" spacing={1}>
-          <Grid item xs={12}>
+          <Grid item xs={9}>
             <Controller
               control={props.control}
               name="IdentificacaoCandidato.NomeCompleto"
@@ -339,6 +339,27 @@ export function ImpressaoCandidato(props: FichaImpressao) {
                     value={field.value}
                     readOnly={true}
                     onChange={field.onChange}
+                  />
+                );
+              }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Controller
+              control={props.control}
+              name="IdentificacaoCandidato.EncaminhadoPor"
+              render={({ field }) => {
+                return (
+                  <TextField
+                    fullWidth
+                    id="outlined-basic 31242"
+                    label="Encaminhado por"
+                    color="primary"
+                    variant="outlined"
+                    {...field}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 );
               }}
@@ -1004,10 +1025,13 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           )}
         </Grid>
         {/* Dados educacionais da ficha */}
-        <div className="cabecalho-form-impressao">
-          3. DADOS EDUCACIONAIS DO CANDIDATO
-        </div>
         <Grid container className="print-section" spacing={1}>
+          <Grid item xs={12}>
+            <div className="cabecalho-form-impressao">
+              3. DADOS EDUCACIONAIS DO CANDIDATO
+            </div>
+          </Grid>
+
           <Grid item xs={3}>
             <Controller
               control={props.control}
@@ -1452,10 +1476,12 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Condições sociais e de saúde da família */}
-        <div className="cabecalho-form-impressao">
-          6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
-        </div>
         <Grid container className="print-section" spacing={1}>
+          <Grid item xs={12}>
+            <div className="cabecalho-form-impressao">
+              6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
+            </div>
+          </Grid>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -2215,8 +2241,11 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Outros gastos */}
-        <div className="cabecalho-form-impressao">10. OUTROS GASTOS</div>
+
         <Grid container className="print-section" spacing={0}>
+          <Grid item xs={12}>
+            <div className="cabecalho-form-impressao">10. OUTROS GASTOS</div>
+          </Grid>
           <Grid container className="print-section" spacing={1}>
             <Grid item xs={12}>
               <Controller
@@ -2488,10 +2517,13 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         </Grid>
 
         {/* Situação socioeconômica familiar */}
-        <div className="cabecalho-form-impressao">
-          13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR
-        </div>
+
         <Grid container className="print-section" spacing={0}>
+          <Grid item xs={12}>
+            <div className="cabecalho-form-impressao">
+              13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR
+            </div>
+          </Grid>
           <Grid container className="print-section" spacing={1}>
             <Grid item xs={12}>
               <Controller
