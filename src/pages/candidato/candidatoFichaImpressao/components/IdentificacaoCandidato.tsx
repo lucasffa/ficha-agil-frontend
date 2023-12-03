@@ -835,7 +835,7 @@ export function IdentificacaoCandidato(props: FichaImpressao) {
                   <TextField
                     fullWidth
                     id={`outlined-basic-${index}-1`}
-                    label="Número da Ficha"
+                    label="Nº Ficha"
                     color="primary"
                     variant="outlined"
                     type="number"
