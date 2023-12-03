@@ -1021,7 +1021,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
               );
             })
           ) : (
-            <p>Não há fichas do Grupo Familiar</p>
+            <p>Não há fichas do Grupo Familiar.</p>
           )}
         </Grid>
         {/* Dados educacionais da ficha */}
@@ -1258,78 +1258,82 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         {/* Benefícios pleiteados da ficha */}
         <div className="cabecalho-form-impressao">4. BENEFÍCIOS PLEITEADOS</div>
         <Grid container className="print-section" spacing={0}>
-          {props.getValues('BeneficiosPleiteados').map((item, index) => {
-            return (
-              <Grid
-                container
-                className="print-section"
-                key={index}
-                spacing={1}
-                style={{ marginBottom: '16px' }}
-              >
-                <Grid item xs={8}>
-                  <Controller
-                    control={props.control}
-                    name={`BeneficiosPleiteados.${index}.NomeCursoPretendido`}
-                    render={({ field }) => (
-                      <TextField
-                        fullWidth
-                        id={`outlined-basic-${index}-1`}
-                        label="Cursos ou Atividades pretendidos (Na ordem de prioridade)
+          {props.getValues('BeneficiosPleiteados').length > 0 ? (
+            props.getValues('BeneficiosPleiteados')?.map((item, index) => {
+              return (
+                <Grid
+                  container
+                  className="print-section"
+                  key={index}
+                  spacing={1}
+                  style={{ marginBottom: '16px' }}
+                >
+                  <Grid item xs={8}>
+                    <Controller
+                      control={props.control}
+                      name={`BeneficiosPleiteados.${index}.NomeCursoPretendido`}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          id={`outlined-basic-${index}-1`}
+                          label="Cursos ou Atividades pretendidos (Na ordem de prioridade)
                           "
-                        color="primary"
-                        variant="outlined"
-                        {...field}
-                        inputProps={{ readOnly: true }}
-                      />
-                    )}
-                  />
+                          color="primary"
+                          variant="outlined"
+                          {...field}
+                          inputProps={{ readOnly: true }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`BeneficiosPleiteados.${index}.Turno`}
+                      render={({ field }) => {
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id="outlined-read-only-input"
+                              label="Turno"
+                              value={
+                                field.value === 'M'
+                                  ? 'Manhã'
+                                  : field.value === 'T'
+                                  ? 'Tarde'
+                                  : 'Noite'
+                              }
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`BeneficiosPleiteados.${index}.Horario`}
+                      render={({ field }) => (
+                        <InputComMascara
+                          name="Horário"
+                          mask={MascaraInput.horario}
+                          value={field.value}
+                          readOnly={true}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`BeneficiosPleiteados.${index}.Turno`}
-                    render={({ field }) => {
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id="outlined-read-only-input"
-                            label="Turno"
-                            value={
-                              field.value === 'M'
-                                ? 'Manhã'
-                                : field.value === 'T'
-                                ? 'Tarde'
-                                : 'Noite'
-                            }
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`BeneficiosPleiteados.${index}.Horario`}
-                    render={({ field }) => (
-                      <InputComMascara
-                        name="Horário"
-                        mask={MascaraInput.horario}
-                        value={field.value}
-                        readOnly={true}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p>Não há benefícios adicionados.</p>
+          )}
         </Grid>
 
         {/* Condições de saúde do candidato */}
@@ -1855,203 +1859,207 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           </div>
         </div>
         <Grid container className="print-section" spacing={0}>
-          {props.getValues('ComposicaoFamiliar').map((item, index) => {
-            return (
-              <Grid
-                container
-                className="print-section"
-                key={index}
-                spacing={1}
-                style={{ marginBottom: '16px' }}
-              >
-                <Grid item xs={3}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.Nome`}
-                    render={({ field }) => {
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id="outlined-basic 3"
-                            label="Nome"
-                            color="primary"
-                            variant="outlined"
-                            {...field}
-                            inputProps={{ readOnly: true }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.IdParentesco`}
-                    render={({ field }) => {
-                      const parentescoDescricao =
-                        props.parentesco?.find(
-                          item => item.IDPARENTESCO === field.value
-                        )?.DESCRICAO || '';
+          {props.getValues('ComposicaoFamiliar').length > 0 ? (
+            props.getValues('ComposicaoFamiliar')?.map((item, index) => {
+              return (
+                <Grid
+                  container
+                  className="print-section"
+                  key={index}
+                  spacing={1}
+                  style={{ marginBottom: '16px' }}
+                >
+                  <Grid item xs={3}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.Nome`}
+                      render={({ field }) => {
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id="outlined-basic 3"
+                              label="Nome"
+                              color="primary"
+                              variant="outlined"
+                              {...field}
+                              inputProps={{ readOnly: true }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.IdParentesco`}
+                      render={({ field }) => {
+                        const parentescoDescricao =
+                          props.parentesco?.find(
+                            item => item.IDPARENTESCO === field.value
+                          )?.DESCRICAO || '';
 
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id={`outlined-read-only-input-parentesco-${index}`}
-                            label="Parentesco"
-                            value={parentescoDescricao}
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.Idade`}
-                    render={({ field }) => {
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id="outlined-basic 3"
-                            label="Idade"
-                            color="primary"
-                            variant="outlined"
-                            type="number"
-                            {...field}
-                            inputProps={{ readOnly: true }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.IdEstadoCivil`}
-                    render={({ field }) => {
-                      const estadoCivilDescricao =
-                        props.estadoCivil?.find(
-                          item => item.IDESTADOCIVIL === field.value
-                        )?.DESCRICAO || '';
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id={`outlined-read-only-input-parentesco-${index}`}
+                              label="Parentesco"
+                              value={parentescoDescricao}
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.Idade`}
+                      render={({ field }) => {
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id="outlined-basic 3"
+                              label="Idade"
+                              color="primary"
+                              variant="outlined"
+                              type="number"
+                              {...field}
+                              inputProps={{ readOnly: true }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.IdEstadoCivil`}
+                      render={({ field }) => {
+                        const estadoCivilDescricao =
+                          props.estadoCivil?.find(
+                            item => item.IDESTADOCIVIL === field.value
+                          )?.DESCRICAO || '';
 
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id={`outlined-read-only-input-estado-civil-${index}`}
-                            label="Estado Civil"
-                            value={estadoCivilDescricao}
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.IdSitTrabalhista`}
-                    render={({ field }) => {
-                      const situacaoTrabalhistaDescricao =
-                        props.situacaoTrabalhista?.find(
-                          item => item.IDSITTRABALHISTA === field.value
-                        )?.DESCRICAO || '';
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id={`outlined-read-only-input-estado-civil-${index}`}
+                              label="Estado Civil"
+                              value={estadoCivilDescricao}
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.IdSitTrabalhista`}
+                      render={({ field }) => {
+                        const situacaoTrabalhistaDescricao =
+                          props.situacaoTrabalhista?.find(
+                            item => item.IDSITTRABALHISTA === field.value
+                          )?.DESCRICAO || '';
 
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id={`outlined-read-only-input-situacao-trabalhista-${index}`}
-                            label="Situação Trabalhista"
-                            value={situacaoTrabalhistaDescricao}
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.Profissao`}
-                    render={({ field }) => {
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id="outlined-basic 3"
-                            label="Profissão"
-                            color="primary"
-                            variant="outlined"
-                            {...field}
-                            inputProps={{ readOnly: true }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.IdEscolaridade`}
-                    render={({ field }) => {
-                      const escolaridadeDescricao =
-                        props.escolaridade?.find(
-                          item => item.IDESCOLARIDADE === field.value
-                        )?.DESCRICAO || '';
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id={`outlined-read-only-input-situacao-trabalhista-${index}`}
+                              label="Situação Trabalhista"
+                              value={situacaoTrabalhistaDescricao}
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.Profissao`}
+                      render={({ field }) => {
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id="outlined-basic 3"
+                              label="Profissão"
+                              color="primary"
+                              variant="outlined"
+                              {...field}
+                              inputProps={{ readOnly: true }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.IdEscolaridade`}
+                      render={({ field }) => {
+                        const escolaridadeDescricao =
+                          props.escolaridade?.find(
+                            item => item.IDESCOLARIDADE === field.value
+                          )?.DESCRICAO || '';
 
-                      return (
-                        <FormControl fullWidth>
-                          <TextField
-                            fullWidth
-                            id={`outlined-read-only-input-${index}`}
-                            label="Escolaridade"
-                            value={escolaridadeDescricao}
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
+                        return (
+                          <FormControl fullWidth>
+                            <TextField
+                              fullWidth
+                              id={`outlined-read-only-input-${index}`}
+                              label="Escolaridade"
+                              value={escolaridadeDescricao}
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Controller
+                      control={props.control}
+                      name={`ComposicaoFamiliar.${index}.Renda`}
+                      render={({ field }) => {
+                        return (
+                          <FormControl fullWidth>
+                            <CurrencyFieldInput
+                              label="Renda"
+                              {...field}
+                              readOnly={true}
+                            />
+                          </FormControl>
+                        );
+                      }}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                  <Controller
-                    control={props.control}
-                    name={`ComposicaoFamiliar.${index}.Renda`}
-                    render={({ field }) => {
-                      return (
-                        <FormControl fullWidth>
-                          <CurrencyFieldInput
-                            label="Renda"
-                            {...field}
-                            readOnly={true}
-                          />
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p>Não há composição familiar adicionada.</p>
+          )}
         </Grid>
 
         {/* Despesas */}
@@ -2615,7 +2623,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           container
           className="print-section"
           spacing={0}
-          style={{ height: '300px', paddingTop: '20px', paddingBottom: '20px' }}
+          style={{ height: '800px', paddingTop: '20px', paddingBottom: '20px' }}
         >
           <div
             style={{
