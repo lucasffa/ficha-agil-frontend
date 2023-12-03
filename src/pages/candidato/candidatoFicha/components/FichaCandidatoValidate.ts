@@ -25,9 +25,8 @@ const validationSchemaFicha = object().shape({
   OutrasFichasGrupoFamiliar: array().of(
     object({
       IdFicha: number().required('Campo obrigatório'),
-      NomeCompleto: string().required('Campo obrigatório'),
+      NomeCompletoFamiliar: string().required('Campo obrigatório'),
       IdParentesco: number().required('Campo obrigatório'),
-      IdGrupoFamiliar: number().required('Campo obrigatório'),
     })
   ),
   DadosEducacionaisCandidato: object({
