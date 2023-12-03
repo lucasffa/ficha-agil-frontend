@@ -7,7 +7,6 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import logoItaka from '../../../../assets/images/logo-itaka.svg';
 import { useEffect, useState } from 'react';
 import {
   InputComMascara,
@@ -27,6 +26,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ptBR from 'date-fns/locale/pt-BR';
 import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
 import '../candidatoFichaImpressao.scss';
+import logoItaka from '../../../../assets/images/logo-itaka.svg';
 
 interface FichaImpressao {
   control: Control<Ficha>;
@@ -190,7 +190,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container spacing={0}>
+      <Grid container className='print-section' spacing={0}>
+        
         <div
           style={{
             display: 'flex',
@@ -208,7 +209,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             }}
           >
             <img
-              style={{ width: '150px', height: '150px' }}
+              style={{ width: '100px', height: '100px' }}
               src={logoItaka}
               alt="Logo Itaka Ficha"
               title="Logo Itaka Ficha"
@@ -221,8 +222,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
               }}
             >
               <b>
-                <p>Obra Social Itaka Escolápios</p>
-                <p>Governador Valadares</p>
+                <h6>Obra Social Itaka Escolápios</h6>
+                <h6>Governador Valadares</h6>
               </b>
             </div>
           </div>
@@ -235,19 +236,20 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             }}
           >
             <b>
-              <h2 style={{ textAlign: 'right' }}>
+              <h5 style={{ textAlign: 'right' }}>
                 Ficha cadastral e Formulário socioeconômico
                 <br />
                 para atendimento socioassistencial
-              </h2>
+              </h5>
             </b>
           </div>
         </div>
+
         {/* Identificação do candidato */}
         <div className="cabecalho-form-impressao">
           1. IDENTIFICAÇÃO DO CANDIDATO
         </div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -863,11 +865,11 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           2. OUTRAS FICHAS DO GRUPO FAMILIAR
         </div>
-        <Grid container spacing={0}>
+        <Grid container className='print-section' spacing={0}>
           {props.getValues('OutrasFichasGrupoFamiliar').map((item, index) => {
             return (
               <Grid
-                container
+                container className='print-section'
                 key={index}
                 spacing={1}
                 style={{ marginBottom: '16px' }}
@@ -946,7 +948,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           3. DADOS EDUCACIONAIS DO CANDIDATO
         </div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={3}>
             <Controller
               control={props.control}
@@ -1172,11 +1174,11 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Benefícios pleiteados da ficha */}
         <div className="cabecalho-form-impressao">4. BENEFÍCIOS PLEITEADOS</div>
-        <Grid container spacing={0}>
+        <Grid container className='print-section' spacing={0}>
           {props.getValues('BeneficiosPleiteados').map((item, index) => {
             return (
               <Grid
-                container
+                container className='print-section'
                 key={index}
                 spacing={1}
                 style={{ marginBottom: '16px' }}
@@ -1250,7 +1252,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           5. CONDIÇÕES DE SAÚDE DO CANDIDATO
         </div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -1393,7 +1395,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
         </div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -1500,7 +1502,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Condições de moradia */}
         <div className="cabecalho-form-impressao">7. CONDIÇÕES DE MORADIA</div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={3}>
             <Controller
               control={props.control}
@@ -1766,11 +1768,11 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             })}
           </div>
         </div>
-        <Grid container spacing={0}>
+        <Grid container className='print-section' spacing={0}>
           {props.getValues('ComposicaoFamiliar').map((item, index) => {
             return (
               <Grid
-                container
+                container className='print-section'
                 key={index}
                 spacing={1}
                 style={{ marginBottom: '16px' }}
@@ -1967,8 +1969,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Despesas */}
         <div className="cabecalho-form-impressao">9. DESPESAS</div>
-        <Grid container spacing={0}>
-          <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={0}>
+          <Grid container className='print-section' spacing={1}>
             <Grid item xs={6}>
               <Controller
                 control={props.control}
@@ -2153,8 +2155,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Outros gastos */}
         <div className="cabecalho-form-impressao">10. OUTROS GASTOS</div>
-        <Grid container spacing={0}>
-          <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={0}>
+          <Grid container className='print-section' spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2186,8 +2188,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           11. OBSERVAÇÕES QUE O CANDIDATO OU O ENTREVISTADOR JULGUEM NECESSÁRIAS{' '}
         </div>
-        <Grid container spacing={0}>
-          <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={0}>
+          <Grid container className='print-section' spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2220,7 +2222,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           {' '}
           12. DECLARAÇÃO DE RESPONSABILIDADE PELAS INFORMAÇÕES E DOCUMENTOS{' '}
         </div>
-        <Grid container spacing={0}>
+        <Grid container className='print-section' spacing={0}>
           <div
             style={{
               display: 'flex',
@@ -2253,7 +2255,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             </span>
 
             <div
-              className="assinatura-container"
+              className="assinatura-container className='print-section'"
               style={{
                 fontFamily: 'Arial, sans-serif',
                 paddingBottom: '0px',
@@ -2382,7 +2384,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Assinatura do Entrevistador */}
         <Grid
-          container
+          container className='print-section'
           spacing={0}
           style={{ paddingBottom: '10px', paddingTop: '50px' }}
         >
@@ -2396,7 +2398,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             }}
           >
             <div
-              className="assinatura-container"
+              className="assinatura-container className='print-section'"
               style={{ fontFamily: 'Arial, sans-serif', marginTop: '16px' }}
             >
               <div
@@ -2427,8 +2429,8 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           13. SITUAÇÃO SOCIOECONÔMICA FAMILIAR
         </div>
-        <Grid container spacing={0}>
-          <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={0}>
+          <Grid container className='print-section' spacing={1}>
             <Grid item xs={12}>
               <Controller
                 control={props.control}
@@ -2460,7 +2462,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
         <div className="cabecalho-form-impressao">
           14. PARECER DO (A) ASSISTENTE SOCIAL
         </div>
-        <Grid container spacing={1}>
+        <Grid container className='print-section' spacing={1}>
           <Grid item xs={12}>
             <Controller
               control={props.control}
@@ -2516,9 +2518,9 @@ export function ImpressaoCandidato(props: FichaImpressao) {
 
         {/* Assinatura da Assistente Social */}
         <Grid
-          container
+          container className='print-section'
           spacing={0}
-          style={{ height: '200px', paddingTop: '0px' }}
+          style={{ height: '300px', paddingTop: '20px', paddingBottom: '20px' }}
         >
           <div
             style={{
@@ -2530,11 +2532,11 @@ export function ImpressaoCandidato(props: FichaImpressao) {
             }}
           >
             <div
-              className="assinatura-container"
+              className="assinatura-container className='print-section'"
               style={{
                 fontFamily: 'Arial, sans-serif',
                 paddingBottom:
-                  '20px' /* Este paddingBottom garante que a assinatura fique na mesma página */,
+                  '30px' /* Este paddingBottom garante que a assinatura fique na mesma página */,
               }}
             >
               <div

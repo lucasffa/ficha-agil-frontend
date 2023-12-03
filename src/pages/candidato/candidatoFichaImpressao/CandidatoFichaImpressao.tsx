@@ -1153,6 +1153,7 @@ export function CandidatoFichaImpressao() {
         })}
         className="form-cadastrar-ficha-impressao"
       >
+        
         <div className="container-ficha-impressao">
           <ImpressaoCandidato
             control={control}
