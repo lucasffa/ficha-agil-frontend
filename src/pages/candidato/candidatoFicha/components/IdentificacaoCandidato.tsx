@@ -73,7 +73,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
       <div className="cabecalho-form">1. IDENTIFICAÇÃO DO CANDIDATO</div>
 
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <Controller
             control={props.control}
             name="IdentificacaoCandidato.NomeCompleto"
@@ -87,6 +87,25 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   variant="outlined"
                   {...field}
                   error={!!props.errors.IdentificacaoCandidato?.NomeCompleto}
+                />
+              );
+            }}
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <Controller
+            control={props.control}
+            name="IdentificacaoCandidato.CadUnico"
+            render={({ field }) => {
+              return (
+                <TextField
+                  fullWidth
+                  id="outlined-basic 1"
+                  label="Nº Cad. Único"
+                  color="primary"
+                  variant="outlined"
+                  {...field}
+                  error={!!props.errors.IdentificacaoCandidato?.CadUnico}
                 />
               );
             }}

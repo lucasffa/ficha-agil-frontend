@@ -68,6 +68,7 @@ export type CoberturaMoradia = {
 export interface Ficha {
   IdentificacaoCandidato: {
     NomeCompleto: string;
+    CadUnico: string;
     Cpf: string;
     DocIdentidade: string;
     DataNascimento: Date | null;
@@ -187,6 +188,7 @@ export interface Ficha {
 
 export interface FichaEdit {
   IDFICHA: number;
+  CADUNICO: string;
   NOMECOMPLETO: string;
   CPF: string;
   DOCIDENTIDADE: string;
@@ -421,10 +423,11 @@ export function CandidatoFicha() {
     formState: { errors },
   } = useForm<Ficha>({
     mode: 'onBlur',
-    resolver: yupResolver(validationSchemaFicha),
+    //resolver: yupResolver(validationSchemaFicha),
     defaultValues: {
       IdentificacaoCandidato: {
         NomeCompleto: fichaCandidato?.NOMECOMPLETO,
+        CadUnico: fichaCandidato?.CADUNICO ?? '',
         Cpf: fichaCandidato?.CPF ?? '',
         DocIdentidade: fichaCandidato?.DOCIDENTIDADE ?? '',
         DataNascimento: fichaCandidato?.DATANASCIMENTO ?? null,
@@ -553,6 +556,7 @@ export function CandidatoFicha() {
   async function postFicha(ficha: Ficha) {
     const dataForm = new FormData();
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
+    dataForm.append('CADUNICO', ficha.IdentificacaoCandidato.CadUnico);
     dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
     dataForm.append(
       'DOCIDENTIDADE',
@@ -865,6 +869,7 @@ export function CandidatoFicha() {
     const dataForm = new FormData();
     dataForm.append('IDFICHA', fichaCandidato.IDFICHA.toString());
     dataForm.append('NOMECOMPLETO', ficha.IdentificacaoCandidato.NomeCompleto);
+    dataForm.append('CADUNICO', ficha.IdentificacaoCandidato.CadUnico);
     dataForm.append('CPF', removeMask(ficha.IdentificacaoCandidato.Cpf));
     dataForm.append(
       'DOCIDENTIDADE',

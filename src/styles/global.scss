@@ -38,11 +38,15 @@ textarea {
 .areas {
   width: 97%;
   height: 100%;
-  // Se adicionar esses margins, a ficha não vai imprimir corretamente nem no Chrome nem no Edge
-  //margin-top: 10px;
-  //margin-bottom: 30px;
+  margin-top: 10px;
+  margin-bottom: 30px;
   background-color: #FFF;
   border-radius: 25px;
   overflow-y: auto; 
+
+    @media print {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    }
 }
 
