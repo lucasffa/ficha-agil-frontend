@@ -116,7 +116,7 @@ function BeneficiosPleiteadosComponent(
     ) => void;
   }
 ) {
-  const { index, control, remove } = props;
+  const { index, control } = props;
 
   return (
     <React.Fragment>

@@ -1,15 +1,16 @@
-import { Grid, TextField } from '@mui/material';
-import React from 'react';
+import { Grid, TextField } from "@mui/material";
+import React from "react";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
 
 interface CondicoesSociaisESaudeFamiliaProps {
+  errors: any;
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -23,7 +24,7 @@ export default function CondicoesSociaisESaudeFamilia(
     <React.Fragment>
       <div className="cabecalho-form">
         6. CONDIÇÕES SOCIAIS E DE SAÚDE DA FAMÍLIA
-      </div>{' '}
+      </div>{" "}
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Controller
@@ -37,6 +38,10 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia
+                    ?.FamiliarTratamentoMedico
+                }
               />
             )}
           />
@@ -53,6 +58,10 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia
+                    ?.FamiliarUsoMedicamento
+                }
               />
             )}
           />
@@ -69,6 +78,10 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia
+                    ?.FamiliarDeficiencia
+                }
               />
             )}
           />
@@ -85,6 +98,10 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia
+                    ?.FamiliarDependenciaQuimica
+                }
               />
             )}
           />
@@ -101,6 +118,9 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia?.AcompTerapeutico
+                }
               />
             )}
           />
@@ -117,6 +137,9 @@ export default function CondicoesSociaisESaudeFamilia(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSociaisESaudeFamilia?.ProgramaSocial
+                }
               />
             )}
           />

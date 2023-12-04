@@ -1,16 +1,17 @@
-import { FormControl, Grid, TextField } from '@mui/material';
-import React from 'react';
+import { FormControl, Grid, TextField } from "@mui/material";
+import React from "react";
 import {
   Control,
   Controller,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
-import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
+import CurrencyFieldInput from "../../../../Shared/InputMaskCurrency";
 
 interface DespesasProps {
+  errors: any;
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -105,6 +106,7 @@ export default function Despesas(props: DespesasProps) {
                     color="primary"
                     variant="outlined"
                     type="number"
+                    error={!!props.errors.Despesas?.DespesasPessoasResidencia}
                     {...field}
                   />
                 </FormControl>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   FormControl,
   Grid,
@@ -6,17 +6,18 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Escolaridade, Ficha } from '../CandidatoFicha';
+} from "react-hook-form";
+import { Escolaridade, Ficha } from "../CandidatoFicha";
 
 interface DadosEducacionaisCandidatoProps {
+  errors: any;
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -44,6 +45,7 @@ export default function DadosEducacionaisCandidato(
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Estuda"
+                    error={!!props.errors.DadosEducacionaisCandidato?.Estuda}
                     {...field}
                   >
                     return (<MenuItem value="S">Sim</MenuItem>
@@ -69,6 +71,10 @@ export default function DadosEducacionaisCandidato(
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Instituição de Ensino"
+                    error={
+                      !!props.errors.DadosEducacionaisCandidato
+                        ?.InstituicaoEnsino
+                    }
                     {...field}
                   >
                     return (<MenuItem value="U">Pública</MenuItem>
@@ -92,6 +98,9 @@ export default function DadosEducacionaisCandidato(
                   label="Nome da Escola/Instituição de Ensino"
                   color="primary"
                   variant="outlined"
+                  error={
+                    !!props.errors.DadosEducacionaisCandidato?.NomeInstituicao
+                  }
                   {...field}
                 />
               );
@@ -110,6 +119,10 @@ export default function DadosEducacionaisCandidato(
                   label="Endereço da instituição de ensino"
                   color="primary"
                   variant="outlined"
+                  error={
+                    !!props.errors.DadosEducacionaisCandidato
+                      ?.EnderecoInstituicao
+                  }
                   {...field}
                 />
               );
@@ -128,6 +141,9 @@ export default function DadosEducacionaisCandidato(
                   label="Bairro"
                   color="primary"
                   variant="outlined"
+                  error={
+                    !!props.errors.DadosEducacionaisCandidato?.BairroInstituicao
+                  }
                   {...field}
                 />
               );
@@ -148,6 +164,7 @@ export default function DadosEducacionaisCandidato(
                   variant="outlined"
                   type="number"
                   {...field}
+                  error={!!props.errors.DadosEducacionaisCandidato?.SerieAtual}
                 />
               );
             }}
@@ -165,6 +182,7 @@ export default function DadosEducacionaisCandidato(
                   label="Turma"
                   color="primary"
                   variant="outlined"
+                  error={!!props.errors.DadosEducacionaisCandidato?.Turma}
                   {...field}
                 />
               );
@@ -183,10 +201,11 @@ export default function DadosEducacionaisCandidato(
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Turno"
+                    error={!!props.errors.DadosEducacionaisCandidato?.Turno}
                     {...field}
                   >
                     return (<MenuItem value="M">Manhã</MenuItem>
-                    <MenuItem value="T">Tarde</MenuItem>{' '}
+                    <MenuItem value="T">Tarde</MenuItem>{" "}
                     <MenuItem value="N">Noite</MenuItem>
                     );
                   </Select>
@@ -209,6 +228,9 @@ export default function DadosEducacionaisCandidato(
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Escolaridade"
+                    error={
+                      !!props.errors.DadosEducacionaisCandidato?.IdEscolaridade
+                    }
                     {...field}
                   >
                     {props?.escolaridade?.map((item, index) => {
@@ -236,6 +258,10 @@ export default function DadosEducacionaisCandidato(
                   label="Outros cursos já realizados (em qualquer instituição)"
                   color="primary"
                   variant="outlined"
+                  error={
+                    !!props.errors.DadosEducacionaisCandidato
+                      ?.OutrosCursosRealizados
+                  }
                   {...field}
                 />
               );

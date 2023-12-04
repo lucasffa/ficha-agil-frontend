@@ -1,19 +1,20 @@
-import { Grid, TextField } from '@mui/material';
-import React from 'react';
+import { Grid, TextField } from "@mui/material";
+import React from "react";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
 import {
   InputComMascara,
   MascaraInput,
-} from '../../../../Shared/InputPadraoForm';
+} from "../../../../Shared/InputPadraoForm";
 
 interface CondicoesSaudeCandidatoProps {
+  errors: any;
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -39,6 +40,9 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSaudeCandidato?.NomeContatoEmergencia
+                }
               />
             )}
           />
@@ -54,6 +58,9 @@ export default function CondicoesSaudeCandidato(
                   name="Telefone de Emergência 1"
                   value={field.value}
                   onChange={field.onChange}
+                  error={
+                    !!props.errors.CondicoesSaudeCandidato?.TelefoneEmergencia1
+                  }
                 />
               );
             }}
@@ -70,6 +77,9 @@ export default function CondicoesSaudeCandidato(
                   name="Telefone de Emergência 2"
                   value={field.value}
                   onChange={field.onChange}
+                  error={
+                    !!props.errors.CondicoesSaudeCandidato?.TelefoneEmergencia2
+                  }
                 />
               );
             }}
@@ -87,6 +97,7 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={!!props.errors.CondicoesSaudeCandidato?.Alergia}
               />
             )}
           />
@@ -103,6 +114,9 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSaudeCandidato?.SitMedicaEspecial
+                }
               />
             )}
           />
@@ -119,6 +133,9 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSaudeCandidato?.FraturasCirurgias
+                }
               />
             )}
           />
@@ -135,6 +152,9 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSaudeCandidato?.MedicacaoControlada
+                }
               />
             )}
           />
@@ -151,6 +171,9 @@ export default function CondicoesSaudeCandidato(
                 color="primary"
                 variant="outlined"
                 {...field}
+                error={
+                  !!props.errors.CondicoesSaudeCandidato?.ProvidenciaRecomendada
+                }
               />
             )}
           />
