@@ -116,6 +116,7 @@ const theme = createTheme({
 
           // Sobrescreve o tamanho da fonte do Label do TextField
           fontSize: '0.80rem',
+          fontWeight: '700',
 
           // Sobrescreve a cor da fonte do Label do TextField
           color: '#000',
@@ -123,6 +124,7 @@ const theme = createTheme({
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver selecionado
           '&.Mui-focused': {
             color: '#000',
+            fontWeight: '700',
           },
 
           // Sobrescreve a cor do Label do TextField quando o mesmo estiver preenchido

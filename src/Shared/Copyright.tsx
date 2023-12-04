@@ -9,7 +9,7 @@ export default function Copyright() {
       style={{ position: 'static' }}
     >
       {'Copyright © '}
-      Univale/Technamina {new Date().getFullYear()}
+      FichaÁgil por Univale/Technamina {new Date().getFullYear()}
     </Typography>
   );
 }
