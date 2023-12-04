@@ -5,7 +5,7 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Controller,
   Control,
@@ -13,22 +13,22 @@ import {
   UseFormSetValue,
   UseFormWatch,
   FieldErrors,
-} from 'react-hook-form';
-import React, { useEffect } from 'react';
+} from "react-hook-form";
+import React, { useEffect } from "react";
 import {
   InputComMascara,
   MascaraInput,
-} from '../../../../Shared/InputPadraoForm';
+} from "../../../../Shared/InputPadraoForm";
 import {
   EstadoCivil,
   Ficha,
   Parentesco,
   RacaEtnia,
   SituacaoTrabalhista,
-} from '../CandidatoFicha';
-import DatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import ptBR from 'date-fns/locale/pt-BR';
+} from "../CandidatoFicha";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import ptBR from "date-fns/locale/pt-BR";
 
 interface IdentificacaoCandidatoProps {
   control: Control<Ficha>;
@@ -42,16 +42,38 @@ interface IdentificacaoCandidatoProps {
   errors: FieldErrors<Ficha>;
 }
 
+//1. IDENTIFICAÇÃO DO CANDIDATO
 export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
   useEffect(() => {
-    registerLocale('pt-BR', ptBR);
+    registerLocale("pt-BR", ptBR);
   }, []);
+
+  function calcularIdade(dataNascimento: Date | null) {
+    if (dataNascimento === null) {
+      return "";
+    }
+    const hoje = new Date();
+    const dataNasc = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - dataNasc.getFullYear();
+    // Verificar se o aniversário já ocorreu neste ano
+    const mesAtual = hoje.getMonth();
+    const diaAtual = hoje.getDate();
+    const mesNasc = dataNasc.getMonth();
+    const diaNasc = dataNasc.getDate();
+
+    if (mesAtual < mesNasc || (mesAtual === mesNasc && diaAtual < diaNasc)) {
+      idade--;
+    }
+
+    return idade + " anos";
+  }
 
   return (
     <React.Fragment>
       <div className="cabecalho-form">1. IDENTIFICAÇÃO DO CANDIDATO</div>
+
       <Grid container spacing={1}>
-        <Grid item xs={10}>
+        <Grid item xs={12}>
           <Controller
             control={props.control}
             name="IdentificacaoCandidato.NomeCompleto"
@@ -65,25 +87,6 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                   variant="outlined"
                   {...field}
                   error={!!props.errors.IdentificacaoCandidato?.NomeCompleto}
-                />
-              );
-            }}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <Controller
-            control={props.control}
-            name="IdentificacaoCandidato.CadUnico"
-            render={({ field }) => {
-              return (
-                <TextField
-                  fullWidth
-                  id="outlined-basic 1"
-                  label="Nº Cad. Único"
-                  color="primary"
-                  variant="outlined"
-                  {...field}
-                  error={!!props.errors.IdentificacaoCandidato?.CadUnico}
                 />
               );
             }}
@@ -149,8 +152,8 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
                       variant="outlined"
                       value={
                         field.value
-                          ? new Date(field.value).toLocaleDateString('pt-BR')
-                          : ''
+                          ? new Date(field.value).toLocaleDateString("pt-BR")
+                          : ""
                       }
                       error={
                         !!props.errors.IdentificacaoCandidato?.DataNascimento
@@ -182,22 +185,16 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
           />
         </Grid>
         <Grid item xs={2}>
-          <Controller
-            control={props.control}
-            name="IdentificacaoCandidato.EncaminhadoPor"
-            render={({ field }) => {
-              return (
-                <TextField
-                  fullWidth
-                  id="outlined-basic 334"
-                  label="Encaminhado por"
-                  color="primary"
-                  variant="outlined"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              );
-            }}
+          <TextField
+            fullWidth
+            id="outlined-basic 3"
+            label="Idade"
+            color="primary"
+            variant="outlined"
+            value={`${calcularIdade(
+              props.watch("IdentificacaoCandidato.DataNascimento")
+            )}`}
+            disabled
           />
         </Grid>
         <Grid item xs={2}>
@@ -233,7 +230,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
         <Grid
           item
           xs={
-            props.watch('IdentificacaoCandidato.IdSitTrabalhista') === 1 ? 2 : 4
+            props.watch("IdentificacaoCandidato.IdSitTrabalhista") === 1 ? 2 : 4
           }
         >
           <Controller
@@ -267,7 +264,7 @@ export function IdentificacaoCandidato(props: IdentificacaoCandidatoProps) {
             }}
           />
         </Grid>
-        {props.getValues('IdentificacaoCandidato.IdSitTrabalhista') === 1 ? (
+        {props.getValues("IdentificacaoCandidato.IdSitTrabalhista") === 1 ? (
           <Grid item xs={2}>
             <Controller
               control={props.control}

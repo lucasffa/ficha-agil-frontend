@@ -5,18 +5,19 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@mui/material';
-import React from 'react';
+} from "@mui/material";
+import React from "react";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { CoberturaMoradia, Ficha, Parentesco } from '../CandidatoFicha';
-import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
+} from "react-hook-form";
+import { CoberturaMoradia, Ficha, Parentesco } from "../CandidatoFicha";
+import CurrencyFieldInput from "../../../../Shared/InputMaskCurrency";
 interface CondicoesMoradiaProps {
+  errors: any;
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
   setValue: UseFormSetValue<Ficha>;
@@ -46,6 +47,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Possuí agua potável"
                     {...field}
+                    error={!!props.errors.CondicoesMoradia?.AguaPotavel}
                   >
                     return (<MenuItem value="S">Sim</MenuItem>
                     <MenuItem value="N">Não</MenuItem>
@@ -71,6 +73,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Possuí rede de esgoto"
                     {...field}
+                    error={!!props.errors.CondicoesMoradia?.RedeEsgoto}
                   >
                     return (<MenuItem value="S">Sim</MenuItem>
                     <MenuItem value="N">Não</MenuItem>
@@ -96,6 +99,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Tipo da cobertura da moradia"
                     {...field}
+                    error={!!props.errors.CondicoesMoradia?.IdCoberturaMoradia}
                   >
                     {props?.coberturaMoradia?.map((item, index) => {
                       return (
@@ -125,6 +129,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="A rua é pavimentada"
                     {...field}
+                    error={!!props.errors.CondicoesMoradia?.RuaPavimentada}
                   >
                     return (<MenuItem value="S">Sim</MenuItem>
                     <MenuItem value="N">Não</MenuItem>
@@ -150,6 +155,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Possuí agua potável"
                     {...field}
+                    error={!!props.errors.CondicoesMoradia?.PossuiEletricidade}
                   >
                     return (<MenuItem value="S">Sim</MenuItem>
                     <MenuItem value="N">Não</MenuItem>
@@ -174,6 +180,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                 variant="outlined"
                 type="number"
                 {...field}
+                error={!!props.errors.CondicoesMoradia?.ComodosMoradia}
               />
             )}
           />
@@ -181,8 +188,8 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
         <Grid
           item
           xs={
-            props.watch('CondicoesMoradia.TipoImovelResidencia') !== '' &&
-            props.watch('CondicoesMoradia.TipoImovelResidencia') !== 'P'
+            props.watch("CondicoesMoradia.TipoImovelResidencia") !== "" &&
+            props.watch("CondicoesMoradia.TipoImovelResidencia") !== "P"
               ? 6
               : 12
           }
@@ -201,6 +208,9 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
                     id="demo-simple-select"
                     label="Situação Trabalhista"
                     {...field}
+                    error={
+                      !!props.errors.CondicoesMoradia?.TipoImovelResidencia
+                    }
                   >
                     return (<MenuItem value="P">Próprio</MenuItem>
                     <MenuItem value="A">Alugado</MenuItem>
@@ -213,7 +223,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
             }}
           />
         </Grid>
-        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'A' ? (
+        {props.getValues("CondicoesMoradia.TipoImovelResidencia") === "A" ? (
           <Grid item xs={6}>
             <Controller
               control={props.control}
@@ -228,7 +238,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
             />
           </Grid>
         ) : null}
-        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'C' ? (
+        {props.getValues("CondicoesMoradia.TipoImovelResidencia") === "C" ? (
           <Grid item xs={6}>
             <Controller
               control={props.control}
@@ -259,7 +269,7 @@ export default function CondicoesMoradia(props: CondicoesMoradiaProps) {
             />
           </Grid>
         ) : null}
-        {props.getValues('CondicoesMoradia.TipoImovelResidencia') === 'F' ? (
+        {props.getValues("CondicoesMoradia.TipoImovelResidencia") === "F" ? (
           <Grid item xs={6}>
             <Controller
               control={props.control}

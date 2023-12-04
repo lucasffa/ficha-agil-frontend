@@ -6,8 +6,8 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+} from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Control,
   Controller,
@@ -15,19 +15,20 @@ import {
   UseFormSetValue,
   UseFormWatch,
   useFieldArray,
-} from 'react-hook-form';
+  UseFieldArrayRemove,
+} from "react-hook-form";
 import {
   Escolaridade,
   EstadoCivil,
   Ficha,
   Parentesco,
   SituacaoTrabalhista,
-} from '../CandidatoFicha';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CurrencyFieldInput from '../../../../Shared/InputMaskCurrency';
-import axiosInstance from '../../../../components/utils/axios';
-import { toast } from 'react-toastify';
+} from "../CandidatoFicha";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CurrencyFieldInput from "../../../../Shared/InputMaskCurrency";
+import axiosInstance from "../../../../components/utils/axios";
+import { toast } from "react-toastify";
 
 interface ComposicaoFamiliarProps {
   control: Control<Ficha>;
@@ -47,12 +48,12 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'ComposicaoFamiliar',
+    name: "ComposicaoFamiliar",
   });
 
   const calcularTotalRendaFamiliar = useCallback(() => {
     let total = 0;
-    fields.forEach(field => {
+    fields.forEach((field) => {
       if (field.Renda) {
         total += parseFloat(String(field.Renda));
       }
@@ -71,19 +72,20 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
   ) {
     try {
       await axiosInstance
-        .delete('deleteCompFamiliar', {
+        .delete("deleteCompFamiliar", {
           params: {
             idFicha: idFicha,
             idCompFamiliar: idCompFamiliar,
           },
         })
-        .then(res => {
+        .then((res) => {
           toast.success(res.data.message);
           remove(index);
         });
     } catch (err: any) {
       const error = err.response?.data;
-      Object.keys(error).map(key => {
+
+      Object.keys(error).map((key) => {
         return toast.error(error[key]);
       });
     }
@@ -93,17 +95,17 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
     <React.Fragment>
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
         <div className="cabecalho-form">8. COMPOSIÇÃO FAMILIAR</div>
         <div>
           TOTAL DA RENDA FAMILIAR:
-          {totalRendaFamiliar.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
+          {totalRendaFamiliar.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
           })}
         </div>
       </div>
@@ -123,6 +125,7 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
           situacaoTrabalhista={props.situacaoTrabalhista}
           calcularTotalRendaFamiliar={calcularTotalRendaFamiliar}
           deleteCompFamiliar={deleteCompFamiliar}
+          remove={remove}
         />
       ))}
       <Grid container spacing={1}>
@@ -132,19 +135,19 @@ export default function ComposicaoFamiliar(props: ComposicaoFamiliarProps) {
             type="button"
             onClick={() =>
               append({
-                Nome: '',
+                Nome: "",
                 IdParentesco: undefined,
                 Idade: undefined,
                 IdEstadoCivil: undefined,
                 IdSitTrabalhista: undefined,
-                Profissao: '',
+                Profissao: "",
                 IdEscolaridade: undefined,
                 Renda: undefined,
                 IdCompFamiliar: undefined,
                 IdFicha: undefined,
               })
             }
-            style={{ background: 'none' }}
+            style={{ background: "none" }}
           >
             <AddIcon color="inherit" />
           </IconButton>
@@ -158,6 +161,7 @@ function ComposicaoFamiliarComponent(
   props: ComposicaoFamiliarProps & {
     index: number;
     field: any;
+    remove: UseFieldArrayRemove;
     calcularTotalRendaFamiliar: () => void;
     deleteCompFamiliar: (
       idFicha: number,
@@ -368,16 +372,18 @@ function ComposicaoFamiliarComponent(
         <Grid item xs={1}>
           <IconButton
             type="button"
-            style={{ background: 'none', marginTop: '5px' }}
+            style={{ background: "none", marginTop: "5px" }}
             onClick={() => {
               const idCompFamiliar = props.getValues(
                 `ComposicaoFamiliar.${index}.IdCompFamiliar`
               );
-              props.deleteCompFamiliar(
-                props.getValues('IdFicha'),
-                index,
-                idCompFamiliar ?? 0
-              );
+              idCompFamiliar === undefined
+                ? props.remove(index)
+                : props.deleteCompFamiliar(
+                    props.getValues("IdFicha"),
+                    index,
+                    idCompFamiliar ?? 0
+                  );
             }}
           >
             <DeleteIcon color="inherit" />

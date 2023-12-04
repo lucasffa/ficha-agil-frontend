@@ -4,11 +4,11 @@ import {
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
-import { Ficha } from '../CandidatoFicha';
-import React from 'react';
-import { FormControl, Grid } from '@mui/material';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+} from "react-hook-form";
+import { Ficha } from "../CandidatoFicha";
+import React from "react";
+import { FormControl, Grid } from "@mui/material";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 interface SituacaoSocioEconomicaFamiliarProps {
   control: Control<Ficha>;
@@ -35,8 +35,8 @@ export default function SituacaoSocioEconomicaFamiliar(
                   <TextareaAutosize
                     minRows={7}
                     style={{
-                      borderRadius: '12px 12px 0 12px',
-                      padding: '12px',
+                      borderRadius: "12px 12px 0 12px",
+                      padding: "12px",
                     }}
                     {...field}
                   />

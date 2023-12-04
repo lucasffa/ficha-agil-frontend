@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
+  UseFieldArrayRemove,
+} from "react-hook-form";
 import {
   Grid,
   TextField,
@@ -14,14 +15,14 @@ import {
   FormControl,
   MenuItem,
   Select,
-} from '@mui/material';
+} from "@mui/material";
 
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Ficha, Parentesco } from '../CandidatoFicha';
-import { useFieldArray } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import axiosInstance from '../../../../components/utils/axios';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Ficha, Parentesco } from "../CandidatoFicha";
+import { useFieldArray } from "react-hook-form";
+import { toast } from "react-toastify";
+import axiosInstance from "../../../../components/utils/axios";
 
 interface OutrasFichasGrupoFamiliarProps {
   control: Control<Ficha>;
@@ -37,7 +38,7 @@ export default function OutrasFichasGrupoFamiliar(
   const { control } = props;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'OutrasFichasGrupoFamiliar',
+    name: "OutrasFichasGrupoFamiliar",
   });
 
   async function deleteGrupoFamiliar(
@@ -47,19 +48,19 @@ export default function OutrasFichasGrupoFamiliar(
   ) {
     try {
       await axiosInstance
-        .delete('deleteGrupoFamiliar', {
+        .delete("deleteGrupoFamiliar", {
           params: {
             idFicha: idFicha,
             idGrupoFamiliar: idGrupoFamiliar,
           },
         })
-        .then(res => {
+        .then((res) => {
           toast.success(res.data.message);
           remove(index);
         });
     } catch (err: any) {
       const error = err.response?.data;
-      Object.keys(error).map(key => {
+      Object.keys(error).map((key) => {
         return toast.error(error[key]);
       });
     }
@@ -79,6 +80,7 @@ export default function OutrasFichasGrupoFamiliar(
           watch={props.watch}
           parentesco={props.parentesco}
           deleteGrupoFamiliar={deleteGrupoFamiliar}
+          remove={remove}
         />
       ))}
       <Grid container spacing={1}>
@@ -89,12 +91,12 @@ export default function OutrasFichasGrupoFamiliar(
             onClick={() =>
               append({
                 IdFicha: undefined,
-                NomeCompletoFamiliar: '',
+                NomeCompletoFamiliar: "",
                 IdParentesco: undefined,
                 IdGrupoFamiliar: undefined,
               })
             }
-            style={{ background: 'none' }}
+            style={{ background: "none" }}
           >
             <AddIcon color="inherit" />
           </IconButton>
@@ -108,6 +110,7 @@ function OutrasFichasGrupoFamiliarComponent(
   props: OutrasFichasGrupoFamiliarProps & {
     index: number;
     field: any;
+    remove: UseFieldArrayRemove;
     deleteGrupoFamiliar: (
       idFicha: number,
       index: number,
@@ -185,16 +188,18 @@ function OutrasFichasGrupoFamiliarComponent(
         <Grid item xs={1}>
           <IconButton
             type="button"
-            style={{ background: 'none', marginTop: '5px' }}
+            style={{ background: "none", marginTop: "5px" }}
             onClick={() => {
               const idGrupoFamiliar = props.getValues(
                 `OutrasFichasGrupoFamiliar.${index}.IdGrupoFamiliar`
               );
-              props.deleteGrupoFamiliar(
-                props.getValues('IdFicha'),
-                index,
-                idGrupoFamiliar ?? 0
-              );
+              idGrupoFamiliar === undefined
+                ? props.remove(index)
+                : props.deleteGrupoFamiliar(
+                    props.getValues("IdFicha"),
+                    index,
+                    idGrupoFamiliar ?? 0
+                  );
             }}
           >
             <DeleteIcon color="inherit" />
