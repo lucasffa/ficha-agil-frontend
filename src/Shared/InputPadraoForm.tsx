@@ -18,6 +18,7 @@ type PropsInput = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   event?: React.ChangeEvent<HTMLInputElement>;
   error?: {};
+  readOnly?: boolean
 };
 
 export const InputComMascara = React.forwardRef((props: PropsInput, ref) => (
@@ -40,6 +41,9 @@ export const InputComMascara = React.forwardRef((props: PropsInput, ref) => (
         error={!!props.error}
         inputRef={ref}
         fullWidth
+        inputProps={{
+          readOnly: props.readOnly
+        }}
       />
     }
   </InputMask>

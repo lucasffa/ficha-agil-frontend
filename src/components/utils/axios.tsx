@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+const baseURL = process.env.REACT_APP_API_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: baseURL, // Defina a URL base da API em ROOT/.env para REACT_APP_API_URL
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorage.getItem('token')}`,
