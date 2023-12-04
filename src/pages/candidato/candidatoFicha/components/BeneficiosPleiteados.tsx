@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Controller,
   Control,
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form';
+  UseFieldArrayRemove,
+} from "react-hook-form";
 import {
   Grid,
   TextField,
@@ -14,18 +15,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from '@mui/material';
+} from "@mui/material";
 
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Ficha } from '../CandidatoFicha';
-import { useFieldArray } from 'react-hook-form';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Ficha } from "../CandidatoFicha";
+import { useFieldArray } from "react-hook-form";
 import {
   InputComMascara,
   MascaraInput,
-} from '../../../../Shared/InputPadraoForm';
-import axiosInstance from '../../../../components/utils/axios';
-import { toast } from 'react-toastify';
+} from "../../../../Shared/InputPadraoForm";
+import axiosInstance from "../../../../components/utils/axios";
+import { toast } from "react-toastify";
 
 interface BeneficiosPleiteadosProps {
   control: Control<Ficha>;
@@ -39,7 +40,7 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
   const { control } = props;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'BeneficiosPleiteados',
+    name: "BeneficiosPleiteados",
   });
   async function deleteBeneficio(
     idFicha: number,
@@ -48,19 +49,19 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
   ) {
     try {
       await axiosInstance
-        .delete('deleteBeneficio', {
+        .delete("deleteBeneficio", {
           params: {
             idFicha: idFicha,
             idBeneficio: idBeneficio,
           },
         })
-        .then(res => {
+        .then((res) => {
           toast.success(res.data.message);
           remove(index);
         });
     } catch (err: any) {
       const error = err.response?.data;
-      Object.keys(error).map(key => {
+      Object.keys(error).map((key) => {
         return toast.error(error[key]);
       });
     }
@@ -78,6 +79,7 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
           setValue={props.setValue}
           watch={props.watch}
           deleteBeneficio={deleteBeneficio}
+          remove={remove}
         />
       ))}
       <Grid container spacing={1}>
@@ -87,12 +89,12 @@ export default function BeneficiosPleiteados(props: BeneficiosPleiteadosProps) {
             type="button"
             onClick={() =>
               append({
-                NomeCursoPretendido: '',
-                Horario: '',
-                Turno: '',
+                NomeCursoPretendido: "",
+                Horario: "",
+                Turno: "",
               })
             }
-            style={{ background: 'none' }}
+            style={{ background: "none" }}
           >
             <AddIcon color="inherit" />
           </IconButton>
@@ -106,6 +108,7 @@ function BeneficiosPleiteadosComponent(
   props: BeneficiosPleiteadosProps & {
     index: number;
     field: any;
+    remove: UseFieldArrayRemove;
     deleteBeneficio: (
       idFicha: number,
       index: number,
@@ -113,7 +116,7 @@ function BeneficiosPleiteadosComponent(
     ) => void;
   }
 ) {
-  const { index, control } = props;
+  const { index, control, remove } = props;
 
   return (
     <React.Fragment>
@@ -150,7 +153,7 @@ function BeneficiosPleiteadosComponent(
                     {...field}
                   >
                     return (<MenuItem value="M">Manhã</MenuItem>
-                    <MenuItem value="T">Tarde</MenuItem>{' '}
+                    <MenuItem value="T">Tarde</MenuItem>{" "}
                     <MenuItem value="N">Noite</MenuItem>
                     );
                   </Select>
@@ -176,16 +179,19 @@ function BeneficiosPleiteadosComponent(
         <Grid item xs={1}>
           <IconButton
             type="button"
-            style={{ background: 'none', marginTop: '5px' }}
+            style={{ background: "none", marginTop: "5px" }}
             onClick={() => {
               const idBeneficio = props.getValues(
                 `BeneficiosPleiteados.${index}.IdBeneficio`
               );
-              props.deleteBeneficio(
-                props.getValues('IdFicha'),
-                index,
-                idBeneficio ?? 0
-              );
+
+              idBeneficio === undefined
+                ? props.remove(index)
+                : props.deleteBeneficio(
+                    props.getValues("IdFicha"),
+                    index,
+                    idBeneficio ?? 0
+                  );
             }}
           >
             <DeleteIcon color="inherit" />
