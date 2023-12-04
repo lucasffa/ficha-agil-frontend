@@ -109,10 +109,10 @@ export interface Ficha {
   };
   CondicoesSociaisESaudeFamilia: {
     FamiliarTratamentoMedico: string;
-    FamiliarUsoMedico: string;
+    FamiliarUsoMedicamento: string;
     FamiliarDeficiencia: string;
     FamiliarDependenciaQuimica: string;
-    AcompanhamentoTerapeutico: string;
+    AcompTerapeutico: string;
     ProgramaSocial: string;
   };
   CondicoesMoradia: {
@@ -215,10 +215,10 @@ export interface FichaEdit {
   MEDICACAOCONTROLADA: string;
   PROVIDENCIARECOMENDADA: string;
   FAMILIARTRATAMENTOMEDICO: string;
-  FAMILIARUSOMEDICO: string;
+  FAMILIARUSOMEDICAMENTO: string;
   FAMILIARDEFICIENCIA: string;
-  FAMILARDEPENDENCIAQUIMICA: string;
-  ACOMPANHAMENTOTERAPEUTICO: string;
+  FAMILIARDEPENDENCIAQUIMICA: string;
+  ACOMPTERAPEUTICO: string;
   PROGRAMASOCIAL: string;
   AGUAPOTAVEL: string;
   REDEESGOTO: string;
@@ -472,14 +472,11 @@ export function CandidatoFichaImpressao() {
         ProvidenciaRecomendada: fichaCandidato?.PROVIDENCIARECOMENDADA ?? '',
       },
       CondicoesSociaisESaudeFamilia: {
-        FamiliarTratamentoMedico:
-          fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
-        FamiliarUsoMedico: fichaCandidato?.FAMILIARUSOMEDICO ?? '',
+        FamiliarTratamentoMedico: fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
+        FamiliarUsoMedicamento: fichaCandidato?.FAMILIARUSOMEDICAMENTO ?? '',
         FamiliarDeficiencia: fichaCandidato?.FAMILIARDEFICIENCIA ?? '',
-        FamiliarDependenciaQuimica:
-          fichaCandidato?.FAMILARDEPENDENCIAQUIMICA ?? '',
-        AcompanhamentoTerapeutico:
-          fichaCandidato?.ACOMPANHAMENTOTERAPEUTICO ?? '',
+        FamiliarDependenciaQuimica: fichaCandidato?.FAMILIARDEPENDENCIAQUIMICA ?? '',
+        AcompTerapeutico: fichaCandidato?.ACOMPTERAPEUTICO ?? '',
         ProgramaSocial: fichaCandidato?.PROGRAMASOCIAL ?? '',
       },
       CondicoesMoradia: {
