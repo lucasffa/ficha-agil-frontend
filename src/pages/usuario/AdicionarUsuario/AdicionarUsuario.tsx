@@ -32,20 +32,6 @@ export default function AdicionarUsuario() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // function mascarCelular(celular: any) {
-  //   console.log(celular.value);
-  //   const cleanedCellphone = celular.value.replace(/\D/g, '');
-
-  //   if (cleanedCellphone.length === 11) {
-  //     return `(${cleanedCellphone.substring(
-  //       0,
-  //       2
-  //     )}) ${cleanedCellphone.substring(2, 6)}-${cleanedCellphone.substring(6)}`;
-  //   }
-
-  //   return celular.value;
-  // }
-
   function removeMask(value: string) {
     return value?.replace(/[.-\s]/g, '');
   }

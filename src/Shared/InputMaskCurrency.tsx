@@ -1,12 +1,12 @@
-import MoneyInput from "@rschpdr/react-money-input";
-import { FormControl, TextField } from "@mui/material";
-import React from "react";
+import MoneyInput from '@rschpdr/react-money-input';
+import { FormControl, TextField } from '@mui/material';
+import React from 'react';
 
 interface CustomCurrencyFieldInputProps {
   label: string;
   readOnly?: boolean;
   error?: boolean;
-  value?: number;
+  value?: number | null;
 }
 
 const CustomCurrencyFieldInput = React.forwardRef(
@@ -19,9 +19,9 @@ const CustomCurrencyFieldInput = React.forwardRef(
         }
         variant="outlined"
         currencyConfig={{
-          locale: "pt-BR",
-          currencyCode: "BRL",
-          currencyDisplay: "symbol",
+          locale: 'pt-BR',
+          currencyCode: 'BRL',
+          currencyDisplay: 'symbol',
         }}
         inputRef={ref}
         {...props}
