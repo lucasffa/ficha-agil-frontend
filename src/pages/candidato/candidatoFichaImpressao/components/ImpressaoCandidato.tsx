@@ -1506,7 +1506,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           <Grid item xs={12}>
             <Controller
               control={props.control}
-              name={`CondicoesSociaisESaudeFamilia.FamiliarUsoMedico`}
+              name={`CondicoesSociaisESaudeFamilia.FamiliarUsoMedicamento`}
               render={({ field }) => (
                 <TextField
                   fullWidth
@@ -1557,7 +1557,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           <Grid item xs={12}>
             <Controller
               control={props.control}
-              name={`CondicoesSociaisESaudeFamilia.AcompanhamentoTerapeutico`}
+              name={`CondicoesSociaisESaudeFamilia.AcompTerapeutico`}
               render={({ field }) => (
                 <TextField
                   fullWidth
