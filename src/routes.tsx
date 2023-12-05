@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import SignIn from './pages/signIn/SignIn';
 import { SideMenu, TopMenu } from './components/Menu/Menu';
-import Relatorios from './pages/relatorios/Relatorios';
+// import Relatorios from './pages/relatorios/Relatorios';
 import './styles/global.scss';
 import CandidatoDashboard from './pages/candidato/candidatoDashboard/CandidatoDashboard';
 import uniqid from 'uniqid';
@@ -41,11 +41,11 @@ export default function Rotas() {
               {/* NotFound rota */}
               <Route path="*" element={<NotFound />} />
               {/* Dashboard rota */}
-              <Route
+              {/* <Route
                 path="/relatorios"
                 element={<Relatorios />}
                 key={uniqid()}
-              />
+              /> */}
               {/* Candidato/ficha rotas */}
               <Route
                 path="/candidato"

@@ -4,11 +4,11 @@ import {
   UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
-} from "react-hook-form";
-import { Ficha } from "../CandidatoFicha";
-import React from "react";
-import { FormControl, Grid } from "@mui/material";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+} from 'react-hook-form';
+import { Ficha } from '../CandidatoFicha';
+import React from 'react';
+import { FormControl, Grid } from '@mui/material';
+import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 interface OutrosGastosProps {
   control: Control<Ficha>;
   getValues: UseFormGetValues<Ficha>;
@@ -32,8 +32,8 @@ export default function OutrosGastos(props: OutrosGastosProps) {
                     placeholder="Expor outros gastos do candidato ou grupo familiar"
                     minRows={3}
                     style={{
-                      borderRadius: "12px 12px 0 12px",
-                      padding: "12px",
+                      borderRadius: '12px 12px 0 12px',
+                      padding: '12px',
                     }}
                     defaultValue={field.value}
                     onBlur={field.onBlur}

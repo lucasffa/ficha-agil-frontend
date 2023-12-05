@@ -78,11 +78,7 @@ const validationSchemaFicha = object().shape({
     DespesasTotal: number().required('Campo obrigatório'),
     DespesasObs: string().required('Campo obrigatório'),
   }),
-  OutrosGastos: string().required('Campo obrigatório'),
-  SitSocioEconomicoFamiliar: string().required('Campo obrigatório'),
-  ObservacoesNecessarias: string().required('Campo obrigatório'),
   ParecerAssistSocial: object({
-    ParecerAssistSocial: string().required('Campo obrigatório'),
     StatusProcesso: string().required('Campo obrigatório'),
   }),
 });

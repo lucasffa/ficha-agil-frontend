@@ -4,7 +4,7 @@ import '../../styles/global.scss';
 import menuIcon from '../../assets/images/menu.svg';
 import closeMenuIcon from '../../assets/images/close.svg';
 import sairIcon from '../../assets/images/exit.svg';
-import relatoriodIcon from '../../assets/images/align-right.svg';
+//import relatoriodIcon from '../../assets/images/align-right.svg';
 import userIcon from '../../assets/images/user.svg';
 import { useState } from 'react';
 import uniqid from 'uniqid';
@@ -38,12 +38,12 @@ const sections = [
     icon: userIcon,
     isSubRota: true,
   },
-  {
-    rota: 'relatorios',
-    name: 'Relatórios',
-    icon: relatoriodIcon,
-    isSubRota: false,
-  },
+  // {
+  //   rota: 'relatorios',
+  //   name: 'Relatórios',
+  //   icon: relatoriodIcon,
+  //   isSubRota: false,
+  // },
 ];
 
 export function SideMenu() {
@@ -59,7 +59,7 @@ export function SideMenu() {
         toast.success(res.data.message);
         setTimeout(() => {
           window.location.href = '/login';
-        }, 5000);
+        }, 3000);
       });
     } catch (err: any) {
       const error = err.response?.data;

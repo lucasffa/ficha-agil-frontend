@@ -82,7 +82,7 @@ export interface Ficha {
   DadosEducacionaisCandidato: {
     Estuda: string;
     InstituicaoEnsino: string;
-    NomeInstituicaoEnsino: string;
+    NomeInstituicao: string;
     EnderecoInstituicao: string;
     BairroInstituicao: string;
     SerieAtual: number;
@@ -103,7 +103,7 @@ export interface Ficha {
     TelefoneEmergencia2: string;
     Alergia: string;
     SitMedicaEspecial: string;
-    FraturasCirurgicas: string;
+    FraturasCirurgias: string;
     MedicacaoControlada: string;
     ProvidenciaRecomendada: string;
   };
@@ -197,7 +197,7 @@ export interface FichaEdit {
   IDPARENTESCO: number | undefined;
   ESTUDA: string;
   INSTITUICAOENSINO: string;
-  NOMEINSTITUICAOENSINO: string;
+  NOMEINSTITUICAO: string;
   ENDERECOINSTITUICAO: string;
   BAIRROINSTITUICAO: string;
   SERIEATUAL: number;
@@ -211,7 +211,7 @@ export interface FichaEdit {
   TELEFONEEMERGENCIA2: string;
   ALERGIA: string;
   SITMEDICAESPECIAL: string;
-  FRATURASCIRURGICAS: string;
+  FRATURASCIRURGIAS: string;
   MEDICACAOCONTROLADA: string;
   PROVIDENCIARECOMENDADA: string;
   FAMILIARTRATAMENTOMEDICO: string;
@@ -446,7 +446,7 @@ export function CandidatoFichaImpressao() {
       DadosEducacionaisCandidato: {
         Estuda: fichaCandidato?.ESTUDA ?? '',
         InstituicaoEnsino: fichaCandidato?.INSTITUICAOENSINO ?? '',
-        NomeInstituicaoEnsino: fichaCandidato?.NOMEINSTITUICAOENSINO ?? '',
+        NomeInstituicao: fichaCandidato?.NOMEINSTITUICAO ?? '',
         EnderecoInstituicao: fichaCandidato?.ENDERECOINSTITUICAO ?? '',
         BairroInstituicao: fichaCandidato?.BAIRROINSTITUICAO ?? '',
         SerieAtual: fichaCandidato?.SERIEATUAL ?? '',
@@ -467,15 +467,17 @@ export function CandidatoFichaImpressao() {
         TelefoneEmergencia2: fichaCandidato?.TELEFONEEMERGENCIA2 ?? '',
         Alergia: fichaCandidato?.ALERGIA ?? '',
         SitMedicaEspecial: fichaCandidato?.SITMEDICAESPECIAL ?? '',
-        FraturasCirurgicas: fichaCandidato?.FRATURASCIRURGICAS ?? '',
+        FraturasCirurgias: fichaCandidato?.FRATURASCIRURGIAS ?? '',
         MedicacaoControlada: fichaCandidato?.MEDICACAOCONTROLADA ?? '',
         ProvidenciaRecomendada: fichaCandidato?.PROVIDENCIARECOMENDADA ?? '',
       },
       CondicoesSociaisESaudeFamilia: {
-        FamiliarTratamentoMedico: fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
+        FamiliarTratamentoMedico:
+          fichaCandidato?.FAMILIARTRATAMENTOMEDICO ?? '',
         FamiliarUsoMedicamento: fichaCandidato?.FAMILIARUSOMEDICAMENTO ?? '',
         FamiliarDeficiencia: fichaCandidato?.FAMILIARDEFICIENCIA ?? '',
-        FamiliarDependenciaQuimica: fichaCandidato?.FAMILIARDEPENDENCIAQUIMICA ?? '',
+        FamiliarDependenciaQuimica:
+          fichaCandidato?.FAMILIARDEPENDENCIAQUIMICA ?? '',
         AcompTerapeutico: fichaCandidato?.ACOMPTERAPEUTICO ?? '',
         ProgramaSocial: fichaCandidato?.PROGRAMASOCIAL ?? '',
       },

@@ -53,7 +53,7 @@ export default function SignIn() {
           localStorage.setItem('idUsuarioLogado', res.data.user.IDUSUARIO);
           localStorage.setItem('isAuthenticated', 'true');
           PrivateRoutes(res.data.length > 1 ? true : false);
-          navigate('/relatorios');
+          navigate('/candidato');
         });
     } catch (err: any) {
       const error = err.response?.data;
