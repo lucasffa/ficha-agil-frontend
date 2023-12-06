@@ -7,11 +7,12 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   InputComMascara,
   MascaraInput,
 } from '../../../../Shared/InputPadraoForm';
+import { useNavigate } from 'react-router-dom';
 import {
   EstadoCivil,
   Ficha,
@@ -152,6 +153,10 @@ const theme = createTheme({
 
 export function ImpressaoCandidato(props: FichaImpressao) {
   const [totalRendaFamiliar, setTotalRendaFamiliar] = useState<Number>(0);
+
+  const navigate = useNavigate();
+
+  const handleBack = useCallback(() => navigate('/candidato'), [navigate]);
 
   useEffect(() => {
     const rendas = props.getValues('ComposicaoFamiliar')?.map(f => f.Renda);
@@ -1079,7 +1084,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           <Grid item xs={6}>
             <Controller
               control={props.control}
-              name="DadosEducacionaisCandidato.NomeInstituicaoEnsino"
+              name="DadosEducacionaisCandidato.NomeInstituicao"
               render={({ field }) => {
                 return (
                   <TextField
@@ -1431,7 +1436,7 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           <Grid item xs={6}>
             <Controller
               control={props.control}
-              name={`CondicoesSaudeCandidato.FraturasCirurgicas`}
+              name={`CondicoesSaudeCandidato.FraturasCirurgias`}
               render={({ field }) => (
                 <TextField
                   fullWidth
@@ -2765,6 +2770,9 @@ export function ImpressaoCandidato(props: FichaImpressao) {
           </div>
         </Grid>
       </Grid>
+      <button type="button" className="btn-voltar" onClick={() => handleBack()}>
+        Voltar
+      </button>
     </ThemeProvider>
   );
 }
