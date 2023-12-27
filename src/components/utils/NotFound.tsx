@@ -16,7 +16,7 @@ export default function NotFound() {
       <br />
       <ButtonLink
         name="IR PARA A PÁGINA INICIAL"
-        pathname="/dashboard"
+        pathname="/candidato"
         className="button"
       />
     </div>
